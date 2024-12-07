@@ -1,37 +1,20 @@
-import { useState } from 'react'
-import './App.css'
-import axios from 'axios';
+import React from 'react'
+import LoginPage from './pages/LoginPage'
+import HomePage from './pages/HomePage'
+import MainLayout from './Layouts/MainLayout'
+import {Route, createBrowserRouter, createRoutesFromElements, RouterProvider} from 'react-router-dom'
 
-function App() {
-  const [responseValue, setResponseValue] = useState([]);
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path='/' element={<MainLayout/>}>
+      <Route index element={<HomePage/>} />
+      <Route path="/log-in" element={<LoginPage/>} />
+    </Route>
+  )
+)
 
-  const fetchData = async () => {
-    try {
-      console.log("Attempting to fetch data...");
-      const response = await axios.get('http://localhost:5000/api/samples');
-      console.log("Response received:", response.data);
-      setResponseValue(response.data); // Update state with the response array
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setResponseValue([]); // Set state to an empty array on error
-    }
-  };
-
-  return (
-    <div>
-      <button onClick={fetchData}>
-        Fetch Server Response
-      </button>
-      <h2>API Response:</h2>
-      <ul>
-        {responseValue.map((item) => (
-          <li key={item.id}>
-            ID: {item.id}, Name: {item.name || "No Name Provided"}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+const App = () => {
+   return <RouterProvider router={router}/>
 }
 
-export default App;
+export default App
