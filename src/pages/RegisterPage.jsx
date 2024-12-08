@@ -78,8 +78,9 @@ const RegisterPage = () => {
 
     return (
         <div className="container-xl lg:container m-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg">
-                <Card>
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg"> */}
+            <div className="flex justify-center items-center h-screen">
+                <Card width="w-full max-w-full">
                     <h2 className="text-2xl font-bold mb-4">Register</h2>
                     <div className="mb-4">
                         <p>Register a new business? <Link className="text-indigo-800 hover:text-indigo-400 " to="/registerBusiness">Click here</Link></p>
@@ -100,9 +101,9 @@ const RegisterPage = () => {
                                 mb = "mb-4"
                                 onChange={handlePasswordChange}
                             />
-                            <span className="text-red-500 ml-2">*</span>
+                            <span className="text-red-500 ml-2 mr-6">*</span>
+                            {passwordMessage && <p className="text-red-500 mb-2">{passwordMessage}</p>}
                         </div>
-                        {passwordMessage && <p className="text-red-500 mb-2">{passwordMessage}</p>}
                         <div className="flex">
                             <TextBox
                                 ph = "confirm password" 
