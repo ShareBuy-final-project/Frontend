@@ -23,7 +23,7 @@ const HomeCards = () => {
           Discover your perfect group deal!
           </p>
           <Link
-            href="/add-job.html"
+            to="/home"
             className="inline-block bg-indigo-700 text-white rounded-lg px-4 py-2 hover:bg-indigo-600"
           >
             Browse deals

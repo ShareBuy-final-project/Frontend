@@ -14,13 +14,14 @@ const Navbar = () => {
           >
             {/* <!-- Logo --> */}
            
-            <a className="flex flex-shrink-0 items-center mr-4" href="/">
-            <FaShoppingCart className="text-white text-3xl inline mr-1" />
-              <span className="hidden md:block text-white text-2xl font-bold ml-2">ShareBuy</span>
-            </a>
+          
+            <NavLink to='/'>
+              <FaShoppingCart className="text-white text-3xl inline mr-1" />
+            </NavLink>
+              <span className="hidden md:block text-white text-2xl font-bold ml-2">ShareBuy</span>          
             <div className="md:ml-auto">
               <div className="flex space-x-2">
-                <NavLink to='/'
+                <NavLink to='/home'
                   className={linkClass}
                   >Home</NavLink>
                 <NavLink to='/log-in'
