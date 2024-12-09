@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-
-const TextBox = ({ph = 'text', mb = 'mb-2',value ,onChange}) => {  
+const TextBox = ({ph = 'text', mb = 'mb-2',value ,onChange, border = 'border-gray-300'}) => {  
     return (
       <div>
         <input 
@@ -8,7 +6,7 @@ const TextBox = ({ph = 'text', mb = 'mb-2',value ,onChange}) => {
           value={value} 
           onChange={onChange} 
           placeholder={ph}
-          className={`${mb} p-2 border border-gray-300 rounded-lg`}
+          className={`${mb} p-2 border ${border} rounded-lg`}
         />
       </div>
     );
