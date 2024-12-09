@@ -35,7 +35,7 @@ const SearchBar = ({ onSearch, onSort ,placeholder = "Search...", width="100%" }
       <SortByDropDown sortOption={sortOption} onSortChange={handleSortChange} />
       <button
         onClick={handleSearch}
-        className="px-4 py-2 bg-indigo-700 text-white rounded-r-lg hover:bg-indigo-600 transition duration-300"
+        className="px-4 py-2 bg-indigo700 text-white rounded-r-lg hover:bg-indigo600 transition duration-300"
         style={{ flexBasis: '10%' }}
       >
         Search
