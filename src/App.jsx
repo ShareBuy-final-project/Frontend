@@ -1,5 +1,6 @@
 import React from 'react'
 import LoginPage from './pages/LoginPage'
+import HomePage from './pages/HomePage'
 import WelcomePage from './pages/WelcomePage'
 import RegisterPage from './pages/RegisterPage'
 import MainLayout from './Layouts/MainLayout'
