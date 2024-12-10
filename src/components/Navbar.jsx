@@ -45,52 +45,58 @@ const Navbar = () => {
     };
   }, []);
 
+  // Subcomponent for Logo and Cart
+  const LogoCart = () => (
+    <div className="flex items-center space-x-2">
+      <NavLink to="/" className="flex items-center">
+        <FaShoppingCart className="text-white text-3xl mr-1" />
+        <span className="hidden md:block text-white text-2xl font-bold ml-2">ShareBuy</span>
+      </NavLink>
+    </div>
+  );
+
+  // Subcomponent for NavLinks
+  const NavLinks = () => (
+    <div className="flex space-x-2 mx-auto">
+      {!isLoggedIn && (
+        <>
+          <button
+            onClick={openModal}
+            className="text-white hover:bg-gray-900 rounded-md px-3 py-2"
+          >
+            Log in
+          </button>
+          <NavLink to="/register" className={linkClass}>
+            Register
+          </NavLink>
+        </>
+      )}
+    </div>
+  );
+
+  // Subcomponent for ProfileButton
+  const ProfileButton = () => (
+    <button
+      className="text-white hover:text-gray-300 text-xl ml-auto p-2 rounded-full border-2 border-white"
+      onClick={toggleSidebar}
+    >
+      <FaUser />
+    </button>
+  );
+  
+
   return (
     <nav className="bg-indigo-700 border-b border-indigo-500">
-      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="flex h-20 items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center">
-            <NavLink to="/" className="flex items-center">
-              <FaShoppingCart className="text-white text-3xl mr-1" />
-              <span className="hidden md:block text-white text-2xl font-bold ml-2">
-                ShareBuy
-              </span>
-            </NavLink>
-          </div>
+      <div className="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center w-full">
+          {/* Left side (Logo and Cart) */}
+          <LogoCart />
 
-          {/* Navigation Links */}
-          <div className="flex space-x-2">
-            <NavLink to="/home" className={linkClass}>
-              Home
-            </NavLink>
-            {!isLoggedIn && (
-              <>
-                <button
-                  onClick={openModal}
-                  className="text-white hover:bg-gray-900 rounded-md px-3 py-2"
-                >
-                  Log in
-                </button>
-                <NavLink to="/register" className={linkClass}>
-                  Register
-                </NavLink>
-              </>
-            )}
-            <NavLink to="/about" className={linkClass}>
-              About
-            </NavLink>
-          </div>
+          {/* Centered Navigation Links */}
+          <NavLinks />
 
           {/* Profile Button (Visible after login) */}
-          {isLoggedIn && (
-            <button
-              className="text-white hover:text-gray-300 text-2xl ml-4 p-3 rounded-full border-2 border-white"
-              onClick={toggleSidebar}
-            >
-              <FaUser />
-            </button>
-          )}
+          {isLoggedIn && <ProfileButton />}
         </div>
       </div>
 
@@ -109,12 +115,11 @@ const Navbar = () => {
 
       {/* Sidebar */}
       <div
-        ref={sidebarRef} // Attach the ref to the sidebar
+        ref={sidebarRef}
         className={`fixed top-0 right-0 h-full bg-white shadow-lg w-64 transform transition-transform duration-300 ${
           isSidebarOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        {/* Close Sidebar Button */}
         <button
           className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl"
           onClick={toggleSidebar}
@@ -122,20 +127,22 @@ const Navbar = () => {
           &times;
         </button>
 
-        {/* Sidebar Content */}
         <div className="p-6">
-          {/* Username and FaUser icon next to it */}
           <h2 className="text-xl font-bold mb-4 flex items-center space-x-4">
-            {/* Circular icon */}
             <div className="flex justify-center items-center w-10 h-10 rounded-full bg-gray-200 text-gray-600">
               <FaUser className="text-xl" />
             </div>
-            <span>{username}</span> {/* Align username to the right */}
+            <span>{username}</span>
           </h2>
           <ul className="space-y-2">
             <li>
-              <NavLink to="/profile" className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 text-sm mt-4 py-2 px-4 rounded-md bg-white hover:bg-gray-100 w-full">
-                View Profile
+              <NavLink to="/my-groups" className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 text-sm mt-4 py-2 px-4 rounded-md bg-white hover:bg-gray-100 w-full">
+                Your Groups
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/my-history" className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 text-sm mt-4 py-2 px-4 rounded-md bg-white hover:bg-gray-100 w-full">
+                Your History
               </NavLink>
             </li>
             <li>
@@ -143,7 +150,6 @@ const Navbar = () => {
                 Settings
               </NavLink>
             </li>
-            {/* Sign Out Button */}
             <li>
               <button
                 onClick={handleSignOut}
