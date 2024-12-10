@@ -121,7 +121,7 @@ const Navbar = () => {
         }`}
       >
         <button
-          className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl"
+          className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl z-index=20"
           onClick={toggleSidebar}
         >
           &times;
