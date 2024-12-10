@@ -38,7 +38,7 @@ const LoginPage = () => {
                     />
                     <Button label="Log in" className="mb-4" onClick={handleClick}/>
                     <div >
-                        Not a member yet? <Link className="text-indigo-800 hover:text-indigo-400 " to="/register">Click here</Link>
+                        Not a member yet? <Link className="text-indigo-800 hover:text-indigo400 " to="/register">Click here</Link>
                     </div>
                 </Card>
             </div>

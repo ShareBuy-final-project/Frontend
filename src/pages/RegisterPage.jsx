@@ -83,8 +83,8 @@ const RegisterPage = () => {
                 <Card width="w-full max-w-full">
                     <h2 className="text-2xl font-bold mb-4">Register</h2>
                     <div className="mb-4">
-                        <p>Register a new business? <Link className="text-indigo-800 hover:text-indigo-400 " to="/registerBusiness">Click here</Link></p>
-                        <p>Already have an account? <Link className="text-indigo-800 hover:text-indigo-400 " to="/log-in">Log in</Link></p>
+                        <p>Register a new business? <Link className="text-indigo-800 hover:text-indigo400 " to="/registerBusiness">Click here</Link></p>
+                        <p>Already have an account? <Link className="text-indigo-800 hover:text-indigo400 " to="/log-in">Log in</Link></p>
                     </div>
                     <div className="mt-8">
                         <div className="flex">
