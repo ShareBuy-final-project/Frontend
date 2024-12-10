@@ -55,9 +55,9 @@ const Navbar = () => {
     </div>
   );
 
-  // Subcomponent for NavLinks
+  // Subcomponent for NavLinks (Login/Register) - Positioned on the left
   const NavLinks = () => (
-    <div className="flex space-x-2 mx-auto">
+    <div className="flex space-x-2 ml-auto">
       {!isLoggedIn && (
         <>
           <button
@@ -92,7 +92,7 @@ const Navbar = () => {
           {/* Left side (Logo and Cart) */}
           <LogoCart />
 
-          {/* Centered Navigation Links */}
+          {/* Centered Navigation Links (Login/Register) */}
           <NavLinks />
 
           {/* Profile Button (Visible after login) */}
