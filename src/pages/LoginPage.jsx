@@ -28,17 +28,17 @@ const LoginPage = () => {
                     <h2 className="text-2xl font-bold mb-4">Log in</h2>
                     <TextBox
                         ph = "user name" 
-                        className="mb-4"
+                        mb="mb-4"
                         onChange={(event) => setUsername(event.target.value)}
                      />
                     <TextBox 
                         ph = "password" 
-                        className="mb-4"
+                        mb="mb-4"
                         onChange={(event) => setPassword(event.target.value)}
                     />
                     <Button label="Log in" className="mb-4" onClick={handleClick}/>
                     <div >
-                        Not a member yet? <Link className="text-indigo-800 hover:text-indigo-400 " to="/register">Click here</Link>
+                        Not a member yet? <Link className="text-indigo-800 hover:text-indigo400 " to="/register">Click here</Link>
                     </div>
                 </Card>
             </div>

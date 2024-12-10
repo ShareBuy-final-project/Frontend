@@ -1,0 +1,55 @@
+{
+    "deals": [
+        {
+            "id": 1,
+            "name": "20% off on Product 1",
+            "original price": 100,
+            "discount": 20,
+            "minimum group size": 30,
+            "description": "This is a product description"
+        },
+        {
+            "id": 2,
+            "name": "30% off on Product 2",
+            "original price": 400,
+            "discount": 30,
+            "minimum group size": 10,
+            "description": "This is a product description"
+        
+        },
+        {
+            "id": 3,
+            "name": "30% off on Product 3",
+            "original price": 400,
+            "discount": 30,
+            "minimum group size": 15,
+            "description": "This is a product description"
+        },
+        {
+            "id": 4,
+            "name": "30% off on Product 4",
+            "original price": 400,
+            "discount": 30,
+            "minimum group size": 15,
+            "description": "This is a product description"
+        },
+        {
+            "id": 5,
+            "name": "30% off on Product 5",
+            "original price": 400,
+            "discount": 30,
+            "minimum group size": 15,
+            "description": "This is a product description"
+        },
+        {
+            "id": 6,
+            "name": "30% off on Product 6",
+            "original price": 50,
+            "discount": 30,
+            "minimum group size": 15,
+            "description": "This is a product description"
+        }
+    
+    
+    ]
+}

@@ -17,14 +17,14 @@ const HomeCards = () => {
                 Create a deal
           </Link>
         </Card>
-        <Card bg='bg-indigo-200'>
+        <Card bg='bg-indigo200'>
           <h2 className="text-2xl font-bold">For customers</h2>
           <p className="mt-2 mb-4">
           Discover your perfect group deal!
           </p>
           <Link
-            href="/add-job.html"
-            className="inline-block bg-indigo-700 text-white rounded-lg px-4 py-2 hover:bg-indigo-600"
+            to="/home"
+            className="inline-block bg-indigo700 text-white rounded-lg px-4 py-2 hover:bg-indigo600"
           >
             Browse deals
           </Link>

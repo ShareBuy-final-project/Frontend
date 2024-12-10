@@ -1,15 +1,27 @@
+import React, { useState } from 'react';
+import SearchBar from '../components/SearchBar';
+import DealsList from '../components/DealsList';
 
-import React from 'react'
-import Welcome from '../components/Welcome'
-import HomeCards from '../components/HomeCards'
 const HomePage = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortOption, setSortOption] = useState('');
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
+
+  const handleSort = (option) => {
+    setSortOption(option);
+  };
+
   return (
     <>
-      <Welcome />
-      <HomeCards/>
+      <div className='mb-4 mt-2'>
+        <SearchBar onSearch={handleSearch} onSort={handleSort} placeholder='search here for any deal or product' />
+      </div>
+      <DealsList searchQuery={searchQuery} sortOption={sortOption} />
     </>
+  );
+};
 
-  )
-}
-
-export default HomePage
+export default HomePage;
