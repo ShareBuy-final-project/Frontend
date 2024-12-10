@@ -10,7 +10,7 @@ const Welcome = () => {
           <h1
             className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl"
           >
-            Welcom to Share Buy
+            Welcome to Share Buy
           </h1>
           <p className="my-4 text-xl text-white">
           ShareBuy is a platform for group purchases, helping you save money by

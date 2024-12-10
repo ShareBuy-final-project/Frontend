@@ -30,6 +30,9 @@ const Navbar = () => {
                 <NavLink to='/register'
                   className={linkClass}
                   >register</NavLink>
+                <NavLink to='/create-group'
+                  className={linkClass}
+                  >create group</NavLink>
                 <NavLink to='/about'
                  className={linkClass}
                   >about</NavLink>
