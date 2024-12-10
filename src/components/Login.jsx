@@ -4,8 +4,14 @@ import { Link } from 'react-router-dom';
 
 Modal.setAppElement('#root'); // Important for accessibility
 
-const LoginModal = ({ isOpen, onClose }) => {
+const LoginModal = ({ isOpen, onClose, onLogin }) => {
   const [isBusiness, setIsBusiness] = useState(false); // Track if the user is a business
+  const [username, setUsername] = useState(''); // Store the username
+
+  const handleLogin = () => {
+    onLogin(username); // Pass the username back to Navbar
+    setUsername(''); // Clear the username input
+  };
 
   return (
     <Modal
@@ -29,6 +35,8 @@ const LoginModal = ({ isOpen, onClose }) => {
       <input
         type="text"
         placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
         className="w-full border p-2 mb-4 rounded"
       />
 
@@ -53,7 +61,7 @@ const LoginModal = ({ isOpen, onClose }) => {
       {/* Log in Button with Dynamic Text */}
       <button
         className="w-full bg-indigo-600 text-white p-2 rounded hover:bg-indigo-500 mb-4"
-        onClick={onClose}
+        onClick={handleLogin}
       >
         {isBusiness ? "Log in as Business" : "Log in as Client"}
       </button>
