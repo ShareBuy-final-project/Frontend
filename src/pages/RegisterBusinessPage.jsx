@@ -50,7 +50,7 @@ const RegisterPage = () => {
     };
 
     const handleClick = async () => {
-        if (!username || !password || !confirmPassword || !description || !category || !businessName || !businessNumber || !houseNumber || !zipCode || !email || !websiteLink) {
+        if (!username || !password || !confirmPassword || !description || !category || !businessName || !businessNumber) {
             setErrorMessage('The required fields are not filled in');
             return;
         }
