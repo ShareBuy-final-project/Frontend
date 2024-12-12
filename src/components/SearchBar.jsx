@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SortByDropDown from './SortByDropDown';
+import DropDown from './DropDown';
 
 const SearchBar = ({ onSearch, onSort ,placeholder = "Search...", width="100%" }) => {
   const [query, setQuery] = useState('');
@@ -22,6 +22,12 @@ const SearchBar = ({ onSearch, onSort ,placeholder = "Search...", width="100%" }
     }
   };
 
+  const sortOptions = [
+    { value: 'price', label: 'Price' },
+    { value: 'date', label: 'Date' },
+    { value: 'discount', label: 'Discount Percent' },
+  ];
+
   return (
     <div className={`flex items-center w-[${width}]`}>
       <input
@@ -32,7 +38,7 @@ const SearchBar = ({ onSearch, onSort ,placeholder = "Search...", width="100%" }
         className="p-2 border border-gray-300 rounded-l-lg flex-grow ml-4"
         style={{ flexBasis: '90%' }}
       />
-      <SortByDropDown sortOption={sortOption} onSortChange={handleSortChange} />
+      <DropDown options={sortOptions} defaultLabel="Sort By" selectedOption={sortOption} onOptionChange={handleSortChange} rounded="rounded-l-lg" />
       <button
         onClick={handleSearch}
         className="px-4 py-2 bg-indigo700 text-white rounded-r-lg hover:bg-indigo600 transition duration-300"

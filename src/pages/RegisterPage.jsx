@@ -116,12 +116,12 @@ const RegisterPage = () => {
                         <h6 className="text-l font-bold mb-4">Address</h6>
                         <div className="flex">
                             <div className="flex">
-                            <TextBox
-                                ph="state"
-                                mb="mb-4 flex-1 min-w-0"
-                                onChange={(event) => setState(event.target.value)}
-                            />
-                            <span className="text-red-500 ml-2 mr-6">*</span>
+                                <TextBox
+                                    ph="state"
+                                    mb="mb-4 flex-1 min-w-0"
+                                    onChange={(event) => setState(event.target.value)}
+                                />
+                                <span className="text-red-500 ml-2 mr-6">*</span>
                             </div>
                             <div className="flex">
                                 <TextBox
