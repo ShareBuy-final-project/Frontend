@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage'
 import WelcomePage from './pages/WelcomePage'
 import RegisterPage from './pages/RegisterPage'
 import CreateGroupPage from './pages/CreateGroupPage'
+import UserProfilePage from './pages/UserProfilePage'
 import MainLayout from './Layouts/MainLayout'
 import {Route, createBrowserRouter, createRoutesFromElements, RouterProvider} from 'react-router-dom'
 
@@ -16,6 +17,7 @@ const router = createBrowserRouter(
       <Route path="/log-in" element={<LoginPage/>} />
       <Route path="/register" element={<RegisterPage/>} />
       <Route path="/create-group" element={<CreateGroupPage/>} />
+      <Route path="/user-profile" element={<UserProfilePage/>} />
     </Route>
   )
 )
