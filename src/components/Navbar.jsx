@@ -83,7 +83,7 @@ const Navbar = () => {
       <FaUser />
     </button>
   );
-  
+
 
   return (
     <nav className="bg-indigo-700 border-b border-indigo-500">
@@ -116,9 +116,8 @@ const Navbar = () => {
       {/* Sidebar */}
       <div
         ref={sidebarRef}
-        className={`fixed top-0 right-0 h-full bg-white shadow-lg w-64 transform transition-transform duration-300 ${
-          isSidebarOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`fixed top-0 right-0 h-full bg-white shadow-lg w-64 transform transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'
+          } z-50`}
       >
         <button
           className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl z-index=20"
