@@ -1,59 +1,56 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BiSortAlt2 } from 'react-icons/bi';  // Import the BiSortAlt2 icon
-import { FaSearch } from 'react-icons/fa';  // Assuming you're using FaSearch for the search icon
+import { BiSortAlt2 } from 'react-icons/bi';
+import { FaSearch } from 'react-icons/fa';
 
 const SearchBar = ({ onSearch, onSort, placeholder = "Search...", width = "100%" }) => {
   const [query, setQuery] = useState('');
   const [sortOption, setSortOption] = useState('');
-  const [isFilterOpen, setIsFilterOpen] = useState(false); // State to toggle filter dropdown
-  const [isSortOpen, setIsSortOpen] = useState(false); // State to toggle sort modal
-  const filterRef = useRef(null);  // Reference for the filter modal
-  const sortRef = useRef(null);  // Reference for the sort modal
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isSortOpen, setIsSortOpen] = useState(false);
+
+  const filterRef = useRef(null);
+  const sortRef = useRef(null);
 
   const handleInputChange = (event) => {
     setQuery(event.target.value);
   };
 
   const handleSearch = () => {
-    if (onSearch) {
-      onSearch(query);
-    }
+    if (onSearch) onSearch(query);
   };
 
   const handleSortChange = (option) => {
     setSortOption(option);
-    if (onSort) {
-      onSort(option);
-    }
+    if (onSort) onSort(option);
   };
 
-  const toggleFilterDropdown = () => {
-    setIsFilterOpen(!isFilterOpen);
-  };
-
-  const toggleSortModal = () => {
-    setIsSortOpen(!isSortOpen);
-  };
+  const toggleFilterDropdown = () => setIsFilterOpen(!isFilterOpen);
+  const toggleSortModal = () => setIsSortOpen(!isSortOpen);
 
   // Close filter and sort modals when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
+      // Close Filter modal
       if (
-        (filterRef.current && !filterRef.current.contains(event.target)) &&
-        (sortRef.current && !sortRef.current.contains(event.target))
+        filterRef.current &&
+        !filterRef.current.contains(event.target) &&
+        !event.target.closest('.filter-button')
       ) {
-        setIsFilterOpen(false); // Close the filter modal if clicking outside
-        setIsSortOpen(false);   // Close the sort modal if clicking outside
+        setIsFilterOpen(false);
+      }
+
+      // Close Sort modal
+      if (
+        sortRef.current &&
+        !sortRef.current.contains(event.target) &&
+        !event.target.closest('.sort-button')
+      ) {
+        setIsSortOpen(false);
       }
     };
 
-    // Attach event listener to document
     document.addEventListener('mousedown', handleClickOutside);
-
-    // Cleanup event listener
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   return (
@@ -73,25 +70,28 @@ const SearchBar = ({ onSearch, onSort, placeholder = "Search...", width = "100%"
       </div>
 
       <div className="ml-4 flex space-x-4 relative">
+        {/* Sort Button */}
         <button
-          className="flex items-center px-4 py-2 bg-gray-200 text-black text-sm rounded-lg hover:bg-gray-300 transition duration-300"
-          onClick={toggleSortModal}  // Toggle sort modal
+          className="sort-button flex items-center px-4 py-2 bg-gray-200 text-black text-sm rounded-lg hover:bg-gray-300 transition duration-300"
+          onClick={toggleSortModal}
         >
-          <BiSortAlt2 className="mr-2" /> {/* BiSortAlt2 icon */}
-          <span className="text-xs">Sort</span> {/* Smaller text */}
+          <BiSortAlt2 className="mr-2" />
+          <span className="text-xs">Sort</span>
         </button>
+
+        {/* Filter Button */}
         <button
-          className="flex items-center px-4 py-2 bg-gray-200 text-black text-sm rounded-lg hover:bg-gray-300 transition duration-300"
-          onClick={toggleFilterDropdown}  // Toggle filter dropdown
+          className="filter-button flex items-center px-4 py-2 bg-gray-200 text-black text-sm rounded-lg hover:bg-gray-300 transition duration-300"
+          onClick={toggleFilterDropdown}
         >
           <FaSearch className="mr-2" />
-          <span className="text-xs">Filter</span> {/* Smaller text */}
+          <span className="text-xs">Filter</span>
         </button>
 
         {/* Filter Dropdown */}
         {isFilterOpen && (
           <div
-            ref={filterRef}  // Attach the reference to the filter modal
+            ref={filterRef}
             className="absolute top-full right-0 mt-2 bg-white p-4 rounded-lg w-80 shadow-lg border border-gray-300 z-10"
           >
             <div className="border-b border-gray-400 pb-3 mb-2">
@@ -111,26 +111,16 @@ const SearchBar = ({ onSearch, onSort, placeholder = "Search...", width = "100%"
                   <option>All warehouses</option>
                 </select>
               </div>
-              <div className="border-b border-gray-400 pb-3">
-                <label className="block text-xs font-medium mb-2">Status</label>
-                <select className="border p-1.5 rounded-lg w-full text-xs">
-                  <option>Active</option>
-                  <option>Inactive</option>
-                </select>
-              </div>
-              <div className="border-b border-gray-400 pb-3">
-                <label className="block text-xs font-medium mb-2">Filter options</label>
-              </div>
               <div className="flex justify-between mt-3">
                 <button
                   className="px-4 py-1 text-xs bg-gray-200 rounded-lg hover:bg-gray-300"
-                  onClick={() => setIsFilterOpen(false)}  // Close dropdown
+                  onClick={() => setIsFilterOpen(false)}
                 >
                   Reset all
                 </button>
                 <button
                   className="px-4 py-1 text-xs bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                  onClick={() => setIsFilterOpen(false)}  // Close dropdown after apply
+                  onClick={() => setIsFilterOpen(false)}
                 >
                   Apply now
                 </button>
@@ -142,7 +132,7 @@ const SearchBar = ({ onSearch, onSort, placeholder = "Search...", width = "100%"
         {/* Sort Modal */}
         {isSortOpen && (
           <div
-            ref={sortRef}  // Attach the reference to the sort modal
+            ref={sortRef}
             className="absolute top-full right-0 mt-2 bg-white p-4 rounded-lg w-80 shadow-lg border border-gray-300 z-10"
           >
             <div className="border-b border-gray-400 pb-3 mb-2">
@@ -171,13 +161,13 @@ const SearchBar = ({ onSearch, onSort, placeholder = "Search...", width = "100%"
             <div className="flex justify-between mt-3">
               <button
                 className="px-4 py-1 text-xs bg-gray-200 rounded-lg hover:bg-gray-300"
-                onClick={() => setIsSortOpen(false)}  // Close sort modal
+                onClick={() => setIsSortOpen(false)}
               >
                 Cancel
               </button>
               <button
                 className="px-4 py-1 text-xs bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                onClick={() => setIsSortOpen(false)}  // Close sort modal after apply
+                onClick={() => setIsSortOpen(false)}
               >
                 Apply
               </button>
