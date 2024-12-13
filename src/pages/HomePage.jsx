@@ -16,10 +16,16 @@ const HomePage = () => {
 
   return (
     <>
-      <div className='mb-4 mt-2'>
-        <SearchBar onSearch={handleSearch} onSort={handleSort} placeholder='search here for any deal or product' />
+      <div className='mb-2 p-4'> 
+        <SearchBar
+          onSearch={handleSearch}
+          onSort={handleSort}
+          placeholder='Search here for any deal or product'
+        />
       </div>
-      <DealsList searchQuery={searchQuery} sortOption={sortOption} />
+      <div className="p-6"> 
+        <DealsList searchQuery={searchQuery} sortOption={sortOption} />
+      </div>
     </>
   );
 };

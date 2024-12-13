@@ -1,5 +1,4 @@
 import React from 'react'
-import LoginPage from './pages/LoginPage'
 import HomePage from './pages/HomePage'
 import WelcomePage from './pages/WelcomePage'
 import RegisterPage from './pages/RegisterPage'
@@ -11,9 +10,7 @@ import {Route, createBrowserRouter, createRoutesFromElements, RouterProvider} fr
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<MainLayout/>}>
-      <Route index element={<WelcomePage/>} />
-      <Route path='/home' element={<HomePage/>} />
-      <Route path="/log-in" element={<LoginPage/>} />
+      <Route index element={<HomePage/>} />
       <Route path="/register" element={<RegisterPage/>} />
       <Route path="/registerBusiness" element={<RegisterBusinessPage/>} />
     </Route>
