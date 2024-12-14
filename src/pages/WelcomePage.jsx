@@ -1,12 +1,10 @@
 
 import React from 'react'
-import Welcome from '../components/Welcome'
-import HomeCards from '../components/HomeCards'
+import HomePage from './HomePage'
 const WelcomePage = () => {
   return (
     <>
-      <Welcome />
-      <HomeCards/>
+      <HomePage />
     </>
 
   )
