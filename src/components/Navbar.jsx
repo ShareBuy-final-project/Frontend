@@ -71,13 +71,20 @@ const Navbar = () => {
           </NavLink>
         </>
       )}
+      {isLoggedIn && (
+        <>
+          <NavLink to="/create-group" className={linkClass}>
+            Create Group
+          </NavLink>
+        </>
+      )}
     </div>
   );
 
   // Subcomponent for ProfileButton
   const ProfileButton = () => (
     <button
-      className="text-white hover:text-gray-300 text-xl ml-auto p-2 rounded-full border-2 border-white"
+      className="text-white hover:text-gray-300 text-xl ml-2 p-2 rounded-full border-2 border-white"
       onClick={toggleSidebar}
     >
       <FaUser />
@@ -135,6 +142,9 @@ const Navbar = () => {
           </h2>
           <ul className="space-y-2">
             <li>
+              <NavLink to={`/user-profile?user=${username}`} className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 text-sm mt-4 py-2 px-4 rounded-md bg-white hover:bg-gray-100 w-full">
+                Profile
+              </NavLink>
               <NavLink to="/my-groups" className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 text-sm mt-4 py-2 px-4 rounded-md bg-white hover:bg-gray-100 w-full">
                 Your Groups
               </NavLink>
