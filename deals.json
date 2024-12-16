@@ -2,11 +2,11 @@
     "deals": [
         {
             "id": 1,
-            "name": "Lamarsoco Linea coffe machine",
+            "name": "Lamarsoco Linea coffee machine",
             "original price": 15000,
             "discount": 20,
             "minimum group size": 30,
-            "description": "Preimum coffe machine for home barista",
+            "description": "Preimum coffee machine for home barista",
             "image": "coffee-beans-white-wooden-wall-closeup.jpg"
         },
         {
@@ -25,7 +25,7 @@
             "original price": 4000,
             "discount": 30,
             "minimum group size": 15,
-            "description": "This is a product description",
+            "description": "Elegant Pandora bracelet, customizable with charms for a personal and stylish touch.",
             "image": "shiny-elegant-gold-chain-display.jpg"
         },
         {
