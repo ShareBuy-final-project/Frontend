@@ -13,6 +13,7 @@ const SearchBar = ({ onSearch, onSort, placeholder = "Search...", width = "100%"
 
   const handleInputChange = (event) => {
     setQuery(event.target.value);
+    if (onSearch) onSearch(event.target.value); // Trigger search on input change
   };
 
   const handleSearch = () => {
@@ -22,6 +23,7 @@ const SearchBar = ({ onSearch, onSort, placeholder = "Search...", width = "100%"
   const handleSortChange = (option) => {
     setSortOption(option);
     if (onSort) onSort(option);
+    setIsSortOpen(false);
   };
 
   const toggleFilterDropdown = () => setIsFilterOpen(!isFilterOpen);
@@ -135,15 +137,12 @@ const SearchBar = ({ onSearch, onSort, placeholder = "Search...", width = "100%"
             ref={sortRef}
             className="absolute top-full right-0 mt-2 bg-white p-4 rounded-lg w-80 shadow-lg border border-gray-300 z-10"
           >
-            <div className="border-b border-gray-400 pb-3 mb-2">
-              <h2 className="block text-xs font-medium mb-2">Sort</h2>
-            </div>
             <div className="space-y-3">
               <button
                 className="w-full text-xs p-2 text-left hover:bg-gray-100"
-                onClick={() => handleSortChange('Name')}
+                onClick={() => handleSortChange('Price')}
               >
-                Sort by Name
+                Sort by Price
               </button>
               <button
                 className="w-full text-xs p-2 text-left hover:bg-gray-100"
@@ -153,23 +152,17 @@ const SearchBar = ({ onSearch, onSort, placeholder = "Search...", width = "100%"
               </button>
               <button
                 className="w-full text-xs p-2 text-left hover:bg-gray-100"
-                onClick={() => handleSortChange('Price')}
+                onClick={() => handleSortChange('Discount')}
               >
-                Sort by Price
+                Sort by Discount
               </button>
             </div>
             <div className="flex justify-between mt-3">
               <button
                 className="px-4 py-1 text-xs bg-gray-200 rounded-lg hover:bg-gray-300"
-                onClick={() => setIsSortOpen(false)}
+                onClick={() => handleSortChange('')}
               >
                 Cancel
-              </button>
-              <button
-                className="px-4 py-1 text-xs bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                onClick={() => setIsSortOpen(false)}
-              >
-                Apply
               </button>
             </div>
           </div>
