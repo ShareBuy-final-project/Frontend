@@ -9,6 +9,7 @@ const UserProfilePage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg">
                 <Card>
                     <h2 className="text-2xl font-bold mb-4">{user}</h2>
+                    <h4 className="text-2xl mb-4">Past Deals:</h4>
                 </Card>
             </div>
         </div>
