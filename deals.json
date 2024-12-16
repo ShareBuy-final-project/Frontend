@@ -2,52 +2,58 @@
     "deals": [
         {
             "id": 1,
-            "name": "20% off on Product 1",
-            "original price": 100,
+            "name": "Lamarsoco Linea coffe machine",
+            "original price": 15000,
             "discount": 20,
             "minimum group size": 30,
-            "description": "This is a product description"
+            "description": "Preimum coffe machine for home barista",
+            "image": "coffee-beans-white-wooden-wall-closeup.jpg"
         },
         {
             "id": 2,
-            "name": "30% off on Product 2",
+            "name": "Nike Air Max 90",
             "original price": 400,
             "discount": 30,
             "minimum group size": 10,
-            "description": "This is a product description"
+            "description": "Newest edition of Nike Air Max 90",
+            "image": "NikeAir.jpg"
         
         },
         {
             "id": 3,
-            "name": "30% off on Product 3",
-            "original price": 400,
+            "name": "Pandora Bracelet",
+            "original price": 4000,
             "discount": 30,
             "minimum group size": 15,
-            "description": "This is a product description"
+            "description": "This is a product description",
+            "image": "shiny-elegant-gold-chain-display.jpg"
         },
         {
             "id": 4,
-            "name": "30% off on Product 4",
-            "original price": 400,
+            "name": "Apple AirPods Pro (2nd Generation)",
+            "original price": 600,
             "discount": 30,
             "minimum group size": 15,
-            "description": "This is a product description"
+            "description": "Noise cancellation, transparency, rich sound, water-resistant.",
+            "image": "modern-wireless-earphones-with-case-simple-concrete-background.jpg"
         },
         {
             "id": 5,
-            "name": "30% off on Product 5",
-            "original price": 400,
+            "name": "Wilson Harmonaized golf set",
+            "original price": 300,
             "discount": 30,
             "minimum group size": 15,
-            "description": "This is a product description"
+            "description": "High-quality clubs for beginners and intermediates.",
+            "image": "Golf.jpg"
         },
         {
             "id": 6,
-            "name": "30% off on Product 6",
+            "name": "Ninja Professional 72oz Countertop Blender",
             "original price": 50,
             "discount": 30,
             "minimum group size": 15,
-            "description": "This is a product description"
+            "description": "Ninja Professional Blender crushes ice and blends smoothies effortlessly.",
+            "image": "pexels-joshsorenson-990439.jpg"
         }
     
     
