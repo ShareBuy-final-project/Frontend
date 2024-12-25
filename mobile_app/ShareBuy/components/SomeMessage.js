@@ -7,7 +7,7 @@ const Message = ({ message }) => {
             <Text
                 style={{
                     fontSize: 30,
-                    color: COLORS.gray,
+                    color: COLORS.primary,
                     textAlign: 'center'
                 }}>
                 {message}
