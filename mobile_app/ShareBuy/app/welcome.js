@@ -2,8 +2,10 @@ import React from 'react';
 import { SafeAreaView, ScrollView, View, TextInput, StyleSheet, Button, Image, Text } from 'react-native';
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from '@react-navigation/native';
 
 const Welcome = () => {
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
@@ -41,7 +43,7 @@ const Welcome = () => {
         </View>
         <View style={styles.messageContainer}>
           <Text style={styles.secondSubMessage}>
-            don't have an account? <Text style={{ color: COLORS.black, textDecorationLine: 'underline' }} onPress={() => { /* Handle navigation to sign up */ }}>Create one</Text>
+            don't have an account? <Text style={{ color: COLORS.black, textDecorationLine: 'underline' }} onPress={() => navigation.navigate('register')}>Create one</Text>
           </Text>
         </View>
       </ScrollView>
