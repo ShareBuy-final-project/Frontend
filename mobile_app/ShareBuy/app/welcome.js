@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, ScrollView, View, TextInput, StyleSheet, Button, Image, Text } from 'react-native';
+import { SafeAreaView, ScrollView, View, TextInput, StyleSheet, Button, Text, Platform, TouchableOpacity } from 'react-native';
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -7,9 +7,9 @@ const Welcome = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
-      <View style={styles.iconContainer}>
-      <Icon name="shopping-cart" size={150} color={COLORS.black} />
-      </View>
+        <View style={styles.iconContainer}>
+          <Icon name="shopping-cart" size={150} color={COLORS.black} />
+        </View>
         <Text style={styles.welcomeMessage}>
           Welcome to ShareBuy
         </Text>
@@ -36,14 +36,15 @@ const Welcome = () => {
             secureTextEntry={true}
           />
         </View>
-        <View style={styles.buttonContainer}>
-          <Button title="Sign In" color={COLORS.white} onPress={() => { /* Handle sign in */ }} />
-        </View>
+        <TouchableOpacity style={styles.buttonContainer} onPress={() => { /* Handle navigation to another screen */ }}>
+          <Text style={{color : COLORS.white}}>Sign In</Text>
+        </TouchableOpacity>
         <View style={styles.messageContainer}>
           <Text style={styles.secondSubMessage}>
-            don't have an account? <Text style={{ color: COLORS.black, textDecorationLine: 'underline' }} onPress={() => { /* Handle navigation to sign up */ }}>Create one</Text>
+            Don't have an account? <Text style={{ color: COLORS.black, textDecorationLine: 'underline' }} onPress={() => { /* Handle navigation to sign up */ }}>Create one</Text>
           </Text>
         </View>
+        
       </ScrollView>
     </SafeAreaView>
   );
@@ -53,18 +54,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.lightWhite,
+    paddingTop: Platform.OS === 'android' ? 25 : 0, // Adjust for Android status bar
   },
   scrollView: {
     flexGrow: 0.25,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 20,
+    paddingTop: 20, // Add padding to move the content up
+  },
+  iconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
   },
   welcomeMessage: {
     fontSize: 50,
     color: COLORS.black,
     textAlign: 'center',
     fontFamily: FONT.arialBold,
+    marginBottom: 20,
   },
   messageContainer: {
     flexDirection: 'row',
@@ -92,7 +100,6 @@ const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
     left: 10,
-    
   },
   input: {
     flex: 1,
@@ -102,9 +109,10 @@ const styles = StyleSheet.create({
     paddingLeft: 40, // Add padding to make space for the icon
   },
   buttonContainer: {
-    width: '25%',
+    paddingHorizontal: 20, // Add spacing inside the button
+    paddingVertical: 10,   // Add vertical spacing
     marginTop: 20,
-    alignItems: 'center',
+    alignSelf: 'center',   // Adjust position
     backgroundColor: COLORS.black,
     borderRadius: 0,
   },
@@ -115,12 +123,6 @@ const styles = StyleSheet.create({
     fontFamily: FONT.arial,
     marginTop: 20,
     backgroundColor: COLORS.glowingYeloow,
-  },
-  iconContainer: {
-    flex: 0.25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
   },
 });
 
