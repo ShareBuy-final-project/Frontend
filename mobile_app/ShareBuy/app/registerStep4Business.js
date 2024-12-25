@@ -3,69 +3,72 @@ import { SafeAreaView, ScrollView, View, StyleSheet, Text, TouchableOpacity } fr
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import InputField from '../components/InputField';
-import DropDown from '../components/DropDown';
 import { useNavigation } from '@react-navigation/native';
 
-const RegisterStep3Business = () => {
+const RegisterStep4Business = () => {
   const navigation = useNavigation();
-  const [businessName, setBusinessName] = useState('');
-  const [businessNumber, setBusinessNumber] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
+  const [state, setState] = useState('');
+  const [city, setCity] = useState('');
+  const [street, setStreet] = useState('');
+  const [streetNumber, setStreetNumber] = useState('');
+  const [zipCode, setZipCode] = useState('');
 
   const handleNext = () => {
-    navigation.navigate('registerStep4Business');
+    // Handle the next step
   };
-
-  const categoryOptions = [
-    { value: 'retail', label: 'Retail' },
-    { value: 'food', label: 'Food & Beverage' },
-    { value: 'tech', label: 'Technology' },
-    { value: 'health', label: 'Health & Wellness' },
-    { value: 'education', label: 'Education' },
-    // Add more categories as needed
-  ];
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
         <Text style={styles.header}>
-          What is your business name?
+          Where can we find you?
         </Text>
         <InputField
-          icon="building"
-          placeholder="Business Name"
+          icon="map-marker"
+          placeholder="State"
           keyboardType="default"
-          value={businessName}
-          onChangeText={setBusinessName}
+          value={state}
+          onChangeText={setState}
           isValid={true}
-          label="Business Name"
+          label="State"
         />
         <InputField
-          icon="id-card"
-          placeholder="Business Number"
+          icon="map-marker"
+          placeholder="City"
           keyboardType="default"
-          value={businessNumber}
-          onChangeText={setBusinessNumber}
+          value={city}
+          onChangeText={setCity}
           isValid={true}
-          label="Business Number"
-        />
-        <DropDown
-          selectedValue={category}
-          onValueChange={setCategory}
-          options={categoryOptions}
-          label="Category"
+          label="City"
         />
         <InputField
-          icon="info-circle"
-          placeholder="Description"
+          icon="map-marker"
+          placeholder="Street"
           keyboardType="default"
-          value={description}
-          onChangeText={setDescription}
+          value={street}
+          onChangeText={setStreet}
           isValid={true}
-          label="Description"
+          label="Street"
         />
-        <View style={[styles.buttonContainer, { marginTop: 60 }]}>
+        <InputField
+          icon="map-marker"
+          placeholder="Street Number"
+          keyboardType="default"
+          value={streetNumber}
+          onChangeText={setStreetNumber}
+          isValid={true}
+          label="Street Number"
+        />
+        <InputField
+          icon="map-marker"
+          placeholder="Zip Code"
+          keyboardType="default"
+          value={zipCode}
+          onChangeText={setZipCode}
+          isValid={true}
+          label="Zip Code"
+        />
+        <View style={[styles.buttonContainer, { marginTop: 40 }]}>
           <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
             <Text style={styles.buttonText}>next</Text>
             <Icon name="arrow-right" size={20} color={COLORS.white} />
@@ -92,7 +95,7 @@ const styles = StyleSheet.create({
     color: COLORS.black,
     textAlign: 'center',
     fontFamily: FONT.arialBold,
-    marginBottom: 40,
+    marginBottom: 20,
   },
   buttonContainer: {
     width: '25%',
@@ -119,4 +122,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterStep3Business;
+export default RegisterStep4Business;
