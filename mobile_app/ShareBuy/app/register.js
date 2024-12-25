@@ -52,39 +52,48 @@ const Register = () => {
           Ready to find your perfect match with <Text style={styles.purpleText}>ShareBuy</Text>?
         </Text>
         <Text style={styles.text}>To pick things off, we'll need a few details about you.</Text>
-        <InputField
-          icon="user"
-          placeholder="Full Name"
-          keyboardType="default"
-          value={fullName}
-          onChangeText={setFullName}
-          isValid={true}
-          label="Full Name"
-        />
-        <InputField
-          icon="envelope"
-          placeholder="Email"
-          keyboardType="email-address"
-          value={email}
-          onChangeText={(text) => {
-            setEmail(text);
-            validateEmail(text);
-          }}
-          isValid={isEmailValid}
-          label="Email"
-        />
-        <InputField
-          icon="phone"
-          placeholder="Phone Number"
-          keyboardType="phone-pad"
-          value={phone}
-          onChangeText={(text) => {
-            setPhone(text);
-            validatePhone(text);
-          }}
-          isValid={isPhoneValid}
-          label="Phone Number"
-        />
+        <View style={styles.inputWrapper}>
+          <InputField
+            icon="user"
+            placeholder="Full Name"
+            keyboardType="default"
+            value={fullName}
+            onChangeText={setFullName}
+            isValid={true}
+            label="Full Name"
+          />
+          <Text style={styles.mandatory}>*</Text>
+        </View>
+        <View style={styles.inputWrapper}>
+          <InputField
+            icon="envelope"
+            placeholder="Email"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={(text) => {
+              setEmail(text);
+              validateEmail(text);
+            }}
+            isValid={isEmailValid}
+            label="Email"
+          />
+          <Text style={styles.mandatory}>*</Text>
+        </View>
+        <View style={styles.inputWrapper}>
+          <InputField
+            icon="phone"
+            placeholder="Phone Number"
+            keyboardType="phone-pad"
+            value={phone}
+            onChangeText={(text) => {
+              setPhone(text);
+              validatePhone(text);
+            }}
+            isValid={isPhoneValid}
+            label="Phone Number"
+          />
+          <Text style={styles.mandatory}>*</Text>
+        </View>
         <View style={[styles.buttonContainer, { marginTop: 40 }]}>
           <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
             <Text style={styles.buttonText}>next</Text>
@@ -130,6 +139,17 @@ const styles = StyleSheet.create({
   },
   purpleText: {
     color: COLORS.purple,
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '90%',
+    justifyContent: 'center',
+  },
+  mandatory: {
+    color: 'red',
+    marginLeft: 5,
+    fontSize: 18,
   },
   buttonContainer: {
     width: '25%',

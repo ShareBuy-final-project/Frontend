@@ -6,6 +6,7 @@ import Register from './register';
 import RegisterStep2 from './registerStep2';
 import RegisterStep3Business from './registerStep3Business';
 import RegisterStep4Business from './registerStep4Business';
+import RegisterStep5Business from './registerStep5Business';
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,7 @@ const AppNavigator = () => {
         <Stack.Screen name="registerStep2" component={RegisterStep2} />
         <Stack.Screen name="registerStep3Business" component={RegisterStep3Business} />
         <Stack.Screen name="registerStep4Business" component={RegisterStep4Business} />
+        <Stack.Screen name="registerStep5Business" component={RegisterStep5Business} />
         {/* Add other screens here */}
       </Stack.Navigator>
     </NavigationContainer>

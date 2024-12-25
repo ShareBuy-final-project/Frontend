@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     borderRadius: 0,
   },
   picker: {
-    height: 50,
+    height: 60, // Increase the height to ensure letters are not sliced
     width: '100%',
   },
 });
