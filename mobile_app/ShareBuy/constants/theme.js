@@ -8,12 +8,19 @@ const COLORS = {
   
     white: "#F3F4F8",
     lightWhite: "#FAFAFC",
+
+    black: "#000000",
+    glowingYeloow: "#D7F205"
   };
   
   const FONT = {
     regular: "DMRegular",
     medium: "DMMedium",
     bold: "DMBold",
+    arial: "Arial",
+    arialBold: "Arial-BoldMT",
+    arialItalic: "Arial-ItalicMT",
+    arialBoldItalic: "Arial-BoldItalicMT",
   };
   
   const SIZES = {
