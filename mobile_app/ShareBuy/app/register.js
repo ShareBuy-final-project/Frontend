@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { SafeAreaView, ScrollView, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { SafeAreaView, ScrollView, View, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import InputField from '../components/InputField';
+import { useNavigation } from '@react-navigation/native';
 
-const register = () => {
+const Register = () => {
+  const navigation = useNavigation();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -19,6 +21,22 @@ const register = () => {
   const validatePhone = (phone) => {
     const phoneRegex = /^\d{10}$/;
     setIsPhoneValid(phoneRegex.test(phone));
+  };
+
+  const handleNext = () => {
+    if (!fullName) {
+      Alert.alert('Invalid Input', 'Full Name field must be filled in.');
+    } else if (!email) {
+      Alert.alert('Invalid Input', 'Email field must be filled in.');
+    } else if (!isEmailValid) {
+      Alert.alert('Invalid Input', 'Email address is not valid.');
+    } else if (!phone) {
+      Alert.alert('Invalid Input', 'Phone Number field must be filled in.');
+    } else if (!isPhoneValid) {
+      Alert.alert('Invalid Input', 'Phone Number is not valid.');
+    } else {
+      navigation.navigate('registerStep2');
+    }
   };
 
   return (
@@ -65,7 +83,7 @@ const register = () => {
           isValid={isPhoneValid}
         />
         <View style={[styles.buttonContainer, { marginTop: 40 }]}>
-          <TouchableOpacity style={styles.nextButton} onPress={() => { /* move to next registration screen */ }}>
+          <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
             <Text style={styles.buttonText}>next</Text>
             <Icon name="arrow-right" size={20} color={COLORS.white} />
           </TouchableOpacity>
@@ -131,7 +149,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: FONT.arialBold,
     marginRight: 10,
+    textAlign: 'center',
   },
 });
 
-export default register;
+export default Register;
