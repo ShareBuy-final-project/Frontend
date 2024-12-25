@@ -59,6 +59,7 @@ const Register = () => {
           value={fullName}
           onChangeText={setFullName}
           isValid={true}
+          label="Full Name"
         />
         <InputField
           icon="envelope"
@@ -70,6 +71,7 @@ const Register = () => {
             validateEmail(text);
           }}
           isValid={isEmailValid}
+          label="Email"
         />
         <InputField
           icon="phone"
@@ -81,6 +83,7 @@ const Register = () => {
             validatePhone(text);
           }}
           isValid={isPhoneValid}
+          label="Phone Number"
         />
         <View style={[styles.buttonContainer, { marginTop: 40 }]}>
           <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
