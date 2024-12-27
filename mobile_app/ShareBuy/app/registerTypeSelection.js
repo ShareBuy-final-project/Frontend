@@ -1,19 +1,26 @@
 import React, { useState } from 'react';
 import { SafeAreaView, View, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
 import { COLORS, FONT } from '../constants/theme';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
-const RegisterStep2 = () => {
+const RegisterTypeSelection = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { fullName, email, phone, password} = route.params;
   const [selectedOption, setSelectedOption] = useState(null);
 
   const handleNext = () => {
     if (selectedOption === 'private') {
       navigation.navigate('registerStep3Private');
     } else if (selectedOption === 'business') {
-      navigation.navigate('registerStep3Business');
+      navigation.navigate('registerBusinessDetails', {
+        fullName,
+        email,
+        phone,
+        password,
+      });
     } else {
       Alert.alert('Selection Required', 'Please select an option to proceed.');
     }
@@ -119,4 +126,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterStep2;
+export default RegisterTypeSelection;

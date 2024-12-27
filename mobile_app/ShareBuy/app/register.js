@@ -35,7 +35,11 @@ const Register = () => {
     } else if (!isPhoneValid) {
       Alert.alert('Invalid Input', 'Phone Number is not valid.');
     } else {
-      navigation.navigate('registerStep2');
+      navigation.navigate('registerPassword', {
+        fullName,
+        email,
+        phone,
+      });
     }
   };
 
