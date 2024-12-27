@@ -10,7 +10,15 @@ const COLORS = {
     lightWhite: "#FAFAFC",
 
     black: "#000000",
-    glowingYeloow: "#D7F205"
+
+    glowingYeloow: "#D7F205",
+    lightYellow : "#EBF3B0",
+    darkYellow: "#B8C200",
+
+    purple: "#7552F2",
+    lightPurple: "#C8BCF2",
+    darkPurple: "#977DF2"
+
   };
   
   const FONT = {
