@@ -7,6 +7,7 @@ import RegisterStep2 from './registerStep2';
 import RegisterStep3Business from './registerStep3Business';
 import RegisterStep4Business from './registerStep4Business';
 import RegisterStep5Business from './registerStep5Business';
+import home from './home';
 
 const Stack = createStackNavigator();
 
@@ -15,6 +16,7 @@ const AppNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="welcome">
         <Stack.Screen name="welcome" component={Welcome} />
+        <Stack.Screen name="home" component={home} />
         <Stack.Screen name="register" component={Register} />
         <Stack.Screen name="registerStep2" component={RegisterStep2} />
         <Stack.Screen name="registerStep3Business" component={RegisterStep3Business} />
