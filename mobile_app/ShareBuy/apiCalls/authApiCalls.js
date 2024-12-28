@@ -15,5 +15,6 @@ export const login = async (email, password) => {
     console.log("Login successful");
     saveToken('accessToken', res.data.accessToken);
     saveToken('refreshToken', res.data.refreshToken);
+    saveToken('email', email);
     return "login successful";
 };

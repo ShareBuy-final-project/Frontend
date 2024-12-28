@@ -3,7 +3,6 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, ScrollView, View, TextInput, StyleSheet, Alert, Text, Platform, TouchableOpacity } from 'react-native';
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
 import { login } from '../apiCalls/authApiCalls';
 import { isLoggedIn } from '../utils/userTokens';
 
@@ -13,6 +12,10 @@ const Welcome = () => {
 
   const  handleSignIn = async () => {
     try {
+        if (email === '' || password === '') {
+          Alert.alert('Please fill in all fields!', [{ text: 'OK' }]);
+          return
+        }
         const res = await login(email, password)
         Alert.alert('Login Successful', 'You have successfully logged in!', [{ text: 'OK' }]);
         navigation.navigate('home');
