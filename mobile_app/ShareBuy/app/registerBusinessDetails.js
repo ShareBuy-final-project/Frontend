@@ -9,7 +9,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 const RegisterBusinessDetails = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { fullName, email, phone, password } = route.params;
+  const { fullName, email, phone, password, state, city, street, streetNumber, zipCode} = route.params;
   const [businessName, setBusinessName] = useState('');
   const [businessNumber, setBusinessNumber] = useState('');
   const [description, setDescription] = useState('');
@@ -25,11 +25,16 @@ const RegisterBusinessDetails = () => {
     } else if (!category) {
       Alert.alert('Invalid Input', 'Category must be selected.');
     } else {
-      navigation.navigate('registerBusinessLocation', {
+      navigation.navigate('registerBusinessContactInfo', {
         fullName,
         email,
         phone,
         password,
+        state,
+        city,
+        street,
+        streetNumber,
+        zipCode,
         businessName,
         businessNumber,
         description,

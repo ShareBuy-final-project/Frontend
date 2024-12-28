@@ -3,10 +3,12 @@ import { SafeAreaView, ScrollView, View, StyleSheet, Text, TouchableOpacity, Ale
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import InputField from '../components/InputField';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const Register = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const {selectedOption} = route.params;
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -39,6 +41,7 @@ const Register = () => {
         fullName,
         email,
         phone,
+        selectedOption,
       });
     }
   };

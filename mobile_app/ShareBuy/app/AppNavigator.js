@@ -5,7 +5,7 @@ import Welcome from './welcome';
 import Register from './register';
 import RegisterTypeSelection from './registerTypeSelection';
 import RegisterBusinessDetails from './registerBusinessDetails';
-import RegisterBusinessLocation from './registerBusinessLocation';
+import RegisterLocation from './registerLocation';
 import RegisterBusinessContactInfo from './registerBusinessContactInfo';
 import RegisterPassword from './registerPassword';
 import home from './home';
@@ -22,7 +22,7 @@ const AppNavigator = () => {
         <Stack.Screen name="registerPassword" component={RegisterPassword} />
         <Stack.Screen name="registerTypeSelection" component={RegisterTypeSelection} />
         <Stack.Screen name="registerBusinessDetails" component={RegisterBusinessDetails} />
-        <Stack.Screen name="registerBusinessLocation" component={RegisterBusinessLocation} />
+        <Stack.Screen name="registerLocation" component={RegisterLocation} />
         <Stack.Screen name="registerBusinessContactInfo" component={RegisterBusinessContactInfo} />
         {/* Add other screens here */}
       </Stack.Navigator>

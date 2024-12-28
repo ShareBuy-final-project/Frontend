@@ -15,7 +15,7 @@ const RegisterBusinessContactInfo = () => {
 
   const handleNext = async () => {
     try {
-      const response = await axios.post('http://132.73.84.56:3000/user/register', {
+      const response = await axios.post('http://132.73.84.56:3000/user/registerBusiness', {
         "user": fullName,
         "email": email,
         "phone": phone,
@@ -33,7 +33,7 @@ const RegisterBusinessContactInfo = () => {
         "contactEmail": contactEmail,
       });
 
-      if (response.data.message === 'User registered successfully') {
+      if (response.data.message === 'Business registered successfully') {
         navigation.navigate('nextPage'); // Replace 'nextPage' with the actual next page
       } else {
         Alert.alert('Registration Error', response.data.error);
