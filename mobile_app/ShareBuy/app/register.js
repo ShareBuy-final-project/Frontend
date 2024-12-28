@@ -63,8 +63,8 @@ const Register = () => {
             keyboardType="default"
             value={fullName}
             onChangeText={setFullName}
-            isValid={true}
             label="Full Name"
+            borderColor={COLORS.black}
           />
           <Text style={styles.mandatory}>*</Text>
         </View>
@@ -78,8 +78,8 @@ const Register = () => {
               setEmail(text);
               validateEmail(text);
             }}
-            isValid={isEmailValid}
             label="Email"
+            borderColor={isEmailValid ? COLORS.black : COLORS.red}
           />
           <Text style={styles.mandatory}>*</Text>
         </View>
@@ -93,8 +93,8 @@ const Register = () => {
               setPhone(text);
               validatePhone(text);
             }}
-            isValid={isPhoneValid}
             label="Phone Number"
+            borderColor={isPhoneValid ? COLORS.black : COLORS.red}
           />
           <Text style={styles.mandatory}>*</Text>
         </View>

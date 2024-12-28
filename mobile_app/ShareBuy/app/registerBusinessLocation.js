@@ -56,7 +56,6 @@ const RegisterBusinessLocation = () => {
             keyboardType="default"
             value={state}
             onChangeText={setState}
-            isValid={true}
             label="State"
           />
           <Text style={styles.mandatory}>*</Text>
@@ -68,7 +67,6 @@ const RegisterBusinessLocation = () => {
             keyboardType="default"
             value={city}
             onChangeText={setCity}
-            isValid={true}
             label="City"
           />
           <Text style={styles.mandatory}>*</Text>
@@ -80,7 +78,6 @@ const RegisterBusinessLocation = () => {
             keyboardType="default"
             value={street}
             onChangeText={setStreet}
-            isValid={true}
             label="Street"
           />
           <Text style={styles.mandatory}>*</Text>
@@ -92,7 +89,6 @@ const RegisterBusinessLocation = () => {
             keyboardType="default"
             value={streetNumber}
             onChangeText={setStreetNumber}
-            isValid={true}
             label="Street Number"
           />
           <Text style={styles.mandatory}>*</Text>
@@ -104,7 +100,6 @@ const RegisterBusinessLocation = () => {
             keyboardType="default"
             value={zipCode}
             onChangeText={setZipCode}
-            isValid={true}
             label="Zip Code"
           />
           <Text style={styles.mandatory}> </Text>

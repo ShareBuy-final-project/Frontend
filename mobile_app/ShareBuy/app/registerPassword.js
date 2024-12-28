@@ -37,11 +37,6 @@ const RegisterPassword = () => {
     }
   };
 
-  const handleConfirmPasswordChange = (text) => {
-    setConfirmPassword(text);
-    setIsPasswordValid(password === text);
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
@@ -61,14 +56,13 @@ const RegisterPassword = () => {
               setPassword(text);
               validatePassword(text);
             }}
-            isValid={isPasswordValid}
             label="Password"
             secureTextEntry={true}
             marginTop={10}
             marginBottom={5}
             marginLeft={20}
             marginRight={5}
-            borderColor={password === confirmPassword ? COLORS.green : COLORS.red}
+            borderColor={password ? (isPasswordValid ? COLORS.green : COLORS.red) : COLORS.black}
           />
           <Text style={styles.mandatory}>*</Text>
           <TouchableOpacity onPress={() => setShowInfo(!showInfo)}>
@@ -91,20 +85,21 @@ const RegisterPassword = () => {
             placeholder="Confirm Password"
             keyboardType="default"
             value={confirmPassword}
-            onChangeText={handleConfirmPasswordChange}
-            isValid={true}
+            onChangeText={(text) => {setConfirmPassword(text)}}
             label="Confirm Password"
             secureTextEntry={true}
             marginTop={10}
             marginBottom={10}
             marginRight={5}
-            borderColor={password === confirmPassword ? COLORS.green : COLORS.red}
+            borderColor={confirmPassword ? (password === confirmPassword ? COLORS.green : COLORS.red) : COLORS.black}
           />
           <Text style={styles.mandatory}>*</Text>
         </View>
-        <Text style={[styles.matchLabel, { color: password === confirmPassword ? COLORS.green : COLORS.red }]}>
-          {password === confirmPassword ? "Passwords match!" : "Passwords don't match!"}
-        </Text>
+        {confirmPassword && (
+          <Text style={[styles.matchLabel, { color: password === confirmPassword ? COLORS.green : COLORS.red }]}>
+            {password === confirmPassword ? "Passwords match!" : "Passwords don't match!"}
+          </Text>
+        )}
         <View style={styles.decorativeAsterisks}>
           <Icon name="asterisk" size={50} color={"#18D925"} />
           <Icon name="asterisk" size={50} color={"#7552F2"} />
