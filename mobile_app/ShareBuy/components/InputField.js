@@ -1,29 +1,43 @@
-import React from 'react';
-import { View, TextInput, StyleSheet, Text } from 'react-native';
+import React, { useState } from 'react';
+import { View, TextInput, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { COLORS, FONT } from '../constants/theme';
 
-const InputField = ({ icon, placeholder, keyboardType, value, onChangeText, isValid, label }) => (
-  <View style={styles.container}>
-    <Text style={styles.label}>{label}</Text>
-    <View style={[styles.inputContainer, !isValid && styles.invalidInput]}>
-      <Icon name={icon} size={20} color={COLORS.gray} style={styles.icon} />
-      <TextInput
-        style={styles.input}
-        placeholder={placeholder}
-        placeholderTextColor={COLORS.gray}
-        keyboardType={keyboardType}
-        value={value}
-        onChangeText={onChangeText}
-      />
+const InputField = ({ icon, placeholder, keyboardType, value, onChangeText, isValid, label, secureTextEntry, marginTop, marginBottom, marginLeft, marginRight }) => {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  return (
+    <View style={[styles.container, { marginTop, marginBottom, marginLeft, marginRight }]}>
+      <Text style={styles.label}>{label}</Text>
+      <View style={[styles.inputContainer, !isValid && styles.invalidInput]}>
+        <Icon name={icon} size={20} color={COLORS.gray} style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          placeholder={placeholder}
+          placeholderTextColor={COLORS.gray}
+          keyboardType={keyboardType}
+          value={value}
+          onChangeText={onChangeText}
+          secureTextEntry={secureTextEntry && !isPasswordVisible} // Toggle visibility
+        />
+        {secureTextEntry && (
+          <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+            <Icon
+              name={isPasswordVisible ? "eye-slash" : "eye"}
+              size={20}
+              color={COLORS.gray}
+              style={styles.eyeIcon}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     width: '80%',
-    marginTop: 20,
   },
   label: {
     fontSize: 14,
@@ -52,7 +66,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: FONT.arial,
     color: COLORS.black,
-    paddingLeft: 40,
+    paddingLeft: 30,
+  },
+  eyeIcon: {
+    position: 'center',
   },
 });
 

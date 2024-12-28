@@ -3,97 +3,103 @@ import { SafeAreaView, ScrollView, View, StyleSheet, Text, TouchableOpacity, Ale
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import InputField from '../components/InputField';
-import { useNavigation } from '@react-navigation/native';
+import DropDown from '../components/DropDown';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
-const RegisterStep4Business = () => {
+const RegisterBusinessDetails = () => {
   const navigation = useNavigation();
-  const [state, setState] = useState('');
-  const [city, setCity] = useState('');
-  const [street, setStreet] = useState('');
-  const [streetNumber, setStreetNumber] = useState('');
-  const [zipCode, setZipCode] = useState('');
+  const route = useRoute();
+  const { fullName, email, phone, password } = route.params;
+  const [businessName, setBusinessName] = useState('');
+  const [businessNumber, setBusinessNumber] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
 
   const handleNext = () => {
-    if (!state) {
-      Alert.alert('Invalid Input', 'State field must be filled in.');
-    } else if (!city) {
-      Alert.alert('Invalid Input', 'City field must be filled in.');
-    } else if (!street) {
-      Alert.alert('Invalid Input', 'Street field must be filled in.');
-    } else if (!streetNumber) {
-      Alert.alert('Invalid Input', 'Street Number field must be filled in.');
+    if (!businessName) {
+      Alert.alert('Invalid Input', 'Business Name field must be filled in.');
+    } else if (!businessNumber) {
+      Alert.alert('Invalid Input', 'Business Number field must be filled in.');
+    } else if (!description) {
+      Alert.alert('Invalid Input', 'Description field must be filled in.');
+    } else if (!category) {
+      Alert.alert('Invalid Input', 'Category must be selected.');
     } else {
-      navigation.navigate('registerStep5Business');
+      navigation.navigate('registerBusinessLocation', {
+        fullName,
+        email,
+        phone,
+        password,
+        businessName,
+        businessNumber,
+        description,
+        category,
+      });
     }
   };
+
+  const categoryOptions = [
+    { value: '', label: 'Category' },
+    { value: 'retail', label: 'Retail' },
+    { value: 'food', label: 'Food & Beverage' },
+    { value: 'tech', label: 'Technology' },
+    { value: 'health', label: 'Health & Wellness' },
+    { value: 'education', label: 'Education' },
+    // Add more categories as needed
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
         <Text style={styles.header}>
-          Where can we find you?
+          What is your business name?
         </Text>
         <View style={styles.inputWrapper}>
           <InputField
-            icon="map-marker"
-            placeholder="State"
+            icon="building"
+            placeholder="Business Name"
             keyboardType="default"
-            value={state}
-            onChangeText={setState}
+            value={businessName}
+            onChangeText={setBusinessName}
             isValid={true}
-            label="State"
+            label="Business Name"
           />
           <Text style={styles.mandatory}>*</Text>
         </View>
         <View style={styles.inputWrapper}>
           <InputField
-            icon="map-marker"
-            placeholder="City"
+            icon="id-card"
+            placeholder="Business Number"
             keyboardType="default"
-            value={city}
-            onChangeText={setCity}
+            value={businessNumber}
+            onChangeText={setBusinessNumber}
             isValid={true}
-            label="City"
+            label="Business Number"
+          />
+          <Text style={styles.mandatory}>*</Text>
+        </View>
+        <View style={styles.inputWrapper}>
+          <DropDown
+            selectedValue={category}
+            onValueChange={setCategory}
+            options={categoryOptions}
+            label="Category"
           />
           <Text style={styles.mandatory}>*</Text>
         </View>
         <View style={styles.inputWrapper}>
           <InputField
-            icon="map-marker"
-            placeholder="Street"
+            icon="info-circle"
+            placeholder="Description"
             keyboardType="default"
-            value={street}
-            onChangeText={setStreet}
+            value={description}
+            onChangeText={setDescription}
             isValid={true}
-            label="Street"
+            label="Description"
           />
           <Text style={styles.mandatory}>*</Text>
         </View>
-        <View style={styles.inputWrapper}>
-          <InputField
-            icon="map-marker"
-            placeholder="Street Number"
-            keyboardType="default"
-            value={streetNumber}
-            onChangeText={setStreetNumber}
-            isValid={true}
-            label="Street Number"
-          />
-          <Text style={styles.mandatory}>*</Text>
-        </View>
-        <View style={styles.inputWrapper}>
-          <InputField
-            icon="map-marker"
-            placeholder="Zip Code"
-            keyboardType="default"
-            value={zipCode}
-            onChangeText={setZipCode}
-            isValid={true}
-            label="Zip Code"
-          />
-          <Text style={styles.mandatory}> </Text>
-        </View>
-        <View style={[styles.buttonContainer, { marginTop: 40 }]}>
+        <View style={[styles.buttonContainer, { marginTop: 60 }]}>
           <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
             <Text style={styles.buttonText}>next</Text>
             <Icon name="arrow-right" size={20} color={COLORS.white} />
@@ -120,23 +126,18 @@ const styles = StyleSheet.create({
     color: COLORS.black,
     textAlign: 'center',
     fontFamily: FONT.arialBold,
-    marginBottom: 20,
+    marginBottom: 40,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '90%', 
-    justifyContent: 'center', 
+    width: '90%',
+    justifyContent: 'center',
   },
   mandatory: {
     color: 'red',
     marginLeft: 5,
     fontSize: 18,
-  },
-  hiddenText: {
-    marginLeft: 5,
-    fontSize: 18,
-    color: COLORS.lightWhite, // Match the background color to hide the text
   },
   buttonContainer: {
     width: '25%',
@@ -163,4 +164,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterStep4Business;
+export default RegisterBusinessDetails;
