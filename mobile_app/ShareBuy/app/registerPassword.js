@@ -37,11 +37,19 @@ const RegisterPassword = () => {
     }
   };
 
+  const handleConfirmPasswordChange = (text) => {
+    setConfirmPassword(text);
+    setIsPasswordValid(password === text);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
         <Text style={styles.header}>
           Set Your Password
+        </Text>
+        <Text style={styles.subHeader}>
+          Create a safe password
         </Text>
         <View style={styles.inputWrapper}>
           <InputField
@@ -60,6 +68,7 @@ const RegisterPassword = () => {
             marginBottom={5}
             marginLeft={20}
             marginRight={5}
+            borderColor={password === confirmPassword ? COLORS.green : COLORS.red}
           />
           <Text style={styles.mandatory}>*</Text>
           <TouchableOpacity onPress={() => setShowInfo(!showInfo)}>
@@ -82,15 +91,25 @@ const RegisterPassword = () => {
             placeholder="Confirm Password"
             keyboardType="default"
             value={confirmPassword}
-            onChangeText={setConfirmPassword}
+            onChangeText={handleConfirmPasswordChange}
             isValid={true}
             label="Confirm Password"
             secureTextEntry={true}
             marginTop={10}
             marginBottom={10}
             marginRight={5}
+            borderColor={password === confirmPassword ? COLORS.green : COLORS.red}
           />
           <Text style={styles.mandatory}>*</Text>
+        </View>
+        <Text style={[styles.matchLabel, { color: password === confirmPassword ? COLORS.green : COLORS.red }]}>
+          {password === confirmPassword ? "Passwords match!" : "Passwords don't match!"}
+        </Text>
+        <View style={styles.decorativeAsterisks}>
+          <Icon name="asterisk" size={50} color={"#18D925"} />
+          <Icon name="asterisk" size={50} color={"#7552F2"} />
+          <Icon name="asterisk" size={50} color={"#F26BC3"} />
+          <Icon name="asterisk" size={50} color={"#D7F205"} />
         </View>
         <View style={[styles.buttonContainer, { marginTop: 40 }]}>
           <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
@@ -119,7 +138,14 @@ const styles = StyleSheet.create({
     color: COLORS.black,
     textAlign: 'center',
     fontFamily: FONT.arialBold,
-    marginBottom: 20,
+    marginBottom: 10,
+  },
+  subHeader: {
+    fontSize: 20,
+    color: COLORS.gray,
+    textAlign: 'center',
+    fontFamily: FONT.arial,
+    marginBottom: 10,
   },
   inputWrapper: {
     flexDirection: 'row',
@@ -173,6 +199,16 @@ const styles = StyleSheet.create({
     fontFamily: FONT.arialBold,
     marginRight: 10,
     textAlign: 'center',
+  },
+  decorativeAsterisks: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+  matchLabel: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 5,
   },
 });
 
