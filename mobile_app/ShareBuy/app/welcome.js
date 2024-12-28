@@ -1,10 +1,30 @@
-import React from 'react';
-import { SafeAreaView, ScrollView, View, TextInput, StyleSheet, Button, Text, Platform, TouchableOpacity } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView, ScrollView, View, TextInput, StyleSheet, Alert, Text, Platform, TouchableOpacity } from 'react-native';
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
+import { login } from '../apiCalls/authApiCalls';
+import { isLoggedIn } from '../utils/userTokens';
 
 const Welcome = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const  handleSignIn = async () => {
+    try {
+        if (email === '' || password === '') {
+          Alert.alert('Please fill in all fields!', [{ text: 'OK' }]);
+          return
+        }
+        const res = await login(email, password)
+        Alert.alert('Login Successful', 'You have successfully logged in!', [{ text: 'OK' }]);
+        navigation.navigate('home');
+      }
+      catch (error) {
+        Alert.alert('Login Failed', error.message, [{ text: 'OK' }]);
+      }
+  };
+
   const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
@@ -27,6 +47,8 @@ const Welcome = () => {
             placeholder="Email"
             placeholderTextColor={COLORS.gray}
             keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
           />
         </View>
         <View style={styles.inputContainer}>
@@ -36,9 +58,11 @@ const Welcome = () => {
             placeholder="Password"
             placeholderTextColor={COLORS.gray}
             secureTextEntry={true}
+            value={password}
+            onChangeText={setPassword}
           />
         </View>
-        <TouchableOpacity style={styles.buttonContainer} onPress={() => { /* Handle navigation to another screen */ }}>
+        <TouchableOpacity style={styles.buttonContainer} onPress={() => { handleSignIn(); }}>
           <Text style={{color : COLORS.white}}>Sign In</Text>
         </TouchableOpacity>
         <View style={styles.messageContainer}>
