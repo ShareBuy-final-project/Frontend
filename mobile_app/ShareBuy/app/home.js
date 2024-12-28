@@ -1,11 +1,12 @@
 import { getToken } from "../utils/userTokens";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 const home = () => {
     const user = getToken('email');
-    return 
-        <view>
+    return(
+        <View>
             <Text>Home</Text>
             <Text>Hello {user}</Text>
-        </view>
+        </View>
+    )
 }
 export default home;
