@@ -61,7 +61,6 @@ const RegisterBusinessDetails = () => {
             keyboardType="default"
             value={businessName}
             onChangeText={setBusinessName}
-            isValid={true}
             label="Business Name"
           />
           <Text style={styles.mandatory}>*</Text>
@@ -73,7 +72,6 @@ const RegisterBusinessDetails = () => {
             keyboardType="default"
             value={businessNumber}
             onChangeText={setBusinessNumber}
-            isValid={true}
             label="Business Number"
           />
           <Text style={styles.mandatory}>*</Text>
@@ -94,7 +92,6 @@ const RegisterBusinessDetails = () => {
             keyboardType="default"
             value={description}
             onChangeText={setDescription}
-            isValid={true}
             label="Description"
           />
           <Text style={styles.mandatory}>*</Text>

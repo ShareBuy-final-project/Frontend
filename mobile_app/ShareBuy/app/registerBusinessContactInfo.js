@@ -67,7 +67,6 @@ const RegisterBusinessContactInfo = () => {
           keyboardType="url"
           value={websiteLink}
           onChangeText={setWebsiteLink}
-          isValid={true}
           label="Website Link"
         />
         <InputField
@@ -76,7 +75,6 @@ const RegisterBusinessContactInfo = () => {
           keyboardType="email-address"
           value={contactEmail}
           onChangeText={setContactEmail}
-          isValid={true}
           label="Contact Email"
         />
         <View style={[styles.buttonContainer, { width: '50%', marginTop: 40 }]}>

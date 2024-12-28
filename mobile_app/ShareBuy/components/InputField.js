@@ -3,13 +3,13 @@ import { View, TextInput, StyleSheet, Text, TouchableOpacity } from 'react-nativ
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { COLORS, FONT } from '../constants/theme';
 
-const InputField = ({ icon, placeholder, keyboardType, value, onChangeText, isValid, label, secureTextEntry, marginTop, marginBottom, marginLeft, marginRight }) => {
+const InputField = ({ icon, placeholder, keyboardType, value, onChangeText, label, secureTextEntry, marginTop, marginBottom, marginLeft, marginRight, borderColor = COLORS.black }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   return (
     <View style={[styles.container, { marginTop, marginBottom, marginLeft, marginRight }]}>
       <Text style={styles.label}>{label}</Text>
-      <View style={[styles.inputContainer, !isValid && styles.invalidInput]}>
+      <View style={[styles.inputContainer, { borderColor }]}>
         <Icon name={icon} size={20} color={COLORS.gray} style={styles.icon} />
         <TextInput
           style={styles.input}
