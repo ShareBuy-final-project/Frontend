@@ -67,7 +67,7 @@ const Welcome = () => {
         </TouchableOpacity>
         <View style={styles.messageContainer}>
           <Text style={styles.secondSubMessage}>
-            don't have an account? <Text style={{ color: COLORS.black, textDecorationLine: 'underline' }} onPress={() => navigation.navigate('register')}>Create one</Text>
+            don't have an account? <Text style={{ color: COLORS.black, textDecorationLine: 'underline' }} onPress={() => navigation.navigate('registerTypeSelection')}>Create one</Text>
           </Text>
         </View>
         

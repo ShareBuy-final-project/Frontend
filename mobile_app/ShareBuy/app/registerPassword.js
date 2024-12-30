@@ -8,7 +8,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 const RegisterPassword = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { fullName, email, phone } = route.params;
+  const { fullName, email, phone, selectedOption} = route.params;
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isPasswordValid, setIsPasswordValid] = useState(true);
@@ -28,11 +28,12 @@ const RegisterPassword = () => {
     } else if (password !== confirmPassword) {
       Alert.alert('Invalid Input', 'Passwords do not match.');
     } else {
-      navigation.navigate('registerTypeSelection', {
+      navigation.navigate('registerLocation', {
         fullName,
         email,
         phone,
         password,
+        selectedOption,
       });
     }
   };
@@ -198,7 +199,7 @@ const styles = StyleSheet.create({
   decorativeAsterisks: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 10,
+    marginTop: 60,
   },
   matchLabel: {
     fontSize: 16,

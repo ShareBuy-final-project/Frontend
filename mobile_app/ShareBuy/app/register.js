@@ -3,10 +3,12 @@ import { SafeAreaView, ScrollView, View, StyleSheet, Text, TouchableOpacity, Ale
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import InputField from '../components/InputField';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const Register = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const {selectedOption} = route.params;
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -39,6 +41,7 @@ const Register = () => {
         fullName,
         email,
         phone,
+        selectedOption,
       });
     }
   };
@@ -140,6 +143,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: FONT.arial,
     marginTop: 20,
+    width: '90%',
   },
   purpleText: {
     color: COLORS.purple,
@@ -149,6 +153,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '90%',
     justifyContent: 'center',
+    marginTop: 20,
   },
   mandatory: {
     color: 'red',

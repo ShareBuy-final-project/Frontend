@@ -1,23 +1,28 @@
-import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
 import { COLORS, FONT } from '../constants/theme';
 
-const DropDown = ({ selectedValue, onValueChange, options, label }) => {
+const DropDown = ({ label, selectedValue, onValueChange, options }) => {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(selectedValue);
+  const [items, setItems] = useState(options);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
-      <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={selectedValue}
-          onValueChange={onValueChange}
-          style={styles.picker}
-        >
-          {options.map((option) => (
-            <Picker.Item key={option.value} label={option.label} value={option.value} />
-          ))}
-        </Picker>
-      </View>
+      {label && <Text style={styles.label}>{label}</Text>}
+      <DropDownPicker
+        open={open}
+        value={value}
+        items={items}
+        setOpen={setOpen}
+        setValue={setValue}
+        setItems={setItems}
+        onChangeValue={onValueChange}
+        placeholder="Select an option"
+        style={styles.picker}
+        dropDownContainerStyle={styles.dropDownContainer}
+      />
     </View>
   );
 };
@@ -33,14 +38,19 @@ const styles = StyleSheet.create({
     fontFamily: FONT.arial,
     marginBottom: 5,
   },
-  pickerContainer: {
-    borderColor: COLORS.black,
-    borderWidth: 1,
-    borderRadius: 0,
-  },
   picker: {
-    height: 60, // Increase the height to ensure letters are not sliced
-    width: '100%',
+    borderWidth: 1,
+    borderColor: COLORS.gray2,
+    borderRadius: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+    fontSize: 16,
+    color: COLORS.black,
+  },
+  dropDownContainer: {
+    borderWidth: 1,
+    borderColor: COLORS.gray2,
+    borderRadius: 4,
   },
 });
 
