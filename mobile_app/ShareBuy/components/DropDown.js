@@ -22,6 +22,11 @@ const DropDown = ({ label, selectedValue, onValueChange, options }) => {
         placeholder="Select an option"
         style={styles.picker}
         dropDownContainerStyle={styles.dropDownContainer}
+        listMode="SCROLLVIEW"
+        scrollViewProps={{
+          nestedScrollEnabled: true,
+        }}
+        
       />
     </View>
   );
@@ -51,6 +56,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.gray2,
     borderRadius: 4,
+    maxHeight: 200, 
   },
 });
 

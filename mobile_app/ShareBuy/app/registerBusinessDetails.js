@@ -50,7 +50,17 @@ const RegisterBusinessDetails = () => {
     { value: 'tech', label: 'Technology' },
     { value: 'health', label: 'Health & Wellness' },
     { value: 'education', label: 'Education' },
-    // Add more categories as needed
+    { value: 'finance', label: 'Finance' },
+    { value: 'real_estate', label: 'Real Estate' },
+    { value: 'construction', label: 'Construction' },
+    { value: 'transportation', label: 'Transportation' },
+    { value: 'hospitality', label: 'Hospitality' },
+    { value: 'entertainment', label: 'Entertainment' },
+    { value: 'agriculture', label: 'Agriculture' },
+    { value: 'utilities', label: 'Utilities' },
+    { value: 'administrative', label: 'Administrative' },
+    { value: 'educational_services', label: 'Educational Services' },
+    { value: 'arts', label: 'Arts' },
   ];
 
   const renderItem = ({ item }) => (
