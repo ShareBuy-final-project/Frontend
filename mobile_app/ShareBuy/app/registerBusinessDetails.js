@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, ScrollView, View, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView, View, StyleSheet, Text, TouchableOpacity, Alert, FlatList } from 'react-native';
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import InputField from '../components/InputField';
@@ -9,7 +9,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 const RegisterBusinessDetails = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { fullName, email, phone, password, state, city, street, streetNumber, zipCode} = route.params;
+  const { fullName, email, phone, password, state, city, street, streetNumber, zipCode } = route.params;
   const [businessName, setBusinessName] = useState('');
   const [businessNumber, setBusinessNumber] = useState('');
   const [description, setDescription] = useState('');
@@ -53,61 +53,78 @@ const RegisterBusinessDetails = () => {
     // Add more categories as needed
   ];
 
+  const renderItem = ({ item }) => (
+    <View style={styles.inputWrapper}>
+      {item}
+    </View>
+  );
+
+  const data = [
+    <Text style={styles.header} key="header">
+      What is your business name?
+    </Text>,
+    <View key="businessNameWrapper" style={styles.inputWrapper}>
+      <InputField
+        key="businessName"
+        icon="building"
+        placeholder="Business Name"
+        keyboardType="default"
+        value={businessName}
+        onChangeText={setBusinessName}
+        label="Business Name"
+      />
+      <Text style={styles.mandatory}>*</Text>
+    </View>,
+    <View key="businessNumberWrapper" style={styles.inputWrapper}>
+      <InputField
+        key="businessNumber"
+        icon="id-card"
+        placeholder="Business Number"
+        keyboardType="default"
+        value={businessNumber}
+        onChangeText={setBusinessNumber}
+        label="Business Number"
+      />
+      <Text style={styles.mandatory}>*</Text>
+    </View>,
+    <View key="categoryWrapper" style={styles.inputWrapper}>
+      <DropDown
+        key="category"
+        selectedValue={category}
+        onValueChange={setCategory}
+        options={categoryOptions}
+        label="Category"
+      />
+      <Text style={styles.mandatory}>*</Text>
+    </View>,
+    <View key="descriptionWrapper" style={styles.inputWrapper}>
+      <InputField
+        key="description"
+        icon="info-circle"
+        placeholder="Description"
+        keyboardType="default"
+        value={description}
+        onChangeText={setDescription}
+        label="Description"
+      />
+      <Text style={styles.mandatory}>*</Text>
+    </View>,
+    <View style={[styles.buttonContainer, { marginTop: 60 }]} key="nextButtonWrapper">
+      <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+        <Text style={styles.buttonText}>next</Text>
+        <Icon name="arrow-right" size={20} color={COLORS.white} />
+      </TouchableOpacity>
+    </View>
+  ];
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollView}>
-        <Text style={styles.header}>
-          What is your business name?
-        </Text>
-        <View style={styles.inputWrapper}>
-          <InputField
-            icon="building"
-            placeholder="Business Name"
-            keyboardType="default"
-            value={businessName}
-            onChangeText={setBusinessName}
-            label="Business Name"
-          />
-          <Text style={styles.mandatory}>*</Text>
-        </View>
-        <View style={styles.inputWrapper}>
-          <InputField
-            icon="id-card"
-            placeholder="Business Number"
-            keyboardType="default"
-            value={businessNumber}
-            onChangeText={setBusinessNumber}
-            label="Business Number"
-          />
-          <Text style={styles.mandatory}>*</Text>
-        </View>
-        <View style={styles.inputWrapper}>
-          <DropDown
-            selectedValue={category}
-            onValueChange={setCategory}
-            options={categoryOptions}
-            label="Category"
-          />
-          <Text style={styles.mandatory}>*</Text>
-        </View>
-        <View style={styles.inputWrapper}>
-          <InputField
-            icon="info-circle"
-            placeholder="Description"
-            keyboardType="default"
-            value={description}
-            onChangeText={setDescription}
-            label="Description"
-          />
-          <Text style={styles.mandatory}>*</Text>
-        </View>
-        <View style={[styles.buttonContainer, { marginTop: 60 }]}>
-          <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-            <Text style={styles.buttonText}>next</Text>
-            <Icon name="arrow-right" size={20} color={COLORS.white} />
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={styles.scrollView}
+      />
     </SafeAreaView>
   );
 };
@@ -135,6 +152,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '90%',
     justifyContent: 'center',
+    marginTop: 10,
   },
   mandatory: {
     color: 'red',

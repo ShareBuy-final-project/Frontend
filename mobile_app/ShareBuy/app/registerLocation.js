@@ -182,7 +182,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: '90%', 
-    justifyContent: 'center', 
+    justifyContent: 'center',
+    marginTop: 20
   },
   mandatory: {
     color: 'red',

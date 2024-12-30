@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   decorativeAsterisks: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 10,
+    marginTop: 60,
   },
   matchLabel: {
     fontSize: 16,

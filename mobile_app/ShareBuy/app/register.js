@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: FONT.arial,
     marginTop: 20,
+    width: '90%',
   },
   purpleText: {
     color: COLORS.purple,
@@ -152,6 +153,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '90%',
     justifyContent: 'center',
+    marginTop: 20,
   },
   mandatory: {
     color: 'red',
