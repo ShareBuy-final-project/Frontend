@@ -15,7 +15,7 @@ const RegisterBusinessContactInfo = () => {
 
   const handleNext = async () => {
     try {
-      const response = await axios.post('http://132.73.84.56:3000/user/registerBusiness', {
+      const response = await axios.post('http://132.73.84.56:443/user/registerBusiness', {
         "user": fullName,
         "email": email,
         "phone": phone,
