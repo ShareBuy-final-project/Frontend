@@ -18,7 +18,7 @@ const RegisterLocation = () => {
 
   const registerUser = async () => {
     try {
-      const response = await axios.post('http://132.73.84.56:3000/user/register', {
+      const response = await axios.post('http://132.73.84.56:443/user/register', {
         "user": fullName,
         "email": email,
         "phone": phone,
