@@ -63,27 +63,33 @@ const BaseLayout = ({ children }) => {
           },
         ]}
       >
-        <Text style={styles.sidebarHeader}>Amit Levints</Text>
-        <TouchableOpacity style={styles.sidebarItem}>
-          <Icon name="person" size={20} color="#fff" style={styles.sidebarIcon} />
-          <Text style={styles.sidebarItemText}>Profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.sidebarItem}>
-          <Icon name="history" size={20} color="#fff" style={styles.sidebarIcon} />
-          <Text style={styles.sidebarItemText}>History</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.sidebarItem}>
-          <Icon name="group" size={20} color="#fff" style={styles.sidebarIcon} />
-          <Text style={styles.sidebarItemText}>Active Groups</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.sidebarItem}>
-          <Icon name="logout" size={20} color="#fff" style={styles.sidebarIcon} />
-          <Text style={styles.sidebarItemText}>Sign Out</Text>
-        </TouchableOpacity>
+        <TouchableWithoutFeedback>
+          <View>
+            <Text style={styles.sidebarHeader}>Amit Levints</Text>
+            <TouchableOpacity style={styles.sidebarItem}>
+              <Icon name="person" size={20} color="#fff" style={styles.sidebarIcon} />
+              <Text style={styles.sidebarItemText}>Profile</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.sidebarItem}>
+              <Icon name="history" size={20} color="#fff" style={styles.sidebarIcon} />
+              <Text style={styles.sidebarItemText}>History</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.sidebarItem}>
+              <Icon name="group" size={20} color="#fff" style={styles.sidebarIcon} />
+              <Text style={styles.sidebarItemText}>Active Groups</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.sidebarItem}>
+              <Icon name="logout" size={20} color="#fff" style={styles.sidebarIcon} />
+              <Text style={styles.sidebarItemText}>Sign Out</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableWithoutFeedback>
       </Animated.View>
 
       {/* Render the child content here */}
-      <View style={styles.content}>{children}</View>
+      <TouchableWithoutFeedback onPress={closeSidebar}>
+        <View style={styles.content}>{children}</View>
+      </TouchableWithoutFeedback>
 
       <TouchableOpacity style={styles.houseButton} onPress={handleHomePress}>
         <Icon name="home" size={30} color="#000" />
