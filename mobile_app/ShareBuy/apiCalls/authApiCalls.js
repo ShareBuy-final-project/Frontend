@@ -7,9 +7,9 @@ export const login = async (email, password) => {
         throw new Error('Already logged in');
     }
     console.log("Logging in");
-    const res = await axios.post('http://10.0.0.22:6000/auth/login', { email, password });
+    const res = await axios.post('http://132.73.84.56:443/auth/login', { email, password });
     if(res.status !== 200 || !res.data.accessToken || !res.data.refreshToken) {
-        console.log("Login fdsfsfsfsdfdsfailed");
+        console.log("Login failed");
         throw new Error('Login failed');
     }
     console.log("Login successful");
