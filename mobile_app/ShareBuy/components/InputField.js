@@ -3,7 +3,7 @@ import { View, TextInput, StyleSheet, Text, TouchableOpacity } from 'react-nativ
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { COLORS, FONT } from '../constants/theme';
 
-const InputField = ({ icon, placeholder, keyboardType, value, onChangeText, label, secureTextEntry, marginTop, marginBottom, marginLeft, marginRight, borderColor = COLORS.black }) => {
+const InputField = ({ icon, placeholder, keyboardType, value, onChangeText, label, secureTextEntry, marginTop, marginBottom, marginLeft, marginRight, borderColor = COLORS.black, editable = true }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   return (
@@ -19,8 +19,9 @@ const InputField = ({ icon, placeholder, keyboardType, value, onChangeText, labe
           value={value}
           onChangeText={onChangeText}
           secureTextEntry={secureTextEntry && !isPasswordVisible} // Toggle visibility
+          editable={editable}
         />
-        {secureTextEntry && (
+        {secureTextEntry && editable && (
           <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
             <Icon
               name={isPasswordVisible ? "eye-slash" : "eye"}

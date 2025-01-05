@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { COLORS, FONT } from '../../constants/theme';
@@ -8,12 +8,30 @@ import axios from 'axios';
 import BaseLayout from '../BaseLayout';
 
 const PersonalData = ({ userData, setUserData, isEditable, setIsEditable }) => {
+  const [originalData, setOriginalData] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://132.73.84.56:443/user/data');
+        setUserData(response.data);
+        setOriginalData(response.data);
+      } catch (error) {
+        console.error('Fetch Error:', error.message);
+        Alert.alert('Fetch Error', `An error occurred: ${error.message}`);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const handleSave = async () => {
     try {
       const response = await axios.put('http://132.73.84.56:443/user/update', userData);
       if (response.data.message === 'User updated successfully') {
         Alert.alert('Success', 'User data updated successfully');
         setIsEditable(false);
+        setOriginalData(userData);
       } else {
         Alert.alert('Update Error', response.data.error);
       }
@@ -21,6 +39,11 @@ const PersonalData = ({ userData, setUserData, isEditable, setIsEditable }) => {
       console.error('Update Error:', error.message);
       Alert.alert('Update Error', `An error occurred: ${error.message}`);
     }
+  };
+
+  const handleCancel = () => {
+    setUserData(originalData);
+    setIsEditable(false);
   };
 
   return (
@@ -82,9 +105,14 @@ const PersonalData = ({ userData, setUserData, isEditable, setIsEditable }) => {
         editable={isEditable}
       />
       {isEditable ? (
-        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-          <Text style={styles.buttonText}>Save</Text>
-        </TouchableOpacity>
+        <>
+          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+            <Text style={styles.buttonText}>Update Personal Data</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
+            <Text style={styles.buttonText}>Cancel</Text>
+          </TouchableOpacity>
+        </>
       ) : (
         <TouchableOpacity style={styles.manageButton} onPress={() => setIsEditable(true)}>
           <Text style={styles.buttonText}>Manage Data</Text>
@@ -314,6 +342,12 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginTop: 20,
+  },
+  cancelButton: {
+    backgroundColor: COLORS.danger,
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
   },
   buttonText: {
     color: COLORS.white,
