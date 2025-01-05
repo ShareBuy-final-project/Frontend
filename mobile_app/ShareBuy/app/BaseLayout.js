@@ -11,6 +11,10 @@ const BaseLayout = ({ children }) => {
     navigation.navigate('home');
   }
 
+  const handleProfilePress = () => {
+    navigation.navigate('personalInformation');
+  };
+
   const toggleSidebar = () => {
     const toValue = isSidebarOpen ? 0 : 1;
     setIsSidebarOpen(!isSidebarOpen);
@@ -63,7 +67,7 @@ const BaseLayout = ({ children }) => {
         ]}
       >
         <Text style={styles.sidebarHeader}>Menu</Text>
-        <TouchableOpacity style={styles.sidebarItem}>
+        <TouchableOpacity style={styles.sidebarItem} onPress={handleProfilePress}>
           <Text style={styles.sidebarItemText}>Profile</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.sidebarItem}>
