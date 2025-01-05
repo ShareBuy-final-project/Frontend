@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View, FlatList, TouchableOpacity, Image } from 'react-native';
 import BaseLayout from './BaseLayout'; // Adjust the path based on your folder structure
+import SearchBar from './SearchBar'; // Adjust the path based on your folder structure
 
 const Home = () => {
   const [deals, setDeals] = useState([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Mock API call to fetch deals
   const fetchDeals = async (pageNumber) => {
@@ -46,10 +48,16 @@ const Home = () => {
     </TouchableOpacity>
   );
 
+  // Filter deals based on the search query
+  const filteredDeals = deals.filter((deal) =>
+    deal.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <BaseLayout>
+      <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
       <FlatList
-        data={deals}
+        data={filteredDeals}
         renderItem={renderDealCard}
         keyExtractor={(item) => item.id}
         key={'grid'} // Force FlatList to re-render if necessary
