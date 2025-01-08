@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { saveToken, isLoggedIn, getToken } from '../utils/userTokens';
 import {excuteAPICall} from './apiCallWrapper';
-require('dotenv').config();
+import Config from "react-native-config";
 
-export const baseRoute = process.env.BASE_ROUTE;
+const baseRoute = Config.BASE_ROUTE;
 
 export const login = async ({email, password}) => {
     if(await isLoggedIn()) {

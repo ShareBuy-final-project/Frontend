@@ -6,6 +6,9 @@
       "expo-secure-store"
     ],
     "name": "ShareBuy",
-    "slug": "ShareBuy"
+    "slug": "ShareBuy",
+    "extra": {
+      "BASE_ROUTE": "http://132.73.84.56:443/"
+    }
   }
 }
