@@ -4,37 +4,16 @@ import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { COLORS, FONT } from '../../constants/theme';
 import InputField from '../../components/InputField';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import axios from 'axios';
+import { fetchPersonalInformation, updatePersonalInformation, changePassword } from '../../apiCalls/userApiCalls';
 import BaseLayout from '../BaseLayout';
 
-const PersonalData = ({ userData, setUserData, isEditable, setIsEditable }) => {
-  const [originalData, setOriginalData] = useState({});
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://132.73.84.56:443/user/data');
-        setUserData(response.data);
-        setOriginalData(response.data);
-      } catch (error) {
-        console.error('Fetch Error:', error.message);
-        Alert.alert('Fetch Error', `An error occurred: ${error.message}`);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+const PersonalData = ({ userData, setUserData, isEditable, setIsEditable, originalData, setOriginalData }) => {
   const handleSave = async () => {
     try {
-      const response = await axios.put('http://132.73.84.56:443/user/update', userData);
-      if (response.data.message === 'User updated successfully') {
-        Alert.alert('Success', 'User data updated successfully');
-        setIsEditable(false);
-        setOriginalData(userData);
-      } else {
-        Alert.alert('Update Error', response.data.error);
-      }
+      const status = await updatePersonalInformation(userData);
+      Alert.alert('Success', status);
+      setIsEditable(false);
+      setOriginalData(userData);
     } catch (error) {
       console.error('Update Error:', error.message);
       Alert.alert('Update Error', `An error occurred: ${error.message}`);
@@ -54,6 +33,7 @@ const PersonalData = ({ userData, setUserData, isEditable, setIsEditable }) => {
         value={userData.fullName}
         onChangeText={(text) => setUserData({ ...userData, fullName: text })}
         editable={isEditable}
+        label="Full Name"
       />
       <InputField
         icon="envelope"
@@ -61,6 +41,7 @@ const PersonalData = ({ userData, setUserData, isEditable, setIsEditable }) => {
         value={userData.email}
         onChangeText={(text) => setUserData({ ...userData, email: text })}
         editable={isEditable}
+        label="Email"
       />
       <InputField
         icon="phone"
@@ -68,6 +49,7 @@ const PersonalData = ({ userData, setUserData, isEditable, setIsEditable }) => {
         value={userData.phone}
         onChangeText={(text) => setUserData({ ...userData, phone: text })}
         editable={isEditable}
+        label="Phone"
       />
       <InputField
         icon="map-marker"
@@ -75,6 +57,7 @@ const PersonalData = ({ userData, setUserData, isEditable, setIsEditable }) => {
         value={userData.state}
         onChangeText={(text) => setUserData({ ...userData, state: text })}
         editable={isEditable}
+        label="State"
       />
       <InputField
         icon="map-marker"
@@ -82,6 +65,7 @@ const PersonalData = ({ userData, setUserData, isEditable, setIsEditable }) => {
         value={userData.city}
         onChangeText={(text) => setUserData({ ...userData, city: text })}
         editable={isEditable}
+        label="City"
       />
       <InputField
         icon="map-marker"
@@ -89,6 +73,7 @@ const PersonalData = ({ userData, setUserData, isEditable, setIsEditable }) => {
         value={userData.street}
         onChangeText={(text) => setUserData({ ...userData, street: text })}
         editable={isEditable}
+        label="Street"
       />
       <InputField
         icon="map-marker"
@@ -96,6 +81,7 @@ const PersonalData = ({ userData, setUserData, isEditable, setIsEditable }) => {
         value={userData.streetNumber}
         onChangeText={(text) => setUserData({ ...userData, streetNumber: text })}
         editable={isEditable}
+        label="Street Number"
       />
       <InputField
         icon="map-marker"
@@ -103,6 +89,7 @@ const PersonalData = ({ userData, setUserData, isEditable, setIsEditable }) => {
         value={userData.zipCode}
         onChangeText={(text) => setUserData({ ...userData, zipCode: text })}
         editable={isEditable}
+        label="Zip Code"
       />
       {isEditable ? (
         <>
@@ -157,19 +144,11 @@ const PasswordChange = () => {
     }
 
     try {
-      const response = await axios.put('http://132.73.84.56:443/user/change-password', {
-        currentPassword,
-        newPassword
-      });
-      
-      if (response.data.success) {
-        Alert.alert('Success', 'Password changed successfully');
-        setCurrentPassword('');
-        setNewPassword('');
-        setConfirmPassword('');
-      } else {
-        Alert.alert('Error', response.data.message);
-      }
+      const status = await changePassword({ currentPassword, newPassword });
+      Alert.alert('Success', status);
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
     } catch (error) {
       Alert.alert('Error', 'Failed to change password');
       console.error(error);
@@ -266,10 +245,26 @@ const PersonalInformation = () => {
     zipCode: '',
   });
 
+  const [originalData, setOriginalData] = useState({});
   const [isEditable, setIsEditable] = useState(false);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchPersonalInformation();
+        setUserData(data);
+        setOriginalData(data);
+      } catch (error) {
+        console.error('Fetch Error:', error.message);
+        Alert.alert('Fetch Error', `An error occurred: ${error.message}`);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const renderScene = SceneMap({
-    personalData: () => <PersonalData userData={userData} setUserData={setUserData} isEditable={isEditable} setIsEditable={setIsEditable} />,
+    personalData: () => <PersonalData userData={userData} setUserData={setUserData} isEditable={isEditable} setIsEditable={setIsEditable} originalData={originalData} setOriginalData={setOriginalData} />,
     passwordChange: PasswordChange,
   });
 
