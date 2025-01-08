@@ -38,8 +38,8 @@ const excuteAPICall = async (route, type, params) => {
         const response = await axios({
             method: type,
             url: baseRoute + route,
-            headers: headers
-            //data: params
+            headers: headers,
+            data: params
         });
         console.log('Response:', response);
         return response;

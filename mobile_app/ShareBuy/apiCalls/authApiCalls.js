@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { saveToken, isLoggedIn, getToken } from '../utils/userTokens';
 import {excuteAPICall} from './apiCallWrapper';
-import Config from "react-native-config";
+import Constants from 'expo-constants';
 
-const baseRoute = Config.BASE_ROUTE;
+const baseRoute = Constants.expoConfig.extra.BASE_ROUTE;
 
 export const login = async ({email, password}) => {
     if(await isLoggedIn()) {
