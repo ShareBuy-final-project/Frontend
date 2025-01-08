@@ -4,7 +4,7 @@ import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import InputField from '../components/InputField';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import axios from 'axios';
+import { registerUser } from '../apiCalls/userApiCalls';
 
 const RegisterLocation = () => {
   const navigation = useNavigation();
@@ -18,16 +18,16 @@ const RegisterLocation = () => {
 
   const registerUser = async () => {
     try {
-      const response = await axios.post('http://132.73.84.56:443/user/register', {
-        "name": fullName,
-        "email": email,
-        "phone": phone,
-        "password": password,
-        "state": state,
-        "city": city,
-        "street": street,
-        "streetNumber": streetNumber,
-        "zipCode": zipCode,
+      const response = await registerUser({
+        fullName,
+        email,
+        phone,
+        password,
+        state,
+        city,
+        street,
+        streetNumber,
+        zipCode,
       });
 
       if (response.data.message === 'User registered successfully') {
