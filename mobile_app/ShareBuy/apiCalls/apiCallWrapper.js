@@ -23,12 +23,10 @@ const excuteAPICall = async (route, type, params) => {
         throw new Error('BASE_ROUTE is not defined');
     }
 
-    //let body = JSON.stringify(params);
+    let body = JSON.stringify(params);
     let accessToken = await getToken('accessToken');
-    console.log('Access token:', accessToken);
     let headers = {
-        'Content-Type': 'application/json',     
-        'Custom-Header': 'custom_value'  
+        'Content-Type': 'application/json'
     };
     if (accessToken) {
         headers['Authorization'] = `Bearer ${accessToken}`;
@@ -39,7 +37,7 @@ const excuteAPICall = async (route, type, params) => {
             method: type,
             url: baseRoute + route,
             headers: headers,
-            data: params
+            data: body
         });
         console.log('Response:', response);
         return response;
@@ -54,7 +52,7 @@ const excuteAPICall = async (route, type, params) => {
                         method: type,
                         url: baseRoute + route,
                         headers: headers,
-                        data: params
+                        //data: body
                     });
                     return retryResponse;
                 } catch (retryError) {
