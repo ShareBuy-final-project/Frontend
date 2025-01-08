@@ -2,7 +2,7 @@ import * as SecureStore from 'expo-secure-store';
 
 /**
  * Save a key-value pair to secure storage.
- * @param {string} key - The key to store the value under.
+ * @param {string} key - The key to store the value under (type of token-'access token' or 'refresh token').
  * @param {string} value - The value to store.
  */
 export async function saveToken(key, value) {
