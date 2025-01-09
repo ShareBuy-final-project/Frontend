@@ -1,5 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Toast from 'react-native-toast-message';
 import Welcome from './welcome';
 import Register from './register';
 import RegisterTypeSelection from './registerTypeSelection';
@@ -24,6 +25,7 @@ const AppNavigator = () => {
       <Stack.Screen name="registerLocation" component={RegisterLocation} />
       <Stack.Screen name="registerBusinessContactInfo" component={RegisterBusinessContactInfo} />
       <Stack.Screen name="personalInformation" component={PersonalInformation} />
+      <Toast ref={(ref) => Toast.setRef(ref)} />
       {/* Add other screens here */}
     </Stack.Navigator>
   );

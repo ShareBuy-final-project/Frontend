@@ -1,4 +1,4 @@
-import { excuteAPICall } from './apiCallWrapper';
+import { excuteAPICallPOST } from './apiCallWrapper';
 
 /**
  * Fetch user personal information.
@@ -6,7 +6,7 @@ import { excuteAPICall } from './apiCallWrapper';
  */
 export const fetchPersonalInformation = async () => {
     try {
-        const res = await excuteAPICall('user/me', {});
+        const res = await excuteAPICallPOST('user/me', {});
         if (res.status !== 200) {
             throw new Error('Failed to fetch personal information');
         }
@@ -24,7 +24,7 @@ export const fetchPersonalInformation = async () => {
  */
 export const updatePersonalInformation = async (personalInfo) => {
     try {
-        const res = await excuteAPICall('user/update', personalInfo);
+        const res = await excuteAPICallPOST('user/update', personalInfo);
         if (res.status !== 200) {
             throw new Error('Failed to update personal information');
         }
@@ -42,7 +42,7 @@ export const updatePersonalInformation = async (personalInfo) => {
  */
 export const changePassword = async (passwordData) => {
     try {
-        const res = await excuteAPICall('user/change-password', passwordData);
+        const res = await excuteAPICallPOST('user/change-password', passwordData);
         if (res.status !== 200) {
             throw new Error('Failed to change password');
         }
@@ -51,4 +51,12 @@ export const changePassword = async (passwordData) => {
         console.error('Error changing password:', error);
         throw error;
     }
+}
+
+export const registerUser = async (params) => {
+  return await excuteAPICallPOST('user/register', params);
+};
+
+export const registerBusiness = async (params) => {
+  return await excuteAPICallPOST('user/registerBusiness', params);
 };
