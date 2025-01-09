@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { saveToken, isLoggedIn, getToken } from '../utils/userTokens';
-import {excuteAPICall} from './apiCallWrapper';
+import {excuteAPICallPOST} from './apiCallWrapper';
 import Constants from 'expo-constants';
 
 const baseRoute = Constants.expoConfig.extra.BASE_ROUTE;
@@ -12,7 +12,7 @@ export const login = async ({email, password}) => {
     }
     console.log("Logging in");
     try{
-        const res = excuteAPICall('auth/login', {email, password});
+        const res = excuteAPICallPOST('auth/login', {email, password});
         if(res.status !== 200 || !res.data.accessToken || !res.data.refreshToken) {
             console.log("Login failed");
             throw new Error('Login failed');

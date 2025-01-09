@@ -6,104 +6,177 @@ import InputField from '../../components/InputField';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { fetchPersonalInformation, updatePersonalInformation, changePassword } from '../../apiCalls/userApiCalls';
 import BaseLayout from '../BaseLayout';
+import Card from '../../components/Card';
 
-const PersonalData = ({ userData, setUserData, isEditable, setIsEditable, originalData, setOriginalData }) => {
-  const handleSave = async () => {
+const PersonalData = ({ userData, setUserData, originalData, setOriginalData }) => {
+  const [isPersonalEditable, setIsPersonalEditable] = useState(false);
+  const [isAddressEditable, setIsAddressEditable] = useState(false);
+  const [tempUserData, setTempUserData] = useState({ ...userData });
+
+  const handlePersonalUpdate = async () => {
     try {
-      const status = await updatePersonalInformation(userData);
+      const personalData = {
+        fullName: tempUserData.fullName,
+        email: tempUserData.email,
+        phone: tempUserData.phone,
+      };
+      const status = await updatePersonalInformation(personalData);
       Alert.alert('Success', status);
-      setIsEditable(false);
-      setOriginalData(userData);
+      setIsPersonalEditable(false);
+      setUserData(tempUserData);
+      setOriginalData(tempUserData);
     } catch (error) {
-      console.error('Update Error:', error.message);
       Alert.alert('Update Error', `An error occurred: ${error.message}`);
     }
   };
 
-  const handleCancel = () => {
-    setUserData(originalData);
-    setIsEditable(false);
+  const handleAddressUpdate = async () => {
+    try {
+      const addressData = {
+        state: tempUserData.state,
+        city: tempUserData.city,
+        street: tempUserData.street,
+        streetNumber: tempUserData.streetNumber,
+        zipCode: tempUserData.zipCode,
+      };
+      const status = await updatePersonalInformation(addressData);
+      Alert.alert('Success', status);
+      setIsAddressEditable(false);
+      setUserData(tempUserData);
+      setOriginalData(tempUserData);
+    } catch (error) {
+      Alert.alert('Update Error', `An error occurred: ${error.message}`);
+    }
   };
+
+  const handlePersonalCancel = () => {
+    setTempUserData({
+      ...tempUserData,
+      fullName: userData.fullName,
+      email: userData.email,
+      phone: userData.phone,
+    });
+    setIsPersonalEditable(false);
+  };
+
+  const handleAddressCancel = () => {
+    setTempUserData({
+      ...tempUserData,
+      state: userData.state,
+      city: userData.city,
+      street: userData.street,
+      streetNumber: userData.streetNumber,
+      zipCode: userData.zipCode,
+    });
+    setIsAddressEditable(false);
+  };
+
+  // Add useEffect to update tempUserData when userData changes
+  useEffect(() => {
+    setTempUserData(userData);
+  }, [userData]);
 
   return (
     <ScrollView contentContainerStyle={styles.scrollView}>
-      <InputField
-        icon="user"
-        placeholder="Full Name"
-        value={userData.fullName}
-        onChangeText={(text) => setUserData({ ...userData, fullName: text })}
-        editable={isEditable}
-        label="Full Name"
-      />
-      <InputField
-        icon="envelope"
-        placeholder="Email"
-        value={userData.email}
-        onChangeText={(text) => setUserData({ ...userData, email: text })}
-        editable={isEditable}
-        label="Email"
-      />
-      <InputField
-        icon="phone"
-        placeholder="Phone"
-        value={userData.phone}
-        onChangeText={(text) => setUserData({ ...userData, phone: text })}
-        editable={isEditable}
-        label="Phone"
-      />
-      <InputField
-        icon="map-marker"
-        placeholder="State"
-        value={userData.state}
-        onChangeText={(text) => setUserData({ ...userData, state: text })}
-        editable={isEditable}
-        label="State"
-      />
-      <InputField
-        icon="map-marker"
-        placeholder="City"
-        value={userData.city}
-        onChangeText={(text) => setUserData({ ...userData, city: text })}
-        editable={isEditable}
-        label="City"
-      />
-      <InputField
-        icon="map-marker"
-        placeholder="Street"
-        value={userData.street}
-        onChangeText={(text) => setUserData({ ...userData, street: text })}
-        editable={isEditable}
-        label="Street"
-      />
-      <InputField
-        icon="map-marker"
-        placeholder="Street Number"
-        value={userData.streetNumber}
-        onChangeText={(text) => setUserData({ ...userData, streetNumber: text })}
-        editable={isEditable}
-        label="Street Number"
-      />
-      <InputField
-        icon="map-marker"
-        placeholder="Zip Code"
-        value={userData.zipCode}
-        onChangeText={(text) => setUserData({ ...userData, zipCode: text })}
-        editable={isEditable}
-        label="Zip Code"
-      />
-      {isEditable ? (
-        <>
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <Text style={styles.buttonText}>Update Personal Data</Text>
+      {!isPersonalEditable ? (
+        <Card 
+          title="Personal Information"
+          actionButton="Manage Data"
+          onActionPress={() => setIsPersonalEditable(true)}
+        >
+          <Text style={styles.infoText}>Name: {userData.fullName}</Text>
+          <Text style={styles.infoText}>Email: {userData.email}</Text>
+          <Text style={styles.infoText}>Phone: {userData.phone}</Text>
+        </Card>
+      ) : (
+        <Card title="Personal Information">
+          <InputField
+            icon="user"
+            placeholder="Full Name"
+            value={tempUserData.fullName}
+            onChangeText={(text) => setTempUserData({ ...tempUserData, fullName: text })}
+            label="Full Name"
+          />
+          <InputField
+            icon="envelope"
+            placeholder="Email"
+            value={tempUserData.email}
+            onChangeText={(text) => setTempUserData({ ...tempUserData, email: text })}
+            label="Email"
+          />
+          <InputField
+            icon="phone"
+            placeholder="Phone"
+            value={tempUserData.phone}
+            onChangeText={(text) => setTempUserData({ ...tempUserData, phone: text })}
+            label="Phone"
+          />
+          <TouchableOpacity style={styles.updateButton} onPress={handlePersonalUpdate}>
+            <Text style={styles.buttonText}>Update</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
+          <TouchableOpacity style={styles.cancelButton} onPress={handlePersonalCancel}>
             <Text style={styles.buttonText}>Cancel</Text>
           </TouchableOpacity>
-        </>
+        </Card>
+      )}
+
+      {!isAddressEditable ? (
+        <Card 
+          title="Address"
+          actionButton="Edit Address"
+          onActionPress={() => setIsAddressEditable(true)}
+        >
+          <Text style={styles.infoText}>
+            {userData.street} {userData.streetNumber}
+          </Text>
+          <Text style={styles.infoText}>
+            {userData.city}, {userData.state}, {userData.zipCode}
+          </Text>
+        </Card>
       ) : (
-        <TouchableOpacity style={styles.manageButton} onPress={() => setIsEditable(true)}>
-          <Text style={styles.buttonText}>Manage Data</Text>
-        </TouchableOpacity>
+        <Card title="Address">
+          <InputField
+            icon="map-marker"
+            placeholder="Street"
+            value={tempUserData.street}
+            onChangeText={(text) => setTempUserData({ ...tempUserData, street: text })}
+            label="Street"
+          />
+          <InputField
+            icon="map-marker"
+            placeholder="Street Number"
+            value={tempUserData.streetNumber}
+            onChangeText={(text) => setTempUserData({ ...tempUserData, streetNumber: text })}
+            label="Street Number"
+          />
+          <InputField
+            icon="map-marker"
+            placeholder="City"
+            value={tempUserData.city}
+            onChangeText={(text) => setTempUserData({ ...tempUserData, city: text })}
+            label="City"
+          />
+          <InputField
+            icon="map-marker"
+            placeholder="State"
+            value={tempUserData.state}
+            onChangeText={(text) => setTempUserData({ ...tempUserData, state: text })}
+            label="State"
+          />
+          <InputField
+            icon="map-marker"
+            placeholder="Zip Code"
+            value={tempUserData.zipCode}
+            onChangeText={(text) => setTempUserData({ ...tempUserData, zipCode: text })}
+            label="Zip Code"
+          />
+          <TouchableOpacity style={styles.updateButton} onPress={handleAddressUpdate}>
+            <Text style={styles.buttonText}>Update</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.cancelButton} onPress={handleAddressCancel}>
+            <Text style={styles.buttonText}>Cancel</Text>
+          </TouchableOpacity>
+        </Card>
       )}
     </ScrollView>
   );
@@ -246,7 +319,7 @@ const PersonalInformation = () => {
   });
 
   const [originalData, setOriginalData] = useState({});
-  const [isEditable, setIsEditable] = useState(false);
+  //const [isEditable, setIsEditable] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -264,7 +337,7 @@ const PersonalInformation = () => {
   }, []);
 
   const renderScene = SceneMap({
-    personalData: () => <PersonalData userData={userData} setUserData={setUserData} isEditable={isEditable} setIsEditable={setIsEditable} originalData={originalData} setOriginalData={setOriginalData} />,
+    personalData: () => <PersonalData userData={userData} setUserData={setUserData} originalData={originalData} setOriginalData={setOriginalData} />,
     passwordChange: PasswordChange,
   });
 
@@ -332,17 +405,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 20,
   },
-  saveButton: {
-    backgroundColor: COLORS.success,
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
-  },
+  // saveButton: {
+  //   backgroundColor: COLORS.secondary,
+  //   padding: 10,
+  //   borderRadius: 5,
+  //   marginTop: 20,
+  // },
   cancelButton: {
-    backgroundColor: COLORS.danger,
+    backgroundColor: COLORS.secondary,  // Using the new danger color
     padding: 10,
     borderRadius: 5,
     marginTop: 10,
+    width: '100%',  // Make buttons full width
   },
   buttonText: {
     color: COLORS.white,
@@ -369,10 +443,9 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
   },
   infoText: {
+    fontSize: 16,
+    marginBottom: 5,
     color: COLORS.black,
-    fontSize: 14,
-    textAlign: 'left',
-    width: '100%', 
   },
   infoTextBold: {
     color: COLORS.black,
@@ -387,7 +460,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   changePasswordButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.purple,  // Changed from primary to purple
     padding: 15,
     borderRadius: 5,
     width: '60%',
@@ -399,6 +472,13 @@ const styles = StyleSheet.create({
     right: 10, 
     top: '50%',
     marginTop: -10,
+  },
+  updateButton: {
+    backgroundColor: COLORS.primary,  // Using the new success color
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    width: '100%',  // Make buttons full width
   },
 });
 

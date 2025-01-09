@@ -15,19 +15,21 @@ const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName="welcome" screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="welcome" component={Welcome} />
-      <Stack.Screen name="home" component={home} />
-      <Stack.Screen name="register" component={Register} />
-      <Stack.Screen name="registerPassword" component={RegisterPassword} />
-      <Stack.Screen name="registerTypeSelection" component={RegisterTypeSelection} />
-      <Stack.Screen name="registerBusinessDetails" component={RegisterBusinessDetails} />
-      <Stack.Screen name="registerLocation" component={RegisterLocation} />
-      <Stack.Screen name="registerBusinessContactInfo" component={RegisterBusinessContactInfo} />
-      <Stack.Screen name="personalInformation" component={PersonalInformation} />
-      <Toast ref={(ref) => Toast.setRef(ref)} />
-      {/* Add other screens here */}
-    </Stack.Navigator>
+    <>
+      <Stack.Navigator initialRouteName="home" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="welcome" component={Welcome} />
+        <Stack.Screen name="home" component={home} />
+        <Stack.Screen name="register" component={Register} />
+        <Stack.Screen name="registerPassword" component={RegisterPassword} />
+        <Stack.Screen name="registerTypeSelection" component={RegisterTypeSelection} />
+        <Stack.Screen name="registerBusinessDetails" component={RegisterBusinessDetails} />
+        <Stack.Screen name="registerLocation" component={RegisterLocation} />
+        <Stack.Screen name="registerBusinessContactInfo" component={RegisterBusinessContactInfo} />
+        <Stack.Screen name="personalInformation" component={PersonalInformation} />
+        {/* Add other screens here */}
+      </Stack.Navigator>
+      <Toast/>
+    </>
   );
 };
 

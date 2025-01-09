@@ -70,7 +70,7 @@ const BaseLayout = ({ children }) => {
         <TouchableWithoutFeedback>
           <View>
             <Text style={styles.sidebarHeader}>Amit Levints</Text>
-            <TouchableOpacity style={styles.sidebarItem}>
+            <TouchableOpacity style={styles.sidebarItem} onPress={handleProfilePress}>
               <Icon name="person" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>Profile</Text>
             </TouchableOpacity>
