@@ -16,7 +16,6 @@ const Welcome = () => {
           Alert.alert('Please fill in all fields!', [{ text: 'OK' }]);
           return
         }
-        console.log('Logging in with email:', email, 'password :', password);
         const res = await login(email, password)
         Alert.alert('Login Successful', 'You have successfully logged in!', [{ text: 'OK' }]);
         navigation.navigate('home');
