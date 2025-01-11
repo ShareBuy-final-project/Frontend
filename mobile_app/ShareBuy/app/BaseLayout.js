@@ -6,10 +6,16 @@ import { useNavigation } from '@react-navigation/native';
 const BaseLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarAnimation = useState(new Animated.Value(0))[0]; // Sidebar animation value
+  const [business, setBusiness] = useState(false);
   const navigation = useNavigation();
 
   const handleHomePress = () => {
     navigation.navigate('home');
+  };
+
+  const handleFavoritesPress = () => {
+    navigation.navigate('favorites'); // Navigate to the FavoritesPage
+    closeSidebar(); // Close sidebar after navigating
   };
 
   const toggleSidebar = () => {
@@ -36,11 +42,14 @@ const BaseLayout = ({ children }) => {
 
   return (
     <View style={styles.container}>
-      {!isSidebarOpen && (
-        <TouchableOpacity onPress={toggleSidebar} style={styles.hamburgerButton}>
-          <Icon name="menu" size={30} color="#000" />
-        </TouchableOpacity>
-      )}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={toggleSidebar} style={styles.hamburgerButton}>
+            <Icon name="menu" size={30} color="#000" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.homeButton} onPress={handleHomePress}>
+            <Icon name="home" size={30} color="#000" />
+          </TouchableOpacity>
+        </View>
 
       {isSidebarOpen && (
         <TouchableWithoutFeedback onPress={closeSidebar}>
@@ -68,8 +77,13 @@ const BaseLayout = ({ children }) => {
             <Text style={styles.sidebarHeader}>Amit Levints</Text>
             <TouchableOpacity style={styles.sidebarItem}>
               <Icon name="person" size={20} color="#fff" style={styles.sidebarIcon} />
-              <Text style={styles.sidebarItemText}>Profile</Text>
+              <Text style={styles.sidebarItemText}>{business ? "Business Profile" : "Profile"}</Text>
             </TouchableOpacity>
+            {!business && (
+            <TouchableOpacity style={styles.sidebarItem} onPress={handleFavoritesPress}>
+              <Icon name="favorite" size={20} color="#fff" style={styles.sidebarIcon} />
+              <Text style={styles.sidebarItemText}>Favorites</Text>
+            </TouchableOpacity>)}
             <TouchableOpacity style={styles.sidebarItem}>
               <Icon name="history" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>History</Text>
@@ -90,13 +104,6 @@ const BaseLayout = ({ children }) => {
       <TouchableWithoutFeedback onPress={closeSidebar}>
         <View style={styles.content}>{children}</View>
       </TouchableWithoutFeedback>
-
-      <TouchableOpacity style={styles.houseButton} onPress={handleHomePress}>
-        <Icon name="home" size={30} color="#000" />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.heartButton}>
-        <Icon name="favorite" size={30} color="#000" />
-      </TouchableOpacity>
     </View>
   );
 };
@@ -106,11 +113,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  hamburgerButton: {
+  header: {
     position: 'absolute',
     top: 20,
-    left: 20,
-    zIndex: 1, // Make sure the hamburger is on top of other content
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    zIndex: 10,
+  },
+  hamburgerButton: {
+    zIndex: 11,
+  },
+  homeButton: {
+    zIndex: 11,
   },
   sidebar: {
     position: 'absolute',
@@ -118,10 +135,10 @@ const styles = StyleSheet.create({
     left: 0,
     width: 250,
     height: '100%',
-    backgroundColor: '#333', // Fully opaque black for testing
+    backgroundColor: '#333',
     padding: 20,
-    zIndex: 10, // Higher than any other element
-    elevation: 10, // For Android
+    zIndex: 10,
+    elevation: 10,
     shadowColor: '#000',
     shadowOffset: { width: 2, height: 0 },
     shadowOpacity: 0.5,
@@ -134,22 +151,16 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   sidebarItem: {
-    flexDirection: 'row', // Align icon and text horizontally
-    alignItems: 'center', // Center them vertically
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: 15,
   },
   sidebarIcon: {
-    marginRight: 10, // Add spacing between icon and text
+    marginRight: 10,
   },
   sidebarItemText: {
     color: '#fff',
     fontSize: 18,
-  },
-  content: {
-    flex: 1, // Take up remaining space
-    alignItems: 'center', // Center the content horizontally
-    marginTop: 60, // Adjust to avoid overlap with the hamburger button
-    padding: 20,
   },
   overlay: {
     position: 'absolute',
@@ -157,19 +168,18 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Semi-transparent background
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 5,
   },
-  houseButton: {
-    position: 'absolute',
-    bottom: 40,
-    left: 20,
-    zIndex: 1, // Keep it above the other elements
+  mainContent: {
+    flex: 1,
+    zIndex: 1,
   },
-  heartButton: {
-    position: 'absolute',
-    bottom: 40,
-    right: 20,
-    zIndex: 1, // Keep it above the other elements
+  content: {
+    flex: 1,
+    alignItems: 'center',
+    marginTop: 60,
+    padding: 10,
   },
 });
 
