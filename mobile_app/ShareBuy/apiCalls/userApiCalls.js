@@ -1,4 +1,4 @@
-import { excuteAPICallPOST } from './apiCallWrapper';
+import { excuteAPICallPOST, excuteAPICallGET } from './apiCallWrapper';
 
 /**
  * Fetch user personal information.
@@ -6,7 +6,7 @@ import { excuteAPICallPOST } from './apiCallWrapper';
  */
 export const fetchPersonalInformation = async () => {
     try {
-        const res = await excuteAPICallPOST('user/me', {});
+        const res = await excuteAPICallGET('user/me', {});
         if (res.status !== 200) {
             throw new Error('Failed to fetch personal information');
         }
