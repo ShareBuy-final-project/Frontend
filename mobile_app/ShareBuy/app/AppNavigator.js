@@ -1,6 +1,5 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 import Welcome from './welcome';
 import Register from './register';
@@ -10,13 +9,14 @@ import RegisterLocation from './registerLocation';
 import RegisterBusinessContactInfo from './registerBusinessContactInfo';
 import RegisterPassword from './registerPassword';
 import home from './home';
+import PersonalInformation from './UserSideBarPages/personalInformation';
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="welcome">
+    <>
+      <Stack.Navigator initialRouteName="welcome" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="welcome" component={Welcome} />
         <Stack.Screen name="home" component={home} />
         <Stack.Screen name="register" component={Register} />
@@ -25,10 +25,11 @@ const AppNavigator = () => {
         <Stack.Screen name="registerBusinessDetails" component={RegisterBusinessDetails} />
         <Stack.Screen name="registerLocation" component={RegisterLocation} />
         <Stack.Screen name="registerBusinessContactInfo" component={RegisterBusinessContactInfo} />
+        <Stack.Screen name="personalInformation" component={PersonalInformation} />
         {/* Add other screens here */}
-        <Toast ref={(ref) => Toast.setRef(ref)} />
       </Stack.Navigator>
-    </NavigationContainer>
+      <Toast/>
+    </>
   );
 };
 

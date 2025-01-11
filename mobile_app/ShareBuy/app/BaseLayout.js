@@ -12,6 +12,10 @@ const BaseLayout = ({ children }) => {
     navigation.navigate('home');
   };
 
+  const handleProfilePress = () => {
+    navigation.navigate('personalInformation');
+  };
+
   const toggleSidebar = () => {
     const toValue = isSidebarOpen ? 0 : 1;
     setIsSidebarOpen(!isSidebarOpen);
@@ -66,7 +70,7 @@ const BaseLayout = ({ children }) => {
         <TouchableWithoutFeedback>
           <View>
             <Text style={styles.sidebarHeader}>Amit Levints</Text>
-            <TouchableOpacity style={styles.sidebarItem}>
+            <TouchableOpacity style={styles.sidebarItem} onPress={handleProfilePress}>
               <Icon name="person" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>Profile</Text>
             </TouchableOpacity>

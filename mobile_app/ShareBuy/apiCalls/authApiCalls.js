@@ -1,32 +1,33 @@
 import axios from 'axios';
 import { saveToken, isLoggedIn, getToken } from '../utils/userTokens';
-import {excuteAPICall} from './apiCallWrapper';
+import {excuteAPICallPOST} from './apiCallWrapper';
 import Constants from 'expo-constants';
 
 const baseRoute = Constants.expoConfig.extra.BASE_ROUTE;
 
-export const login = async ({email, password}) => {
-    if(await isLoggedIn()) {
+export const login = async (email, password) => {
+  console.log("Logging in with email:", email , "password :", password);  
+  if(await isLoggedIn()) {
         console.log("Already logged in");
         throw new Error('Already logged in');
     }
-    console.log("Logging in");
-    try{
-        const res = excuteAPICall('auth/login', {email, password});
-        if(res.status !== 200 || !res.data.accessToken || !res.data.refreshToken) {
-            console.log("Login failed");
-            throw new Error('Login failed');
-        }
-        console.log("Login successful");
-        saveToken('accessToken', res.data.accessToken);
-        saveToken('refreshToken', res.data.refreshToken);
-        saveToken('email', email);
-        return "login successful";
-    }
-    catch(error) {
-        console.error('Login failed:', error);
-        throw error;
-    }
+  try{
+      const res = await excuteAPICallPOST('auth/login', {email, password});
+      console.log("login res:\n" ,res);
+      if(res.status !== 200 || !res.data.accessToken || !res.data.refreshToken) {
+          console.log("Login failed");
+          throw new Error('Login failed');
+      }
+      console.log("Login successful");
+      saveToken('accessToken', res.data.accessToken);
+      saveToken('refreshToken', res.data.refreshToken);
+      saveToken('email', email);
+      return "login successful";
+  }
+  catch(error) {
+      console.error('Login failed:', error);
+      throw error;
+  }
 };
 
 /**

@@ -1,11 +1,22 @@
-import { Redirect } from "expo-router";
-import { useEffect } from "react";
-import { deleteAllTokens } from "../utils/userTokens";
+import React, { useEffect } from "react";
+import { NavigationContainer } from '@react-navigation/native';
+import { registerRootComponent } from 'expo';
+import { deleteAllTokens } from "../utils/userTokens"; 
+import AppNavigator from "./AppNavigator";
 
-export default function Index() {
+function App() {
     useEffect(() => {
         // Clear the secure store when the app starts
         deleteAllTokens();
-      }, []);
-    return <Redirect href="/welcome" />;
+    }, []);
+
+    return (
+        <NavigationContainer>
+            <AppNavigator />
+        </NavigationContainer>
+    );
 }
+
+registerRootComponent(App);
+
+export default App;
