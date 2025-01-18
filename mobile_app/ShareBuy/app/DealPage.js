@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, View, ActivityIndicator, Image, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, View, ActivityIndicator, Image, TouchableOpacity, Alert } from 'react-native';
 import { useRoute } from '@react-navigation/native'; // For route parameters
 import Icon from 'react-native-vector-icons/MaterialIcons'; // For the button icons
 
@@ -37,7 +37,21 @@ const DealPage = () => {
   };
 
   const handleLeaveGroup = () => {
-    setIsInGroup(false);
+    Alert.alert(
+      'Confirm Exit',
+      'Are you sure you want to leave this group? You will no longer be a part of this deal.',
+          [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => setIsInGroup(false),
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   const toggleFavorite = (dealId) => {
