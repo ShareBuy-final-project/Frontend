@@ -14,11 +14,14 @@ const BaseLayout = ({ children }) => {
   };
 
   const handleFavoritesPress = () => {
-    navigation.navigate('favorites'); // Navigate to the FavoritesPage
-    closeSidebar(); // Close sidebar after navigating
+    navigation.navigate('favorites'); 
+    closeSidebar(); 
+  };
+
   const handleProfilePress = () => {
     navigation.navigate('personalInformation');
-  }};
+  };
+
 
   const toggleSidebar = () => {
     const toValue = isSidebarOpen ? 0 : 1;
@@ -112,6 +115,7 @@ const BaseLayout = ({ children }) => {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 50,
     flex: 1,
     backgroundColor: '#f5f5f5',
   },

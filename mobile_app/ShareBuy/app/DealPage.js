@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Text, StyleSheet, View, ActivityIndicator, Image, TouchableOpacity, Alert } from 'react-native';
 import { useRoute } from '@react-navigation/native'; // For route parameters
 import Icon from 'react-native-vector-icons/MaterialIcons'; // For the button icons
+import BaseLayout from './BaseLayout';
 
 const DealPage = () => {
   const route = useRoute();
@@ -63,10 +64,15 @@ const DealPage = () => {
   };
 
   if (isLoading) {
-    return <ActivityIndicator size="large" color="#f08080" />;
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#f08080" />
+      </View>
+    );    
   }
 
   return (
+    <BaseLayout>
     <View style={styles.container}>
       <Image source={{ uri: dealDetails?.image }} style={styles.image} />
       {/* Heart Icon */}
@@ -106,6 +112,7 @@ const DealPage = () => {
         )}
       </View>
     </View>
+    </BaseLayout>
   );
 };
 
@@ -125,6 +132,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center', 
+    alignItems: 'center',      
   },
   description: {
     fontSize: 16,
