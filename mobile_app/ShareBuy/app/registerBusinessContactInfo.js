@@ -4,6 +4,7 @@ import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import InputField from '../components/InputField';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { registerBusiness } from '../apiCalls/userApiCalls';
 import axios from 'axios';
 
 const RegisterBusinessContactInfo = () => {
@@ -15,22 +16,22 @@ const RegisterBusinessContactInfo = () => {
 
   const handleNext = async () => {
     try {
-      const response = await axios.post('http://132.73.84.56:443/user/registerBusiness', {
-        "user": fullName,
-        "email": email,
-        "phone": phone,
-        "password": password,
-        "state": state,
-        "city": city,
-        "street": street,
-        "streetNumber": streetNumber,
-        "zipCode": zipCode,
-        "businessName": businessName,
-        "businessNumber": businessNumber,
-        "description": description,
-        "category": category,
-        "websiteLink": websiteLink,
-        "contactEmail": contactEmail,
+      const response = await registerBusiness({
+        fullName,
+        email,
+        phone,
+        password,
+        state,
+        city,
+        street,
+        streetNumber,
+        zipCode,
+        businessName,
+        businessNumber,
+        description,
+        category,
+        websiteLink,
+        contactEmail,
       });
 
       if (response.data.message === 'Business registered successfully') {

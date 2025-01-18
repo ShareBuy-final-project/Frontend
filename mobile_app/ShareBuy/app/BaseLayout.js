@@ -16,7 +16,9 @@ const BaseLayout = ({ children }) => {
   const handleFavoritesPress = () => {
     navigation.navigate('favorites'); // Navigate to the FavoritesPage
     closeSidebar(); // Close sidebar after navigating
-  };
+  const handleProfilePress = () => {
+    navigation.navigate('personalInformation');
+  }};
 
   const toggleSidebar = () => {
     const toValue = isSidebarOpen ? 0 : 1;
@@ -75,7 +77,7 @@ const BaseLayout = ({ children }) => {
         <TouchableWithoutFeedback>
           <View>
             <Text style={styles.sidebarHeader}>Amit Levints</Text>
-            <TouchableOpacity style={styles.sidebarItem}>
+            <TouchableOpacity style={styles.sidebarItem} onPress={handleProfilePress}>
               <Icon name="person" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>{business ? "Business Profile" : "Profile"}</Text>
             </TouchableOpacity>

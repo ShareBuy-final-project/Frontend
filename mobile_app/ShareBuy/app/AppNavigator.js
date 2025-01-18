@@ -1,6 +1,6 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Toast from 'react-native-toast-message';
 import Welcome from './welcome';
 import Register from './register';
 import RegisterTypeSelection from './registerTypeSelection';
@@ -12,13 +12,14 @@ import FavoritesPage from './favorites';
 import home from './home';
 import NewDealBasics from './NewDealBasics';
 import DealPage from './DealPage';
+import PersonalInformation from './UserSideBarPages/personalInformation';
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="welcome">
+    <>
+      <Stack.Navigator initialRouteName="welcome" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="welcome" component={Welcome} />
         <Stack.Screen name="home" component={home} />
         <Stack.Screen name="register" component={Register} />
@@ -30,9 +31,11 @@ const AppNavigator = () => {
         <Stack.Screen name="favorites" component={FavoritesPage} />
         <Stack.Screen name="NewDealBasics" component={NewDealBasics} />
         <Stack.Screen name="DealPage" component={DealPage} />
+        <Stack.Screen name="personalInformation" component={PersonalInformation} />
         {/* Add other screens here */}
       </Stack.Navigator>
-    </NavigationContainer>
+      <Toast/>
+    </>
   );
 };
 

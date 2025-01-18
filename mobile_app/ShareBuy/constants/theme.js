@@ -20,8 +20,10 @@ const COLORS = {
 
     purple: "#7552F2",
     lightPurple: "#C8BCF2",
-    darkPurple: "#977DF2"
+    darkPurple: "#977DF2",
 
+    success: "#28a745",  // Bright green
+    danger: "#dc3545",   // Bright red
   };
   
   const FONT = {
