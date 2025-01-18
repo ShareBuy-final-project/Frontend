@@ -7,5 +7,5 @@ export default function Index() {
         // Clear the secure store when the app starts
         deleteAllTokens();
       }, []);
-    return <Redirect href="/welcome" />;
+    return <Redirect href="/home" />;
 }

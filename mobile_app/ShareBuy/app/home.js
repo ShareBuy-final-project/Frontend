@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View, FlatList, TouchableOpacity, Image } from 'react-native';
-import BaseLayout from './BaseLayout'; 
-import SearchBar from '../components/SearchBar'; 
-import Icon from 'react-native-vector-icons/MaterialIcons'; 
+import BaseLayout from './BaseLayout';
+import SearchBar from '../components/SearchBar';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useNavigation } from '@react-navigation/native'; // For navigation
+import { COLORS, FONT } from '../constants/theme';
 
 const Home = () => {
   const [deals, setDeals] = useState([]);
@@ -11,86 +13,91 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [favorites, setFavorites] = useState([]);
 
+  const navigation = useNavigation(); // Use navigation for page transition
+
   const toggleFavorite = (dealId) => {
     setFavorites((prevFavorites) =>
       prevFavorites.includes(dealId)
         ? prevFavorites.filter((id) => id !== dealId)
         : [...prevFavorites, dealId]
     );
-  };  
+  };
 
   // Mock API call to fetch deals
   const fetchDeals = async (pageNumber) => {
     setIsLoading(true);
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
 
-    // Generate mock data
     const newDeals = Array.from({ length: 10 }, (_, index) => ({
       id: `deal-${pageNumber}-${index + 1}-${Date.now()}`,
       title: `Deal ${index + 1 + (pageNumber - 1) * 10}`,
-      price: `$${(Math.random() * 100).toFixed(2)}`,
+      original_price: `$${(Math.random() * 100).toFixed(2)}`,
+      descounted_price: `$${(Math.random() * 100).toFixed(2)}`,
       image: 'https://via.placeholder.com/150', // Placeholder image
-      participants: `${Math.floor(Math.random() * 10) + 1}/10`, // Random participant count for demonstration
+      participants: `${Math.floor(Math.random() * 10) + 1}/10`, // Random participant count
     }));
 
     setDeals((prevDeals) => [...prevDeals, ...newDeals]);
     setIsLoading(false);
   };
 
-  // Fetch initial deals on component mount
   useEffect(() => {
     fetchDeals(page);
   }, [page]);
 
-  // Load more deals when reaching the end of the list
   const handleLoadMore = () => {
     if (!isLoading) {
       setPage((prevPage) => prevPage + 1);
     }
   };
 
-  // Render a single deal card
   const renderDealCard = ({ item }) => (
     <TouchableOpacity style={styles.card}>
       <View style={styles.imageContainer}>
         <Image source={{ uri: item.image }} style={styles.cardImage} />
         <TouchableOpacity
-        style={styles.heartButton}
-        onPress={() => toggleFavorite(item.id)}
-      >
-        <Icon
-          name={favorites.includes(item.id) ? 'favorite' : 'favorite-border'}
-          size={24}
-          color="#f08080"
-        />
-      </TouchableOpacity>
+          style={styles.heartButton}
+          onPress={() => toggleFavorite(item.id)}
+        >
+          <Icon
+            name={favorites.includes(item.id) ? 'favorite' : 'favorite-border'}
+            size={24}
+            color="#f08080"
+          />
+        </TouchableOpacity>
         <View style={styles.participantOverlay}>
           <Text style={styles.participantText}>{item.participants}</Text>
         </View>
       </View>
       <Text style={styles.cardTitle}>{item.title}</Text>
-      <Text style={styles.cardPrice}>{item.price}</Text>
+      <View style={styles.priceContainer}>
+        <Text style={styles.cardPriceOriginal}>{item.original_price}</Text>
+        <Text style={styles.cardPriceDiscounted}>{item.descounted_price}</Text>
+      </View>
     </TouchableOpacity>
   );
 
-  // Filter deals based on the search query
   const filteredDeals = deals.filter((deal) =>
     deal.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <BaseLayout>
+      <View style={styles.messageContainer}>
+        <Text style={styles.secondSubMessage}>
+          Want to create a new suggested deal? <Text style={{ color: COLORS.black, textDecorationLine: 'underline' }} onPress={() => navigation.replace('NewDealBasics')}>Create one</Text>
+        </Text>
+      </View>
       <View style={styles.DealsContainer}>
         <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
         <FlatList
           data={filteredDeals}
           renderItem={renderDealCard}
           keyExtractor={(item) => item.id}
-          key={'grid'} // Force FlatList to re-render if necessary
+          key={'grid'}
           contentContainerStyle={styles.listContainer}
-          numColumns={2} // Display 2 items per row
-          columnWrapperStyle={styles.row} // Space between rows
+          numColumns={2}
+          columnWrapperStyle={styles.row}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           ListFooterComponent={isLoading && <Text style={styles.loadingText}>Loading more deals...</Text>}
@@ -101,8 +108,33 @@ const Home = () => {
 };
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 15,
+    backgroundColor: '#f08080',
+  },
+  headerTitle: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  createButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ff7f50',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  createButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    marginLeft: 5,
+  },
   DealsContainer: {
-    marginTop: -30,
+    marginTop: -10,
   },
   listContainer: {
     paddingHorizontal: 10,
@@ -146,17 +178,28 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-
   cardTitle: {
     fontSize: 14,
     fontWeight: 'bold',
     margin: 10,
   },
-  cardPrice: {
-    fontSize: 12,
-    color: '#888',
+  priceContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginHorizontal: 10,
     marginBottom: 10,
+  },
+  cardPriceOriginal: {
+    fontSize: 14,
+    color: '#888',
+    textDecorationLine: 'line-through', // Add red line through original price
+    alignSelf: 'center', // Align it vertically with the discounted price
+  },
+  cardPriceDiscounted: {
+    fontSize: 14,
+    color: '#f08080', // Discounted price color (can adjust as needed)
+    fontWeight: 'bold',
+    alignSelf: 'center', // Align vertically with the original price
   },
   loadingText: {
     textAlign: 'center',
@@ -169,7 +212,19 @@ const styles = StyleSheet.create({
     left: 8,
     zIndex: 10,
     padding: 6,
-  },  
+  },
+  messageContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
+  secondSubMessage: {
+    fontSize: 14,
+    color: COLORS.black,
+    textAlign: 'center',
+    fontFamily: FONT.arial,
+    backgroundColor: COLORS.glowingYeloow,
+  },
 });
 
 export default Home;
