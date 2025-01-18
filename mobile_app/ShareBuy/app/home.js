@@ -52,7 +52,7 @@ const Home = () => {
   };
 
   const renderDealCard = ({ item }) => (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('DealPage', { dealName: item.title })}>
       <View style={styles.imageContainer}>
         <Image source={{ uri: item.image }} style={styles.cardImage} />
         <TouchableOpacity

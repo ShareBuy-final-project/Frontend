@@ -11,6 +11,7 @@ import RegisterPassword from './registerPassword';
 import FavoritesPage from './favorites';
 import home from './home';
 import NewDealBasics from './NewDealBasics';
+import DealPage from './DealPage';
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,7 @@ const AppNavigator = () => {
         <Stack.Screen name="registerBusinessContactInfo" component={RegisterBusinessContactInfo} />
         <Stack.Screen name="favorites" component={FavoritesPage} />
         <Stack.Screen name="NewDealBasics" component={NewDealBasics} />
+        <Stack.Screen name="DealPage" component={DealPage} />
         {/* Add other screens here */}
       </Stack.Navigator>
     </NavigationContainer>
