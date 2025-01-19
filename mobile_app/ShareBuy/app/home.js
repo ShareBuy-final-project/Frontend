@@ -5,6 +5,7 @@ import SearchBar from '../components/SearchBar';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native'; // For navigation
 import { COLORS, FONT } from '../constants/theme';
+import {fetchDeals, saveGroup, unSaveGroup} from '../apiCalls/groupApiCalls'
 
 const Home = () => {
   const [deals, setDeals] = useState([]);
@@ -16,19 +17,31 @@ const Home = () => {
 
   const navigation = useNavigation(); // Use navigation for page transition
 
-  const toggleFavorite = (dealId) => {
-    setFavorites((prevFavorites) =>
-      prevFavorites.includes(dealId)
+  const toggleFavorite = async (dealId) => {
+    setFavorites((prevFavorites) => {
+      const isFavorited = prevFavorites.includes(dealId);
+      const newFavorites = isFavorited
         ? prevFavorites.filter((id) => id !== dealId)
-        : [...prevFavorites, dealId]
-    );
+        : [...prevFavorites, dealId];
+  
+      // Call saveGroup or unSaveGroup based on whether the deal is being added or removed from favorites
+      if (isFavorited) {
+        unSaveGroup(dealId)  // Call unSaveGroup when unfavoriting
+          .catch(error => console.error('Error unsaving group:', error));
+      } else {
+        saveGroup(dealId)  // Call saveGroup when favoriting
+          .catch(error => console.error('Error saving group:', error));
+      }
+  
+      return newFavorites;
+    });
   };
-
-  const fetchDeals = async (pageNumber) => {
+  
+  const getDeals = async (pageNumber) => {
     setIsLoading(true);
     try {
       // Call the API fetchDeals function
-      const apiDeals = await fetchDealsFromApi({}, pageNumber, 10, 'user@example.com'); // Replace 'user@example.com' with actual user email
+      const apiDeals = await fetchDeals({}, pageNumber, 10); 
       if (apiDeals.length === 0) {
         setHasMore(false); // No more deals available
         return;
@@ -41,7 +54,12 @@ const Home = () => {
         discounted_price: deal.discounted_price,
         image: deal.image || 'https://via.placeholder.com/150', // Default placeholder image
         participants: deal.totalAmount || 0, // Participant count from API
+        isSaved: deal.isSaved || false,
       }));
+
+      // Update favorites based on the deals received
+      const initialFavorites = formattedDeals.filter(deal => deal.isSaved).map(deal => deal.id);
+      setFavorites(initialFavorites);
 
       // Update the state with the new deals
       setDeals((prevDeals) => [...prevDeals, ...formattedDeals]);
@@ -54,7 +72,7 @@ const Home = () => {
 
   // Fetch deals whenever the page changes
   useEffect(() => {
-    fetchDeals(page);
+    getDeals(page);
   }, [page]);
 
   const handleLoadMore = () => {
@@ -63,32 +81,32 @@ const Home = () => {
     }
     };
 
-  const renderDealCard = ({ item }) => (
-    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('DealPage', { dealName: item.title })}>
-      <View style={styles.imageContainer}>
-        <Image source={{ uri: item.image }} style={styles.cardImage} />
-        <TouchableOpacity
-          style={styles.heartButton}
-          onPress={() => toggleFavorite(item.id)}
-        >
-          <Icon
-            name={favorites.includes(item.id) ? 'favorite' : 'favorite-border'}
-            size={24}
-            color="#f08080"
-          />
-        </TouchableOpacity>
-        <View style={styles.participantOverlay}>
-          <Text style={styles.participantText}>{item.participants}</Text>
+    const renderDealCard = ({ item }) => (
+      <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('DealPage', { dealName: item.title })}>
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: item.image }} style={styles.cardImage} />
+          <TouchableOpacity
+            style={styles.heartButton}
+            onPress={() => toggleFavorite(item.id)}
+          >
+            <Icon
+              name={favorites.includes(item.id) ? 'favorite' : 'favorite-border'}
+              size={24}
+              color="#f08080"
+            />
+          </TouchableOpacity>
+          <View style={styles.participantOverlay}>
+            <Text style={styles.participantText}>{item.participants}</Text>
+          </View>
         </View>
-      </View>
-      <Text style={styles.cardTitle}>{item.title}</Text>
-      <View style={styles.priceContainer}>
-        <Text style={styles.cardPriceOriginal}>{item.original_price}</Text>
-        <Text style={styles.cardPriceDiscounted}>{item.descounted_price}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-
+        <Text style={styles.cardTitle}>{item.title}</Text>
+        <View style={styles.priceContainer}>
+          <Text style={styles.cardPriceOriginal}>{item.original_price}</Text>
+          <Text style={styles.cardPriceDiscounted}>{item.discounted_price}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+    
   const filteredDeals = deals.filter((deal) =>
     deal.title.toLowerCase().includes(searchQuery.toLowerCase())
   );

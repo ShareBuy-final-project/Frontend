@@ -19,7 +19,7 @@ const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
   return (
     <>
-      <Stack.Navigator initialRouteName="welcome" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="home" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="welcome" component={Welcome} />
         <Stack.Screen name="home" component={home} />
         <Stack.Screen name="register" component={Register} />

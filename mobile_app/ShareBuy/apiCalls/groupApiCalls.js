@@ -38,20 +38,29 @@ export const getGroupById = async (groupId) => {
 
 /**
  * Get saved groups for a user
+ * @param {Number} [page=1] - Page number
+ * @param {Number} [limit=10] - Number of groups per page
  * @returns {Promise<Object[]>} - List of saved groups
  */
-export const getSavedGroups = async () => {
+export const getSavedGroups = async (page = 1, limit = 10) => {
   try {
-    const res = await excuteAPICallGET('group/getSavedGroups');
+    const res = await excuteAPICallGET('group/getSavedGroups', {
+      page,
+      limit,
+    });
+
     if (res.status !== 200) {
-      throw new Error('Failed to fetch saved groups');
+      throw new Error('Failed to fetch deals');
     }
+
     return res.data;
   } catch (error) {
-    console.error('Error fetching saved groups:', error);
+    console.error('Error fetching deals:', error);
     throw error;
   }
 };
+
+
 
 /**
  * Save a group for a user
@@ -69,6 +78,24 @@ export const saveGroup = async (groupId) => {
     throw error;
   }
 };
+
+/**
+ * Save a group for a user
+ * @param {String} groupId - ID of the group to save
+ * @returns {Promise<void>} - Success or failure
+ */
+export const unSaveGroup = async (groupId) => {
+  try {
+    const res = await excuteAPICallPOST('group/unSaveGroup', { groupId });
+    if (res.status !== 200) {
+      throw new Error('Failed to unsave group');
+    }
+  } catch (error) {
+    console.error('Error unsaving group:', error);
+    throw error;
+  }
+};
+
 
 /**
  * Join a group
@@ -147,3 +174,53 @@ export const fetchDeals = async (filters = {}, page = 1, limit = 10) => {
     throw error;
   }
 };
+
+/**
+ * Get history groups of a user
+ * @param {Number} [page=1] - Page number
+ * @param {Number} [limit=10] - Number of groups per page
+ * @returns {Promise<Object[]>} - List of saved groups
+ */
+export const getUserHistory = async (page = 1, limit = 10) => {
+  try {
+    const res = await excuteAPICallGET('group/getUserHistory', {
+      page,
+      limit,
+    });
+
+    if (res.status !== 200) {
+      throw new Error('Failed to fetch history deals');
+    }
+
+    return res.data;
+  } catch (error) {
+    console.error('Error fetching history deals:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get current groups of a user
+ * @param {Number} [page=1] - Page number
+ * @param {Number} [limit=10] - Number of groups per page
+ * @returns {Promise<Object[]>} - List of saved groups
+ */
+export const getUserCurrentGroups = async (page = 1, limit = 10) => {
+  try {
+    const res = await excuteAPICallGET('group/getUserGroups', {
+      page,
+      limit,
+    });
+
+    if (res.status !== 200) {
+      throw new Error('Failed to fetch user current deals');
+    }
+
+    return res.data;
+  } catch (error) {
+    console.error('Error fetching user current  deals:', error);
+    throw error;
+  }
+};
+
+

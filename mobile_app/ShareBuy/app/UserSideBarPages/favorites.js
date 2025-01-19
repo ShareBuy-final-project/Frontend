@@ -4,9 +4,9 @@ import BaseLayout from './BaseLayout'; // Ensure you import BaseLayout correctly
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS, FONT } from '../constants/theme';
-import {getUserCurrentGroups, saveGroup, unSaveGroup} from '../apiCalls/groupApiCalls'
+import {getSavedGroups, saveGroup, unSaveGroup} from '../apiCalls/groupApiCalls'
 
-const myGroups = () => {
+const FavoritesPage = () => {
   const [deals, setDeals] = useState([]);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +39,7 @@ const myGroups = () => {
     setIsLoading(true);
     try {
       // Call the API getSavedGroups function
-      const apiDeals = await getUserCurrentGroups({}, pageNumber, 10); 
+      const apiDeals = await getSavedGroups({}, pageNumber, 10); 
       if (apiDeals.length === 0) {
         setHasMore(false); // No more deals available
         return;
@@ -252,4 +252,4 @@ secondSubMessage: {
 },
 });
 
-export default myGroups;
+export default FavoritesPage;
