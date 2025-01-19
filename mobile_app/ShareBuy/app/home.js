@@ -8,10 +8,11 @@ import { COLORS, FONT } from '../constants/theme';
 
 const Home = () => {
   const [deals, setDeals] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [favorites, setFavorites] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
 
   const navigation = useNavigation(); // Use navigation for page transition
 
@@ -23,33 +24,44 @@ const Home = () => {
     );
   };
 
-  // Mock API call to fetch deals
   const fetchDeals = async (pageNumber) => {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
+    try {
+      // Call the API fetchDeals function
+      const apiDeals = await fetchDealsFromApi({}, pageNumber, 10, 'user@example.com'); // Replace 'user@example.com' with actual user email
+      if (apiDeals.length === 0) {
+        setHasMore(false); // No more deals available
+        return;
+      }  
+      // Map the API response to match your component's requirements
+      const formattedDeals = apiDeals.map((deal) => ({
+        id: deal.id,
+        title: deal.name,
+        original_price: deal.original_price,
+        discounted_price: deal.discounted_price,
+        image: deal.image || 'https://via.placeholder.com/150', // Default placeholder image
+        participants: deal.totalAmount || 0, // Participant count from API
+      }));
 
-    const newDeals = Array.from({ length: 10 }, (_, index) => ({
-      id: `deal-${pageNumber}-${index + 1}-${Date.now()}`,
-      title: `Deal ${index + 1 + (pageNumber - 1) * 10}`,
-      original_price: `$${(Math.random() * 100).toFixed(2)}`,
-      descounted_price: `$${(Math.random() * 100).toFixed(2)}`,
-      image: 'https://via.placeholder.com/150', // Placeholder image
-      participants: `${Math.floor(Math.random() * 10) + 1}/10`, // Random participant count
-    }));
-
-    setDeals((prevDeals) => [...prevDeals, ...newDeals]);
-    setIsLoading(false);
+      // Update the state with the new deals
+      setDeals((prevDeals) => [...prevDeals, ...formattedDeals]);
+    } catch (error) {
+      console.error('Error fetching deals:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  // Fetch deals whenever the page changes
   useEffect(() => {
     fetchDeals(page);
   }, [page]);
 
   const handleLoadMore = () => {
-    if (!isLoading) {
+    if (!isLoading && hasMore) {
       setPage((prevPage) => prevPage + 1);
     }
-  };
+    };
 
   const renderDealCard = ({ item }) => (
     <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('DealPage', { dealName: item.title })}>
