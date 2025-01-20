@@ -3,13 +3,13 @@ import { View, Text, StyleSheet } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { COLORS, FONT } from '../constants/theme';
 
-const DropDown = ({ label, selectedValue, onValueChange, options }) => {
+const DropDown = ({ label, selectedValue, onValueChange, options, width = '80%' }) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(selectedValue);
   const [items, setItems] = useState(options);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { width }]}>
       {label && <Text style={styles.label}>{label}</Text>}
       <DropDownPicker
         open={open}
@@ -26,7 +26,6 @@ const DropDown = ({ label, selectedValue, onValueChange, options }) => {
         scrollViewProps={{
           nestedScrollEnabled: true,
         }}
-        
       />
     </View>
   );
@@ -34,7 +33,6 @@ const DropDown = ({ label, selectedValue, onValueChange, options }) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: '80%',
     marginTop: 20,
   },
   label: {
