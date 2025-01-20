@@ -2,6 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 import Welcome from './welcome';
+import CheckoutScreen from './pay';
 import Register from './register';
 import RegisterTypeSelection from './registerTypeSelection';
 import RegisterBusinessDetails from './registerBusinessDetails';
@@ -16,7 +17,8 @@ const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
   return (
     <>
-      <Stack.Navigator initialRouteName="welcome" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="CheckoutScreen" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="CheckoutScreen" component={CheckoutScreen} />
         <Stack.Screen name="welcome" component={Welcome} />
         <Stack.Screen name="home" component={home} />
         <Stack.Screen name="register" component={Register} />
