@@ -6,7 +6,7 @@ import BaseLayout from './BaseLayout';
 
 const DealPage = () => {
   const route = useRoute();
-  const { dealName } = route.params; // Get the deal name passed from Home
+  const { dealId } = route.params; // Get the deal id passed from Home
   const [dealDetails, setDealDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isInGroup, setIsInGroup] = useState(false); // Track if the user is part of a group
@@ -15,19 +15,23 @@ const DealPage = () => {
   useEffect(() => {
     const fetchDealDetails = async () => {
       setIsLoading(true);
-      // Simulate API call to fetch deal details based on dealName
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate delay
+      try {
+        // Fetch group details using the dealId
+        const group = await getGroupById(dealId);
 
-      // Simulated fetched deal details
-      setDealDetails({
-        name: dealName,
-        description: 'This is a detailed description of the deal. A great deal for bulk purchases.',
-        price: '$50',
-        originalPrice: '$100',
-        image: 'https://via.placeholder.com/150', // Placeholder image
-        participants: '3/10', // Simulated number of participants
-      });
-      setIsLoading(false);
+        setDealDetails({
+          name: group.name, // Assuming group object has a 'name' field
+          description: group.description, // Assuming group object has a 'description' field
+          price: `$${group.price}`, // Assuming group object has a 'price' field
+          originalPrice: `$${group.originalPrice}`, // Assuming group object has an 'originalPrice' field
+          image: group.image || 'https://via.placeholder.com/150', // Placeholder image
+          participants: `${group.participants.length}/${group.maxParticipants}`, // Example participants
+        });
+      } catch (error) {
+        console.error('Error fetching deal details:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchDealDetails();
@@ -55,12 +59,24 @@ const DealPage = () => {
     );
   };
 
-  const toggleFavorite = (dealId) => {
-    setFavorites((prevFavorites) =>
-      prevFavorites.includes(dealId)
+  const toggleFavorite = async (dealId) => {
+    setFavorites((prevFavorites) => {
+      const isFavorited = prevFavorites.includes(dealId);
+      const newFavorites = isFavorited
         ? prevFavorites.filter((id) => id !== dealId)
-        : [...prevFavorites, dealId]
-    );
+        : [...prevFavorites, dealId];
+  
+      // Call saveGroup or unSaveGroup based on whether the deal is being added or removed from favorites
+      if (isFavorited) {
+        unSaveGroup(dealId)  // Call unSaveGroup when unfavoriting
+          .catch(error => console.error('Error unsaving group:', error));
+      } else {
+        saveGroup(dealId)  // Call saveGroup when favoriting
+          .catch(error => console.error('Error saving group:', error));
+      }
+  
+      return newFavorites;
+    });
   };
 
   if (isLoading) {
@@ -78,10 +94,10 @@ const DealPage = () => {
       {/* Heart Icon */}
       <TouchableOpacity
         style={styles.heartButton}
-        onPress={() => toggleFavorite(dealName)} // Use the deal name or unique id for this
+        onPress={() => toggleFavorite(item.id)} // Use the deal name or unique id for this
       >
         <Icon
-          name={favorites.includes(dealName) ? 'favorite' : 'favorite-border'}
+          name={favorites.includes(item.id) ? 'favorite' : 'favorite-border'}
           size={28} 
           color="#f08080"
         />
