@@ -2,7 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 import Welcome from './welcome';
-import CheckoutScreen from './pay';
+import CheckoutScreen from './paymentPage';
 import Register from './register';
 import RegisterTypeSelection from './registerTypeSelection';
 import RegisterBusinessDetails from './registerBusinessDetails';

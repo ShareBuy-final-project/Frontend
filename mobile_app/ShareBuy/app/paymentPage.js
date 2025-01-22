@@ -1,15 +1,19 @@
 import { StripeProvider } from '@stripe/stripe-react-native';
-import { View, TouchableOpacity, Text, StyleSheet, Alert, Modal } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, Alert, Modal, ActivityIndicator} from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useStripe } from '@stripe/stripe-react-native';
 import BaseLayout from './BaseLayout';
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { CheckBox } from 'react-native-elements'; // Import CheckBox from react-native-elements
-import TermsOfUse from '../components/TermsOfUse'; // Ensure correct import
-import DropDown from '../components/DropDown'; // Import DropDown component
+import { CheckBox } from 'react-native-elements'; 
+import TermsOfUse from '../components/TermsOfUse';
+import DropDown from '../components/DropDown'; 
+import {createPaymentIntent} from '../apiCalls/groupApiCall';
+import Toast from 'react-native-toast-message';
+
 
 export default CheckoutScreen = () => {
+  const [isLoading, setIsLoading] = useState(false);
     const { initPaymentSheet, presentPaymentSheet } = useStripe();
     const route = useRoute(); 
     // const { dealDetails } = route.params;
@@ -21,56 +25,52 @@ export default CheckoutScreen = () => {
     }
     const [isTermsVisible, setIsTermsVisible] = useState(false);
     const [isConsentChecked, setIsConsentChecked] = useState(false);
-    const [amount, setAmount] = useState(1); // State for amount
+    const [amount, setAmount] = useState(1);
 
     const setupPaymentSheet = async () => {
-      const response = await fetch('http://10.100.102.6:4000/payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        Authorization: 'Bearer access-token', // Replace with your API token
-        body: JSON.stringify({ amount: 5000 }), // Replace with your amount
-      });
-  
-      const {     
-        paymentIntent,
-        ephemeralKey,
-        customer,
-        publishableKey,
-        paymentIntentId } = await response.json();
-  
-      const { error } = await initPaymentSheet({
-        merchantDisplayName: "Example, Inc.",
-        customerId: customer,
-        customerEphemeralKeySecret: ephemeralKey,
-        paymentIntentClientSecret: paymentIntent,
-        // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
-        //methods that complete payment after a delay, like SEPA Debit and Sofort.
-        allowsDelayedPaymentMethods: true,
-        defaultBillingDetails: {
-          name: 'Jane Doe',
-        },
-        appearance: {
-            colors: {
-              primary: '#000000',
-              background: '#ffffff',
-              componentBackground: '#f3f3f3',
-              componentBorder: '#c7c7c7',
-              componentDivider: '#e3e3e3',
-              primaryText: '#000000',
-              secondaryText: '#666666',
-              componentText: '#000000',
-              placeholderText: '#999999',
-            },
-          },
+        try{
+          const response = await createPaymentIntent({ groupId: dealDetails.groupId,amount: amount });
+          const {     
+            paymentIntent,
+            ephemeralKey,
+            customer,
+            publishableKey,
+            paymentIntentId } = response;
+          const { error } = await initPaymentSheet({
+            customerId: customer,
+            customerEphemeralKeySecret: ephemeralKey,
+            paymentIntentClientSecret: paymentIntent,
+            // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
+            //methods that complete payment after a delay, like SEPA Debit and Sofort.
+            allowsDelayedPaymentMethods: true,
+            appearance: {
+                colors: {
+                  primary: '#000000',
+                  background: '#ffffff',
+                  componentBackground: '#f3f3f3',
+                  componentBorder: '#c7c7c7',
+                  componentDivider: '#e3e3e3',
+                  primaryText: '#000000',
+                  secondaryText: '#666666',
+                  componentText: '#000000',
+                  placeholderText: '#999999',
+                },
+              },
 
-      });
-  
-      if (error) {
-        console.error('Error initializing Payment Sheet:', error);
-        return;
+          });
+      
+          if (error) {
+            console.error('Error initializing Payment Sheet:', error);
+            return {error};
+          }
+      
+          console.log('Payment Sheet initialized successfully');
+          return;
       }
-  
-      console.log('Payment Sheet initialized successfully');
+      catch(error) {
+          console.error('Error setting up Payment Sheet:', error);
+          return {error};
+      }
     };
   
     const openPaymentSheet = async () => {
@@ -85,18 +85,35 @@ export default CheckoutScreen = () => {
           );
           return;
       }
+      setIsLoading(true);
+      const setupResponse = await setupPaymentSheet();
+      setIsLoading(false);
+      if (setupResponse?.error) {
+        console.error('Error during Payment Sheet setup:', setupResponse.error.message);
+        return;
+      }
       const { error } = await presentPaymentSheet();
-  
       if (error) {
-        console.error('Payment failed:', error.message);
+        Alert.alert('Error processing payment', error.message);
+        
       } else {
-        console.log('Payment authorized successfully');
-        // Notify your backend that the Payment Intent was confirmed
+        console.log('Payment authorized successfully.');
+        Toast.show({
+          type: 'success',
+          text1: 'Your payment was successful, and you have successfully joined the group 🎉',
+        });
+        navigation.navigate('Home')
       }
     };
 
     const totalPrice = dealDetails.price * amount; // Calculate total price
-  
+    if (isLoading) {
+      return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#f08080" />
+        </View>
+      );    
+    }
     return (
         <BaseLayout>
             <StripeProvider publishableKey="pk_test_51Qg9a2GBz0nP5Loo5OXv3znrj1HFtp7pFa0cHkECXnvWbwAJFMYpYrvRLbw4An6eUmOM4EeUJ7BuhwgJj6JlUq1g003hKQsNBH">
@@ -227,5 +244,10 @@ const styles = StyleSheet.create({
     },
     label: {
         marginLeft: 8,
+    },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center', 
+      alignItems: 'center',      
     },
 });
