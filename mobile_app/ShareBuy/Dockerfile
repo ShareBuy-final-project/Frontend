@@ -10,8 +10,8 @@ COPY package.json package-lock.json ./
 # Install dependencies
 RUN npm install
 
-# Install expo-cli globally
-RUN npm install -g expo-cli
+# Install expo-cli and @expo/ngrok globally
+RUN npm install -g expo-cli @expo/ngrok 
 
 # Copy the rest of the application code
 COPY . .
