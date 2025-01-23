@@ -12,7 +12,6 @@ services:
       - "8083:8083"
     # volumes:
     #   - .:/app
-    command: npx expo start --lan --port 8083
     environment:
       - NODE_ENV=development
       - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
