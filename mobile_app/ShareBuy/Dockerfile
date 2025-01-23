@@ -10,6 +10,9 @@ COPY package.json package-lock.json ./
 # Install dependencies
 RUN npm install
 
+# Install expo-cli globally
+RUN npm install -g expo-cli
+
 # Copy the rest of the application code
 COPY . .
 
