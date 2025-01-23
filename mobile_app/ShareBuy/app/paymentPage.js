@@ -99,7 +99,9 @@ export default CheckoutScreen = () => {
         
       } else {
         console.log('Payment authorized successfully.');
-        updatePaymentConfirmed(paymentIntentId);
+        setIsLoading(true);
+        await updatePaymentConfirmed(paymentIntentId);
+        setIsLoading(false);
         Toast.show({
           type: 'success',
           text1: 'Your payment was successful, and you have successfully joined the group 🎉',
