@@ -25,7 +25,7 @@ export const createGroup = async (groupData) => {
  */
 export const getGroupById = async (groupId) => {
   try {
-    const res = await excuteAPICallGET('group/get', { id: groupId });
+    const res = await excuteAPICallGET(`group/get?id=${groupId}`);
     if (res.status !== 200) {
       throw new Error('Failed to fetch group');
     }

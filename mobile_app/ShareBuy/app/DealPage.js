@@ -3,7 +3,7 @@ import { Text, StyleSheet, View, ActivityIndicator, Image, TouchableOpacity, Ale
 import { useRoute } from '@react-navigation/native'; // For route parameters
 import Icon from 'react-native-vector-icons/MaterialIcons'; // For the button icons
 import BaseLayout from './BaseLayout';
-import {getGroupById} from '../apiCalls/groupApiCalls'
+import {getGroupById, joinGroup, leaveGroup} from '../apiCalls/groupApiCalls'
 
 const DealPage = () => {
   const route = useRoute();
@@ -18,7 +18,6 @@ const DealPage = () => {
       setIsLoading(true);
       try {
         // Fetch group details using the dealId
-        console.log("amit-test", dealId)
         const group = await getGroupById(dealId);
         setDealDetails({
           id: group.id,
