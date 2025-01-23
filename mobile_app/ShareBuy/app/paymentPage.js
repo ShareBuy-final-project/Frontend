@@ -16,12 +16,12 @@ export default CheckoutScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
     const { initPaymentSheet, presentPaymentSheet } = useStripe();
     const route = useRoute(); 
-    // const { dealDetails } = route.params;
+    const { title, description, price, groupId} = route.params;
     const dealDetails = {
-        name: "Deal Name",
-        description: 'This is a detailed description of the deal. A great deal for bulk purchases.',
-        price: 50, // Change to number for calculation
-        groupId : '1234',
+        name: title,
+        description: description,
+        price: price, // Change to number for calculation
+        groupId : groupId,
     }
     const [isTermsVisible, setIsTermsVisible] = useState(false);
     const [isConsentChecked, setIsConsentChecked] = useState(false);
