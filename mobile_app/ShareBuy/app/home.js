@@ -49,10 +49,10 @@ const Home = () => {
       // Map the API response to match your component's requirements
       const formattedDeals = apiDeals.map((deal) => ({
         id: deal.id,
-        title: `Deal ${deal.name}`,
+        title: `${deal.name}`,
         original_price: `$${deal.price}`,
         discounted_price: `$${deal.discount}`,
-        image: deal.image || 'https://via.placeholder.com/150', // Default placeholder image
+        image: deal.imageBase64 || 'https://via.placeholder.com/150', // Default placeholder image
         participants: deal.totalAmount || 0, // Participant count from API
         size: deal.size,
         isSaved: deal.isSaved || false,
