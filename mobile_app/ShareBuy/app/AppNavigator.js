@@ -8,7 +8,7 @@ import RegisterBusinessDetails from './registerBusinessDetails';
 import RegisterLocation from './registerLocation';
 import RegisterBusinessContactInfo from './registerBusinessContactInfo';
 import RegisterPassword from './registerPassword';
-import FavoritesPage from './favorites';
+import FavoritesPage from './UserSideBarPages/favorites'
 import home from './home';
 import NewDealBasics from './NewDealBasics';
 import DealPage from './DealPage';
@@ -19,7 +19,7 @@ const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
   return (
     <>
-      <Stack.Navigator initialRouteName="home" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="welcome" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="welcome" component={Welcome} />
         <Stack.Screen name="home" component={home} />
         <Stack.Screen name="register" component={Register} />

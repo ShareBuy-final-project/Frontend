@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View, FlatList, TouchableOpacity, Image } from 'react-native';
-import BaseLayout from './BaseLayout'; // Ensure you import BaseLayout correctly
+import BaseLayout from '../BaseLayout'; // Ensure you import BaseLayout correctly
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
-import { COLORS, FONT } from '../constants/theme';
-import {getSavedGroups, saveGroup, unSaveGroup} from '../apiCalls/groupApiCalls'
+import { COLORS, FONT } from '../../constants/theme';
+import {getSavedGroups, saveGroup, unSaveGroup} from '../../apiCalls/groupApiCalls'
 
 const FavoritesPage = () => {
   const [deals, setDeals] = useState([]);

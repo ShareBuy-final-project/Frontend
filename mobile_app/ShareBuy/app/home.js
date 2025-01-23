@@ -9,7 +9,7 @@ import {fetchDeals, saveGroup, unSaveGroup} from '../apiCalls/groupApiCalls'
 
 const Home = () => {
   const [deals, setDeals] = useState([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [favorites, setFavorites] = useState([]);
@@ -50,10 +50,11 @@ const Home = () => {
       const formattedDeals = apiDeals.map((deal) => ({
         id: deal.id,
         title: deal.name,
-        original_price: deal.original_price,
-        discounted_price: deal.discounted_price,
+        original_price: deal.price,
+        discounted_price: deal.discount,
         image: deal.image || 'https://via.placeholder.com/150', // Default placeholder image
         participants: deal.totalAmount || 0, // Participant count from API
+        size: deal.size,
         isSaved: deal.isSaved || false,
       }));
 
@@ -70,11 +71,12 @@ const Home = () => {
     }
   };
 
-  // Fetch deals whenever the page changes
   useEffect(() => {
-    getDeals(page);
-  }, [page]);
-
+    if (page === 1) { // Only fetch on the first render
+      getDeals(page);
+    }
+  }, []);
+  
   const handleLoadMore = () => {
     if (!isLoading && hasMore) {
       setPage((prevPage) => prevPage + 1);
