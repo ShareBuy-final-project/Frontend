@@ -14,7 +14,7 @@ COPY . .
 RUN npm install
 
 # Install expo-cli and @expo/ngrok globally
-# RUN npm install -g expo-cli @expo/ngrok 
+RUN npm install -g expo-cli @expo/ngrok 
 
 
 # Expose the ports the app runs on
