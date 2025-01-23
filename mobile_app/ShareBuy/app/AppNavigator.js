@@ -13,14 +13,16 @@ import home from './home';
 import NewDealBasics from './NewDealBasics';
 import DealPage from './DealPage';
 import PersonalInformation from './UserSideBarPages/personalInformation';
+import registerBankDetails from './registerBusinessBankDetails';
 
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
   return (
     <>
-      <Stack.Navigator initialRouteName="welcome" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="registerBankDetails" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="welcome" component={Welcome} />
+        <Stack.Screen name="registerBankDetails" component={registerBankDetails} />
         <Stack.Screen name="home" component={home} />
         <Stack.Screen name="register" component={Register} />
         <Stack.Screen name="registerPassword" component={RegisterPassword} />
