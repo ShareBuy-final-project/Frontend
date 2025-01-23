@@ -39,7 +39,7 @@ const excuteAPICall = async (route, type, params) => {
             headers: headers,
             data: body
         });
-        //console.log('Response:', response);
+        console.log('Response:::::', response);
         return response;
     } catch (error) {
         if (error.response && error.response.status === 401) {

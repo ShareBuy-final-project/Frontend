@@ -2,7 +2,9 @@ import {excuteAPICallPOST} from './apiCallWrapper';
 
 export const createPaymentIntent = async (groupId, amount) => {
   try{
+      console.log("Creating payment intent with groupId:", groupId, "and amount:", amount);
       const res = await excuteAPICallPOST('group/joinGroup', {groupId, amount});
+      console.log("Payment intent res:\n" ,res);
       return res.data;
   }
   catch(error) {

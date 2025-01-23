@@ -9,6 +9,7 @@ import { CheckBox } from 'react-native-elements';
 import TermsOfUse from '../components/TermsOfUse';
 import DropDown from '../components/DropDown'; 
 import {createPaymentIntent} from '../apiCalls/groupApiCall';
+import {updatePaymentConfirmed} from '../apiCalls/paymentApiCalls';
 import Toast from 'react-native-toast-message';
 
 
@@ -16,7 +17,6 @@ export default CheckoutScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
     const { initPaymentSheet, presentPaymentSheet } = useStripe();
     const route = useRoute(); 
-    
     let { name, price, groupId} = route.params;
     price = parseFloat(price.replace("$", ""));
     const  dealDetails  = {name, price, groupId};
@@ -40,6 +40,7 @@ export default CheckoutScreen = () => {
             customer,
             publishableKey,
             paymentIntentId } = response;
+            
           const { error } = await initPaymentSheet({
             customerId: customer,
             customerEphemeralKeySecret: ephemeralKey,
@@ -69,7 +70,7 @@ export default CheckoutScreen = () => {
           }
       
           console.log('Payment Sheet initialized successfully');
-          return;
+          return paymentIntentId;
       }
       catch(error) {
           console.error('Error setting up Payment Sheet:', error);
@@ -90,18 +91,15 @@ export default CheckoutScreen = () => {
           return;
       }
       setIsLoading(true);
-      const setupResponse = await setupPaymentSheet();
+      const paymentIntentId = await setupPaymentSheet();
       setIsLoading(false);
-      if (setupResponse?.error) {
-        console.error('Error during Payment Sheet setup:', setupResponse.error.message);
-        return;
-      }
       const { error } = await presentPaymentSheet();
       if (error) {
         Alert.alert('Error processing payment', error.message);
         
       } else {
         console.log('Payment authorized successfully.');
+        updatePaymentConfirmed(paymentIntentId);
         Toast.show({
           type: 'success',
           text1: 'Your payment was successful, and you have successfully joined the group 🎉',
