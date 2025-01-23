@@ -117,7 +117,7 @@ const Home = () => {
     <BaseLayout>
       <View style={styles.messageContainer}>
         <Text style={styles.secondSubMessage}>
-          Want to create a new suggested deal? <Text style={{ color: COLORS.black, textDecorationLine: 'underline' }} onPress={() => navigation.replace('NewDealBasics')}>Create one</Text>
+          Want to create a new suggested deal? <Text style={{ color: COLORS.black, textDecorationLine: 'underline' }} onPress={() => navigation.navigate('NewDealBasics')}>Create one</Text>
         </Text>
       </View>
       <View style={styles.DealsContainer}>
