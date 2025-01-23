@@ -10,14 +10,11 @@ COPY package.json package-lock.json ./
 # Install dependencies
 RUN npm install
 
-# Install expo-cli globally
-RUN npm install -g expo-cli
-
 # Copy the rest of the application code
 COPY . .
 
 # Expose the port the app runs on
 EXPOSE 19000
 
-# Start the Expo server
+# Start the Expo server using the new local Expo CLI
 CMD ["npx", "expo", "start"]
