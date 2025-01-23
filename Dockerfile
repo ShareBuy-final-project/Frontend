@@ -17,9 +17,6 @@ RUN npm install -g expo-cli @expo/ngrok
 COPY . .
 
 # Expose the ports the app runs on
-EXPOSE 19000
-EXPOSE 19001
-EXPOSE 19002
 EXPOSE 8084
 
 # Start the Expo server using the new local Expo CLI
