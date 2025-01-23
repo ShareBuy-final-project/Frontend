@@ -3,6 +3,7 @@ import { Text, StyleSheet, View, ActivityIndicator, Image, TouchableOpacity, Ale
 import { useRoute } from '@react-navigation/native'; // For route parameters
 import Icon from 'react-native-vector-icons/MaterialIcons'; // For the button icons
 import BaseLayout from './BaseLayout';
+import {getGroupById} from '../apiCalls/groupApiCalls'
 
 const DealPage = () => {
   const route = useRoute();
@@ -17,16 +18,17 @@ const DealPage = () => {
       setIsLoading(true);
       try {
         // Fetch group details using the dealId
+        console.log("amit-test", dealId)
         const group = await getGroupById(dealId);
         setDealDetails({
-          id: deal.id,
-          title: `Deal ${deal.name}`,
-          original_price: `$${deal.price}`,
-          discounted_price: `$${deal.discount}`,
-          image: deal.image || 'https://via.placeholder.com/150', // Default placeholder image
-          participants: deal.totalAmount || 0, // Participant count from API
-          size: deal.size,
-          isSaved: deal.isSaved || false});
+          id: group.id,
+          title: `Deal ${group.name}`,
+          original_price: `$${group.price}`,
+          discounted_price: `$${group.discount}`,
+          image: group.image || 'https://via.placeholder.com/150', // Default placeholder image
+          participants: group.totalAmount || 0, // Participant count from API
+          size: group.size,
+          isSaved: group.isSaved || false});
       } catch (error) {
         console.error('Error fetching deal details:', error);
       } finally {
@@ -94,16 +96,16 @@ const DealPage = () => {
       {/* Heart Icon */}
       <TouchableOpacity
         style={styles.heartButton}
-        onPress={() => toggleFavorite(dealDetails.id)} // Use the deal name or unique id for this
+        onPress={() => toggleFavorite(dealDetails?.id)} // Use the deal name or unique id for this
       >
         <Icon
-          name={favorites.includes(dealDetails.id) ? 'favorite' : 'favorite-border'}
+          name={favorites.includes(dealDetails?.id) ? 'favorite' : 'favorite-border'}
           size={28} 
           color="#f08080"
         />
       </TouchableOpacity>
       <View style={styles.participantOverlay}>
-          <Text style={styles.participantText}>{dealDetails.participants}</Text>
+          <Text style={styles.participantText}>{dealDetails?.participants}</Text>
         </View>
       <Text style={styles.title}>{dealDetails?.name}</Text>
       <Text style={styles.description}>{dealDetails?.description}</Text>
