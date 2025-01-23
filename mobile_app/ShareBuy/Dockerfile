@@ -20,4 +20,4 @@ EXPOSE 19002
 EXPOSE 8081
 
 # Start the Expo server using the new local Expo CLI
-CMD ["npx", "expo", "start","--tunnel" ,"--port","8083"]
+CMD ["npx", "expo", "start" ,"--port","8083"]
