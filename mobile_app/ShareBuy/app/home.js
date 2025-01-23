@@ -98,7 +98,7 @@ const Home = () => {
             />
           </TouchableOpacity>
           <View style={styles.participantOverlay}>
-            <Text style={styles.participantText}>{item.participants}</Text>
+            <Text style={styles.participantText}>{item.participants}/{item.size}</Text>
           </View>
         </View>
         <Text style={styles.cardTitle}>{item.title}</Text>
