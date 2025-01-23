@@ -34,14 +34,21 @@ const RegisterBusinessContactInfo = () => {
         contactEmail,
       });
 
-      if (response.data.message === 'Business registered successfully') {
-        navigation.navigate('nextPage'); // Replace 'nextPage' with the actual next page
-      } else {
+      if (res.status === 201) {
+        Toast.show({
+          type: 'success',
+          text1: 'Registration Successful 🎉',
+          text2: 'You can now login to your account',
+        });
+        navigation.navigate('welcome');
+      } 
+      else {
         Alert.alert('Registration Error', response.data.error);
+        throw new Error(response.data.error);
       }
     } catch (error) {
       if (error.response) {
-        // Server responded with a status other than 200 range
+        // Server responded with a status other than 201 range
         console.error('Registration Error:', error.response.data);
         Alert.alert('Registration Error', `Server Error: ${error.response.data.error}`);
       } else if (error.request) {
