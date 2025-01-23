@@ -10,6 +10,7 @@ services:
       - "19001:19001"
       - "19002:19002"
       - "8083:8083"
+    command: npx expo start --lan --port 8083
     # volumes:
     #   - .:/app
     environment:
