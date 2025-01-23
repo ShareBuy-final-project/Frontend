@@ -5,9 +5,15 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
-    command: npx expo start --port 8081
+    command: npx expo start --port 8081 --verbose
     volumes:
       - .:/app
     environment:
       - NODE_ENV=development
       - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+      - DEBUG=*
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
