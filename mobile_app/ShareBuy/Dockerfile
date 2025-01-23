@@ -15,6 +15,9 @@ COPY . .
 
 # Expose the port the app runs on
 EXPOSE 19000
+EXPOSE 19001
+EXPOSE 19002
+EXPOSE 8081
 
 # Start the Expo server using the new local Expo CLI
-CMD ["npx", "expo", "start"]
+CMD ["npx", "expo", "start","--tunnel" ,"--port","8083"]
