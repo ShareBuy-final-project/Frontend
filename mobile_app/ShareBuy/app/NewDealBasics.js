@@ -23,7 +23,7 @@ const NewDealBasics = () => {
     } else if (!minimumAmount) {
       Alert.alert('Invalid Input', 'Minimum Amount of Products must be provided.');
     } else {
-      navigation.replace('NewDealDetails', {
+      navigation.navigate('NewDealDetails', {
         dealName,
         amountBefore,
         amountAfter,
