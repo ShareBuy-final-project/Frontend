@@ -31,7 +31,7 @@ const excuteAPICall = async (route, type, params) => {
     if (accessToken) {
         headers['Authorization'] = `Bearer ${accessToken}`;
     }
-
+    console.log('Request:', type, baseRoute + route, headers, body);
     try {
         const response = await axios({
             method: type,

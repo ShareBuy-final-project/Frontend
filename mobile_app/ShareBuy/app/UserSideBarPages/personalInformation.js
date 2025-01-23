@@ -325,8 +325,10 @@ const PersonalInformation = () => {
     const fetchData = async () => {
       try {
         const data = await fetchPersonalInformation();
+        console.log(data);
         setUserData(data);
         setOriginalData(data);
+        
       } catch (error) {
         console.error('Fetch Error:', error.message);
         Alert.alert('Fetch Error', `An error occurred: ${error.message}`);
