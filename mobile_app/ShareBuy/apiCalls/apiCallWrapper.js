@@ -81,4 +81,3 @@ export const excuteAPICallPOST = async (route, params) => {
 export const excuteAPICallDELETE = async (route, params) => {
     return await excuteAPICall(route, 'delete', params);
 };
-
