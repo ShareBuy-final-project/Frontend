@@ -27,6 +27,7 @@ const DealPage = () => {
           image: group.image || 'https://via.placeholder.com/150', // Default placeholder image
           participants: group.totalAmount || 0, // Participant count from API
           size: group.size,
+          description: group.description,
           isSaved: group.isSaved || false});
       } catch (error) {
         console.error('Error fetching deal details:', error);
@@ -88,6 +89,7 @@ const DealPage = () => {
     );    
   }
 
+  console.log(dealDetails)
   return (
     <BaseLayout>
     <View style={styles.container}>
@@ -104,13 +106,13 @@ const DealPage = () => {
         />
       </TouchableOpacity>
       <View style={styles.participantOverlay}>
-          <Text style={styles.participantText}>{dealDetails?.participants}</Text>
+          <Text style={styles.participantText}>{dealDetails?.participants}/{dealDetails?.size}</Text>
         </View>
-      <Text style={styles.title}>{dealDetails?.name}</Text>
+      <Text style={styles.title}>{dealDetails?.title}</Text>
       <Text style={styles.description}>{dealDetails?.description}</Text>
       <View style={styles.priceContainer}>
-        <Text style={styles.price}>Price: {dealDetails?.price}</Text>
-        <Text style={styles.originalPrice}>Original Price: {dealDetails?.originalPrice}</Text>
+        <Text style={styles.price}>Price: {dealDetails?.discounted_price}</Text>
+        <Text style={styles.originalPrice}>Original Price: {dealDetails?.original_price}</Text>
       </View>
 
       {/* Participants Circle */}
@@ -138,6 +140,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
     backgroundColor: '#f9f9f9',
+    width: '100%'
   },
   image: {
     width: '100%',
