@@ -9,19 +9,6 @@
     "slug": "ShareBuy",
     "extra": {
       "BASE_ROUTE": "http://132.73.84.56:443/"
-    },
-    "android": {
-      "package": "com.sharebuy.app",
-      "versionCode": 1,
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
-    },
-    "ios": {
-      "bundleIdentifier": "com.sharebuy.app",
-      "buildNumber": "1.0.0"
-    },
-    "version": "1.0.0"
+    }
   }
 }

@@ -1,4 +1,4 @@
-package com.anonymous.ShareBuy
+package com.sharebuy.app
 
 import android.app.Application
 import android.content.res.Configuration
