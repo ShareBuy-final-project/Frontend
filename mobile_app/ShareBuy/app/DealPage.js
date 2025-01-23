@@ -18,15 +18,15 @@ const DealPage = () => {
       try {
         // Fetch group details using the dealId
         const group = await getGroupById(dealId);
-
         setDealDetails({
-          name: group.name, // Assuming group object has a 'name' field
-          description: group.description, // Assuming group object has a 'description' field
-          price: `$${group.price}`, // Assuming group object has a 'price' field
-          originalPrice: `$${group.originalPrice}`, // Assuming group object has an 'originalPrice' field
-          image: group.image || 'https://via.placeholder.com/150', // Placeholder image
-          participants: `${group.participants.length}/${group.maxParticipants}`, // Example participants
-        });
+          id: deal.id,
+          title: `Deal ${deal.name}`,
+          original_price: `$${deal.price}`,
+          discounted_price: `$${deal.discount}`,
+          image: deal.image || 'https://via.placeholder.com/150', // Default placeholder image
+          participants: deal.totalAmount || 0, // Participant count from API
+          size: deal.size,
+          isSaved: deal.isSaved || false});
       } catch (error) {
         console.error('Error fetching deal details:', error);
       } finally {
@@ -35,7 +35,7 @@ const DealPage = () => {
     };
 
     fetchDealDetails();
-  }, [dealName]);
+  }, [dealId]);
 
   const handleJoinGroup = () => {
     setIsInGroup(true);
@@ -94,10 +94,10 @@ const DealPage = () => {
       {/* Heart Icon */}
       <TouchableOpacity
         style={styles.heartButton}
-        onPress={() => toggleFavorite(item.id)} // Use the deal name or unique id for this
+        onPress={() => toggleFavorite(dealDetails.id)} // Use the deal name or unique id for this
       >
         <Icon
-          name={favorites.includes(item.id) ? 'favorite' : 'favorite-border'}
+          name={favorites.includes(dealDetails.id) ? 'favorite' : 'favorite-border'}
           size={28} 
           color="#f08080"
         />
