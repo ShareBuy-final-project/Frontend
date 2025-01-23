@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  expo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
+    volumes:
+      - .:/app
+    command: npm start
+    environment:
+      - NODE_ENV=development
+      - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
