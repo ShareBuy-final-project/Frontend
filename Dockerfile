@@ -14,11 +14,11 @@ COPY . .
 RUN npm install
 
 # Install expo-cli and @expo/ngrok globally
-RUN npm install -g expo-cli @expo/ngrok 
+# RUN npm install -g expo-cli @expo/ngrok 
 
 
 # Expose the ports the app runs on
-EXPOSE 8081
+EXPOSE 8083
 
 # Start the Expo server using the new local Expo CLI
-CMD ["npx", "expo", "start", "--port", "8081"]
+CMD ["npx", "expo", "start", "--port", "8083"]
