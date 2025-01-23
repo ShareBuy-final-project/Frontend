@@ -3,8 +3,7 @@ import { refreshAccessToken } from "./authApiCalls";
 import axios from 'axios';
 import Constants from 'expo-constants';
 
-// const baseRoute = Constants.expoConfig.extra.BASE_ROUTE;
-const baseRoute = 'http://10.100.102.6:4000';
+const baseRoute = Constants.expoConfig.extra.BASE_ROUTE;
 
 // request interceptor for debbug purposes
 // axios.interceptors.request.use(
@@ -25,8 +24,7 @@ const excuteAPICall = async (route, type, params) => {
     }
 
     let body = JSON.stringify(params);
-    let accessToken = "aaaaa";
-    // let accessToken = await getToken('accessToken');
+    let accessToken = await getToken('accessToken');
     let headers = {
         'Content-Type': 'application/json'
     };
@@ -83,4 +81,3 @@ export const excuteAPICallPOST = async (route, params) => {
 export const excuteAPICallDELETE = async (route, params) => {
     return await excuteAPICall(route, 'delete', params);
 };
-
