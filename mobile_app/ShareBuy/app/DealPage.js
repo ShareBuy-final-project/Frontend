@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Text, StyleSheet, View, ActivityIndicator, Image, TouchableOpacity, Alert } from 'react-native';
-import { useRoute } from '@react-navigation/native'; // For route parameters
+import { useRoute,useNavigation } from '@react-navigation/native'; // For route parameters
 import Icon from 'react-native-vector-icons/MaterialIcons'; // For the button icons
 import BaseLayout from './BaseLayout';
 
 const DealPage = () => {
+  const navigation = useNavigation();
   const route = useRoute();
   const { dealName } = route.params; // Get the deal name passed from Home
   const [dealDetails, setDealDetails] = useState(null);
@@ -25,7 +26,8 @@ const DealPage = () => {
         price: '$50',
         originalPrice: '$100',
         image: 'https://via.placeholder.com/150', // Placeholder image
-        participants: '3/10', // Simulated number of participants
+        participants: '3/10',
+        groupId: '51' // Simulated number of participants
       });
       setIsLoading(false);
     };
@@ -34,6 +36,12 @@ const DealPage = () => {
   }, [dealName]);
 
   const handleJoinGroup = () => {
+    console.log("price:",dealDetails.price);
+    navigation.navigate('CheckoutScreen', {
+      name: dealDetails.name,
+      price: dealDetails.price,
+      groupId: dealDetails.groupId
+    });
     setIsInGroup(true);
   };
 

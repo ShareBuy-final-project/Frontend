@@ -2,7 +2,7 @@ import {excuteAPICallPOST} from './apiCallWrapper';
 
 export const createPaymentIntent = async (groupId, amount) => {
   try{
-      const res = await excuteAPICallPOST('/group/joinGroup', {groupId, amount});
+      const res = await excuteAPICallPOST('group/joinGroup', {groupId, amount});
       return res.data;
   }
   catch(error) {
@@ -13,7 +13,7 @@ export const createPaymentIntent = async (groupId, amount) => {
 
 export const cancelPaymentIntent = async (groupId, paymentIntentId) => {
     try{
-        const res = await excuteAPICallPOST('/group/leaveGroup', {groupId, paymentIntentId});
+        const res = await excuteAPICallPOST('group/leaveGroup', {groupId, paymentIntentId});
         return res;
     }
     catch(error) {

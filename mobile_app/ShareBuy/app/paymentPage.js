@@ -16,20 +16,24 @@ export default CheckoutScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
     const { initPaymentSheet, presentPaymentSheet } = useStripe();
     const route = useRoute(); 
-    // const { dealDetails } = route.params;
-    const dealDetails = {
-        name: "Deal Name",
-        description: 'This is a detailed description of the deal. A great deal for bulk purchases.',
-        price: 50, // Change to number for calculation
-        groupId : '1234',
-    }
+    
+    let { name, price, groupId} = route.params;
+    price = parseFloat(price.replace("$", ""));
+    const  dealDetails  = {name, price, groupId};
+    console.log("deal:",dealDetails.groupId);
+    // const dealDetails = {
+    //     name: "Deal Name",
+    //     description: 'This is a detailed description of the deal. A great deal for bulk purchases.',
+    //     price: 50, // Change to number for calculation
+    //     groupId : '1234',
+    // }
     const [isTermsVisible, setIsTermsVisible] = useState(false);
     const [isConsentChecked, setIsConsentChecked] = useState(false);
     const [amount, setAmount] = useState(1);
 
     const setupPaymentSheet = async () => {
         try{
-          const response = await createPaymentIntent({ groupId: dealDetails.groupId,amount: amount });
+          const response = await createPaymentIntent(dealDetails.groupId, amount);
           const {     
             paymentIntent,
             ephemeralKey,
@@ -168,6 +172,7 @@ export default CheckoutScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
+      width: '100%',
         flex: 1,
         padding: 15,
         backgroundColor: '#f9f9f9',
