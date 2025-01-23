@@ -10,17 +10,17 @@ COPY package.json package-lock.json ./
 # Install dependencies
 RUN npm install
 
-# Install expo-cli and @expo/ngrok globally
-RUN npm install -g expo-cli @expo/ngrok
+# Install expo-cli globally
+RUN npm install -g expo-cli
 
 # Copy the rest of the application code
 COPY . .
 
-# Expose the port the app runs on
+# Expose the ports the app runs on
 EXPOSE 19000
 EXPOSE 19001
 EXPOSE 19002
 EXPOSE 8081
 
 # Start the Expo server using the new local Expo CLI
-CMD ["npx", "expo", "start", "--tunnel" , "--port","8083"]
+CMD ["npx", "expo", "start", "--lan", "--port", "8083"]
