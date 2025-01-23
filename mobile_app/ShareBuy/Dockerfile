@@ -10,8 +10,8 @@ COPY package.json package-lock.json ./
 # Install dependencies
 RUN npm install
 
-# Install expo-cli globally
-RUN npm install -g expo-cli
+# Install the new Expo CLI
+RUN npx expo install
 
 # Copy the rest of the application code
 COPY . .
@@ -20,4 +20,4 @@ COPY . .
 EXPOSE 19000
 
 # Start the Expo server
-CMD ["npm", "start"]
+CMD ["npx", "expo", "start"]
