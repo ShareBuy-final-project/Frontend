@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8081:8081"
+      - "8083:8083"
     command: npx expo start --port 8083
     # volumes:
     #   - .:/app
