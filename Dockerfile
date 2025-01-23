@@ -18,7 +18,7 @@ RUN npm install
 
 
 # Expose the ports the app runs on
-EXPOSE 8083
+EXPOSE 8084
 
 # Start the Expo server using the new local Expo CLI
-CMD ["npx", "expo", "start", "--port", "8083"]
+CMD ["npx", "expo", "start", "--port", "8084"]
