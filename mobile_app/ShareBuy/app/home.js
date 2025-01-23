@@ -124,8 +124,8 @@ const Home = () => {
     <BaseLayout>
       <View style={styles.messageContainer}>
         <Text style={styles.secondSubMessage}>
-          {isBusiness ? 'Want to create a new deal?' : 'Want to create a new suggested deal?'} 
-          <Text style={{ color: COLORS.black, textDecorationLine: 'underline' }} onPress={() => navigation.navigate(isBusiness ? 'NewDealBasics' : 'suggestedDeal')}>
+          {isBusiness ? 'Want to create a new deal? ' : 'Want to create a new suggested deal? '} 
+          <Text style={{ color: COLORS.black, textDecorationLine: 'underline', fontWeight: 'bold' }} onPress={() => navigation.navigate(isBusiness ? 'NewDealBasics' : 'suggestedDeal')}>
             Create one
           </Text>
         </Text>

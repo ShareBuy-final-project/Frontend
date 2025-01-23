@@ -2,23 +2,37 @@ import React, { useState } from 'react';
 import { SafeAreaView, View, StyleSheet, Text, TouchableOpacity, Alert, Image, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import BaseLayout from './BaseLayout';
 import * as ImagePicker from 'expo-image-picker';
+import { createGroup } from '../apiCalls/groupApiCalls';
 
 const NewDealDetails = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { dealName, amountBefore, amountAfter, minimumAmount } = route.params;
   const [description, setDescription] = useState('');
   const [picture, setPicture] = useState(null);
   const [image, setImage] = useState(null);
 
-  const handleDone = () => {
+  const handleDone = async () => {
     if (!description) {
       Alert.alert('Invalid Input', 'Deal Name field must be filled in.'); 
     } else {
-      // Handle navigation or submission
-      Alert.alert('Success', 'Your deal has been submitted!');
-      navigation.navigate('home', {});
+      try {
+        await createGroup({
+          name: dealName,
+          description,
+          image,
+          price: amountBefore,
+          discount: amountAfter,
+          size: minimumAmount
+        });
+        Alert.alert('Success', 'Your deal has been submitted!');
+        navigation.navigate('home', {});
+      } catch (error) {
+        Alert.alert('Error', error.message);
+      }
     }
   };
 
