@@ -26,7 +26,7 @@ const DealPage = () => {
           title: `Deal ${group.name}`,
           original_price: `$${group.price}`,
           discounted_price: `$${group.discount}`,
-          image: group.imageBase64,
+          image: group.image,
           participants: group.totalAmount || 0, // Participant count from API
           size: group.size,
           description: group.description,
@@ -100,7 +100,7 @@ const DealPage = () => {
   return (
     <BaseLayout>
     <View style={styles.container}>
-      <Image source={dealDetails?.image? { uri: dealDetails.image }: DefaultPic} style={styles.image} resizeMode="contain"/>
+      <Image source={dealDetails?.image ? { uri: dealDetails.image } : DefaultPic} style={styles.image} resizeMode="contain"/>
       {/* Heart Icon */}
       <TouchableOpacity
         style={styles.heartButton}
