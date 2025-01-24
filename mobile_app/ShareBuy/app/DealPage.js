@@ -4,6 +4,7 @@ import { useRoute,useNavigation } from '@react-navigation/native'; // For route 
 import Icon from 'react-native-vector-icons/MaterialIcons'; // For the button icons
 import BaseLayout from './BaseLayout';
 import {getGroupById, joinGroup, leaveGroup} from '../apiCalls/groupApiCalls'
+import DefaultPic from '../assets/images/default_pic.png';
 
 const DealPage = () => {
   const navigation = useNavigation();
@@ -99,7 +100,7 @@ const DealPage = () => {
   return (
     <BaseLayout>
     <View style={styles.container}>
-      <Image source={{ uri: dealDetails?.image }} style={styles.image} />
+      <Image source={dealDetails?.image? { uri: dealDetails.image }: DefaultPic} style={styles.image} resizeMode="contain"/>
       {/* Heart Icon */}
       <TouchableOpacity
         style={styles.heartButton}
