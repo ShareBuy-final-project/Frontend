@@ -99,7 +99,7 @@ const CheckoutScreen = () => {
       setIsLoading(false);
       Toast.show({
         type: 'success',
-        text1: 'Your payment was successful, and you have successfully joined the group 🎉',
+        text1: 'Your payment was successful 🎉',
       });
       navigation.navigate('home')
     }
