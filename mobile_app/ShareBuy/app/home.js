@@ -7,7 +7,6 @@ import { useNavigation } from '@react-navigation/native'; // For navigation
 import { COLORS, FONT } from '../constants/theme';
 import {fetchDeals, saveGroup, unSaveGroup} from '../apiCalls/groupApiCalls'
 import { getToken } from '../utils/userTokens';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 const Home = () => {
   const [deals, setDeals] = useState([]);
