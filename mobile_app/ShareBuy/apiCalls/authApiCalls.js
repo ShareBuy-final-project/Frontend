@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { saveToken, isLoggedIn, getToken } from '../utils/userTokens';
-import {excuteAPICallPOST} from './apiCallWrapper';
+import { saveToken, isLoggedIn, getToken, deleteAllTokens } from '../utils/userTokens';
+import {excuteAPICallPOST, excuteAPICallDELETE} from './apiCallWrapper';
 import Constants from 'expo-constants';
 
 const baseRoute = Constants.expoConfig.extra.BASE_ROUTE;
@@ -30,6 +30,18 @@ export const login = async (email, password) => {
   }
 };
 
+export const logout = async () => {
+  try {
+    console.log("Logging out");
+    const refreshToken = await getToken('refreshToken');
+    const res = await excuteAPICallDELETE('auth/logout', {token: refreshToken});
+    await deleteAllTokens();
+    return res;
+  } catch (error) {
+    console.error('Logout failed:', error);
+    throw error;
+  }
+}
 /**
  * Refresh the access token using the refresh token.
  * @returns {Promise<string|null>} - The new access token or null if refresh failed.
