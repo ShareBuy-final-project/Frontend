@@ -42,7 +42,6 @@ const Home = () => {
   
   const getDeals = async () => {
     setIsLoading(true);
-    setDeals([]); // Clear the deals before fetching new ones
     try {
       // Call the API fetchDeals function
       const apiDeals = await fetchDeals({text: searchQuery}, page, 10); 
