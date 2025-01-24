@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native'; // For navigation
 import { COLORS, FONT } from '../constants/theme';
 import {fetchDeals, saveGroup, unSaveGroup} from '../apiCalls/groupApiCalls'
+import { getToken } from '../utils/userTokens';
 
 const Home = () => {
   const [deals, setDeals] = useState([]);
@@ -14,6 +15,7 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [favorites, setFavorites] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+  const [isBusiness, setIsBusiness] = useState(false);
 
   const navigation = useNavigation(); // Use navigation for page transition
 
@@ -72,6 +74,11 @@ const Home = () => {
   };
 
   useEffect(() => {
+    const fetchIsBusiness = async () => {
+      const value = await getToken('isBusiness');
+      setIsBusiness(value === 'true');
+    };
+    fetchIsBusiness();
     if (page === 1) { // Only fetch on the first render
       getDeals(page);
     }
@@ -117,7 +124,10 @@ const Home = () => {
     <BaseLayout>
       <View style={styles.messageContainer}>
         <Text style={styles.secondSubMessage}>
-          Want to create a new suggested deal? <Text style={{ color: COLORS.black, textDecorationLine: 'underline' }} onPress={() => navigation.navigate('NewDealBasics')}>Create one</Text>
+          {isBusiness ? 'Want to create a new deal? ' : 'Want to create a new suggested deal? '} 
+          <Text style={{ color: COLORS.black, textDecorationLine: 'underline', fontWeight: 'bold' }} onPress={() => navigation.navigate(isBusiness ? 'NewDealBasics' : 'suggestedDeal')}>
+            Create one
+          </Text>
         </Text>
       </View>
       <View style={styles.DealsContainer}>
