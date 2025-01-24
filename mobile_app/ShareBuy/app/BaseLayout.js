@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing, TouchableWithoutFeedback, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+import { logout } from '../apiCalls/authApiCalls';
+import { isLoggedIn } from '../utils/userTokens';
 
 const BaseLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -22,6 +24,21 @@ const BaseLayout = ({ children }) => {
     navigation.navigate('personalInformation');
   };
 
+  const handleLogout = async () => {
+    if(await isLoggedIn()) {
+      const res = await logout();
+      if(res.status === 200) {
+        Alert.alert('Logout Successful', 'You have successfully logged out!', [{ text: 'OK' }]);
+        navigation.navigate('welcome');
+      }
+      else{
+        Alert.alert('Error', 'Error logging out', [{ text: 'ERROR' }]);
+      }
+    }
+    else{
+      Alert.alert('Error', 'You are not logged in', [{ text: 'ERROR' }]);
+    }
+  };
 
   const toggleSidebar = () => {
     const toValue = isSidebarOpen ? 0 : 1;
@@ -97,7 +114,7 @@ const BaseLayout = ({ children }) => {
               <Icon name="group" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>Active Groups</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.sidebarItem}>
+            <TouchableOpacity style={styles.sidebarItem} onPress={async () => {await handleLogout();}}>
               <Icon name="logout" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>Sign Out</Text>
             </TouchableOpacity>
@@ -189,4 +206,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BaseLayout;
+export default BaseLayout
