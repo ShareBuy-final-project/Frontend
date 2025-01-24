@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Text, StyleSheet, View, FlatList, TouchableOpacity, Image } from 'react-native';
 import BaseLayout from './BaseLayout';
 import SearchBar from '../components/SearchBar';
@@ -13,6 +13,7 @@ const Home = () => {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [search, setSearch] = useState('');
   const [favorites, setFavorites] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [isBusiness, setIsBusiness] = useState(false);
@@ -39,11 +40,13 @@ const Home = () => {
     });
   };
   
-  const getDeals = async (pageNumber) => {
+  const getDeals = async () => {
+    console.log('Fetching deals...');
     setIsLoading(true);
+    setDeals([]); // Clear the deals before fetching new ones
     try {
       // Call the API fetchDeals function
-      const apiDeals = await fetchDeals({}, pageNumber, 10); 
+      const apiDeals = await fetchDeals({text: searchQuery}, page, 10); 
       if (apiDeals.length === 0) {
         setHasMore(false); // No more deals available
         return;
@@ -81,9 +84,26 @@ const Home = () => {
     fetchIsBusiness();
   }, []);
 
+  const isFirstRenderSearchQuery = useRef(true);
+
   useEffect(() => {
-    getDeals(page);
+    //console.log('Search query:', searchQuery);
+    getDeals();
   }, [page]);
+
+  useEffect(() => {
+    console.log('Search query:', searchQuery);
+    if (isFirstRenderSearchQuery.current) {
+      isFirstRenderSearchQuery.current = false;
+      return;
+    }
+    if(page !== 1) {
+      setPage(1);
+    }
+    else {
+      getDeals();
+    }
+  }, [searchQuery]);
 
   
   const handleLoadMore = () => {
@@ -118,9 +138,9 @@ const Home = () => {
       </TouchableOpacity>
     );
     
-  const filteredDeals = deals.filter((deal) =>
-    deal.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // const filteredDeals = deals.filter((deal) =>
+  //   deal.title.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
 
   return (
     <BaseLayout>
@@ -134,18 +154,22 @@ const Home = () => {
       </View>
       <View style={styles.DealsContainer}>
         <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
-        <FlatList
-          data={filteredDeals}
-          renderItem={renderDealCard}
-          keyExtractor={(item) => item.id}
-          key={'grid'}
-          contentContainerStyle={styles.listContainer}
-          numColumns={2}
-          columnWrapperStyle={styles.row}
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={isLoading && <Text style={styles.loadingText}>Loading more deals...</Text>}
-        />
+        {deals.length === 0 && !isLoading ? (
+          <Text style={styles.noDealsText}>No deals found for the search query.</Text>
+        ) : (
+          <FlatList
+            data={deals}
+            renderItem={renderDealCard}
+            keyExtractor={(item) => item.id}
+            key={'grid'}
+            contentContainerStyle={styles.listContainer}
+            numColumns={2}
+            columnWrapperStyle={styles.row}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={isLoading && <Text style={styles.loadingText}>Loading more deals...</Text>}
+          />
+        )}
       </View>
     </BaseLayout>
   );
@@ -179,6 +203,7 @@ const styles = StyleSheet.create({
   },
   DealsContainer: {
     marginTop: -10,
+    alignItems: 'center', // Center the SearchBar
   },
   listContainer: {
     paddingHorizontal: 10,
@@ -268,6 +293,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: FONT.arial,
     backgroundColor: COLORS.glowingYeloow,
+  },
+  noDealsText: {
+    textAlign: 'center',
+    marginVertical: 20,
+    color: '#888',
+    fontSize: 16,
   },
 });
 
