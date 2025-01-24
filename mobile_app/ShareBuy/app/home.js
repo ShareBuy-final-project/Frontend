@@ -41,7 +41,6 @@ const Home = () => {
   };
   
   const getDeals = async () => {
-    console.log('Fetching deals...');
     setIsLoading(true);
     setDeals([]); // Clear the deals before fetching new ones
     try {

@@ -25,7 +25,7 @@ const DealPage = () => {
           title: `Deal ${group.name}`,
           original_price: `$${group.price}`,
           discounted_price: `$${group.discount}`,
-          image: group.image || 'https://via.placeholder.com/150', // Default placeholder image
+          image: group.imageBase64,
           participants: group.totalAmount || 0, // Participant count from API
           size: group.size,
           description: group.description,
