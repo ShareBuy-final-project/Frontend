@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Text, StyleSheet, View, FlatList, TouchableOpacity, Image } from 'react-native';
 import BaseLayout from './BaseLayout';
 import SearchBar from '../components/SearchBar';
@@ -83,7 +83,6 @@ const Home = () => {
     fetchIsBusiness();
   }, []);
 
-  const isFirstRenderSearchQuery = useRef(true);
 
   useEffect(() => {
     getDeals();
@@ -101,7 +100,6 @@ const Home = () => {
   );
 
   const handleSearchChange = (query) => {
-    console.log('Search query:', query);
     setSearchQuery(query); // Update the search query state immediately
     debouncedGetDeals(); // Debounce the page reset or getDeals call
   };

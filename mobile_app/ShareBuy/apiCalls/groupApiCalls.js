@@ -44,10 +44,11 @@ export const getGroupById = async (groupId) => {
  */
 export const getSavedGroups = async (page = 1, limit = 10) => {
   try {
-    const res = await excuteAPICallGET('group/getSavedGroups', {
+    const res = await excuteAPICallPOST('group/getSavedGroups', {
       page,
       limit,
     });
+    console.log("saved", res.data);
 
     if (res.status !== 200) {
       throw new Error('Failed to fetch deals');
@@ -183,7 +184,7 @@ export const fetchDeals = async (filters = {}, page = 1, limit = 10) => {
  */
 export const getUserHistory = async (page = 1, limit = 10) => {
   try {
-    const res = await excuteAPICallGET('group/getUserHistory', {
+    const res = await excuteAPICallPOST('group/getUserHistory', {
       page,
       limit,
     });
@@ -207,7 +208,7 @@ export const getUserHistory = async (page = 1, limit = 10) => {
  */
 export const getUserCurrentGroups = async (page = 1, limit = 10) => {
   try {
-    const res = await excuteAPICallGET('group/getUserGroups', {
+    const res = await excuteAPICallPOST('group/getUserGroups', {
       page,
       limit,
     });

@@ -15,6 +15,8 @@ import NewDealBasics from './NewDealBasics';
 import NewDealDetails from './NewDealDetails';
 import DealPage from './DealPage';
 import PersonalInformation from './UserSideBarPages/personalInformation';
+import purchasesHistory from './UserSideBarPages/purchasesHistory';
+import myGroups from './UserSideBarPages/myGroups';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,7 +38,8 @@ const AppNavigator = () => {
         <Stack.Screen name="NewDealDetails" component={NewDealDetails} />
         <Stack.Screen name="DealPage" component={DealPage} />
         <Stack.Screen name="personalInformation" component={PersonalInformation} />
-        {/* Add other screens here */}
+        <Stack.Screen name="purchaseHistory" component={purchasesHistory} />
+        <Stack.Screen name="myGroups" component={myGroups} />
       </Stack.Navigator>
       <Toast/>
     </>

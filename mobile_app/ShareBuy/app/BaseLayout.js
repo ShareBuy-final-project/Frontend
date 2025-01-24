@@ -13,6 +13,7 @@ const BaseLayout = ({ children }) => {
 
   const handleHomePress = () => {
     navigation.navigate('home');
+    closeSidebar(); 
   };
 
   const handleFavoritesPress = () => {
@@ -22,7 +23,18 @@ const BaseLayout = ({ children }) => {
 
   const handleProfilePress = () => {
     navigation.navigate('personalInformation');
+    closeSidebar(); 
   };
+
+  const handleHistoryPress= () => {
+    navigation.navigate('purchaseHistory');
+    closeSidebar(); 
+  }
+
+  const handleCurrentGroupsPress= () => {
+    navigation.navigate('myGroups');
+    closeSidebar(); 
+  }
 
   const handleLogout = async () => {
     if(await isLoggedIn()) {
@@ -106,12 +118,12 @@ const BaseLayout = ({ children }) => {
               <Icon name="favorite" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>Favorites</Text>
             </TouchableOpacity>)}
-            <TouchableOpacity style={styles.sidebarItem}>
+            <TouchableOpacity style={styles.sidebarItem} onPress={handleHistoryPress}>
               <Icon name="history" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>History</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.sidebarItem}>
-              <Icon name="group" size={20} color="#fff" style={styles.sidebarIcon} />
+            <TouchableOpacity style={styles.sidebarItem} onPress={handleCurrentGroupsPress}>
+              <Icon name="group" size={20} color="#fff" style={styles.sidebarIcon}/>
               <Text style={styles.sidebarItemText}>Active Groups</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.sidebarItem} onPress={async () => {await handleLogout();}}>
