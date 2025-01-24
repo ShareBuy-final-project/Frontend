@@ -79,10 +79,12 @@ const Home = () => {
       setIsBusiness(value === 'true');
     };
     fetchIsBusiness();
-    if (page === 1) { // Only fetch on the first render
-      getDeals(page);
-    }
   }, []);
+
+  useEffect(() => {
+    getDeals(page);
+  }, [page]);
+
   
   const handleLoadMore = () => {
     if (!isLoading && hasMore) {
