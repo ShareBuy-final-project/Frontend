@@ -64,7 +64,6 @@ const excuteAPICall = async (route, type, params) => {
                 throw error;
             }
         } else {
-            console.error('API call failed:', error);
             throw error;
         }
     }
