@@ -315,4 +315,9 @@ const styles = StyleSheet.create({
   noDealsText: {
     textAlign: 'center',
     marginVertical: 20,
-    color: '#888',    fontSize: 16,  },});export default Home;
+    color: '#888',    
+    fontSize: 16,  
+  },
+});
+    
+export default Home;
