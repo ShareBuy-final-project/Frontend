@@ -4,7 +4,6 @@ import { useRoute,useNavigation } from '@react-navigation/native'; // For route 
 import Icon from 'react-native-vector-icons/MaterialIcons'; // For the button icons
 import BaseLayout from './BaseLayout';
 import {getGroupById, joinGroup, leaveGroup} from '../apiCalls/groupApiCalls'
-import { useNavigation } from '@react-navigation/native'; // For navigation
 
 const DealPage = () => {
   const navigation = useNavigation();
@@ -14,7 +13,6 @@ const DealPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isInGroup, setIsInGroup] = useState(false); // Track if the user is part of a group
   const [favorites, setFavorites] = useState([]); // Track favorite deals
-  const navigation = useNavigation(); // Use navigation for page transition
 
   useEffect(() => {
     const fetchDealDetails = async () => {
