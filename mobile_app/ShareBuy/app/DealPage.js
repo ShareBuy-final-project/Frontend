@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Text, StyleSheet, View, ActivityIndicator, Image, TouchableOpacity, Alert } from 'react-native';
-import { useRoute } from '@react-navigation/native'; // For route parameters
+import { useRoute,useNavigation } from '@react-navigation/native'; // For route parameters
 import Icon from 'react-native-vector-icons/MaterialIcons'; // For the button icons
 import BaseLayout from './BaseLayout';
 import {getGroupById, joinGroup, leaveGroup} from '../apiCalls/groupApiCalls'
-import { useNavigation } from '@react-navigation/native'; // For navigation
 
 const DealPage = () => {
+  const navigation = useNavigation();
   const route = useRoute();
   const { dealId } = route.params; // Get the deal id passed from Home
   const [dealDetails, setDealDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isInGroup, setIsInGroup] = useState(false); // Track if the user is part of a group
   const [favorites, setFavorites] = useState([]); // Track favorite deals
-  const navigation = useNavigation(); // Use navigation for page transition
 
   useEffect(() => {
     const fetchDealDetails = async () => {
