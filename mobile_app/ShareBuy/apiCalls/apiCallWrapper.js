@@ -31,7 +31,7 @@ const excuteAPICall = async (route, type, params) => {
     if (accessToken) {
         headers['Authorization'] = `Bearer ${accessToken}`;
     }
-    console.log('Request:', type, baseRoute + route, headers, body);
+
     try {
         const response = await axios({
             method: type,
@@ -39,7 +39,7 @@ const excuteAPICall = async (route, type, params) => {
             headers: headers,
             data: body
         });
-        console.log('Response:::::', response);
+        //console.log('Response:', response);
         return response;
     } catch (error) {
         if (error.response && error.response.status === 401) {
@@ -75,7 +75,6 @@ export const excuteAPICallGET = async (route, params) => {
 };
 
 export const excuteAPICallPOST = async (route, params) => {
-    console.log('Calling:', route, params);
     return await excuteAPICall(route, 'post', params);
 };
 
