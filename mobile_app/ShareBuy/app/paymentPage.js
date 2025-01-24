@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { CheckBox } from 'react-native-elements'; 
 import TermsOfUse from '../components/TermsOfUse';
 import DropDown from '../components/DropDown'; 
-import {createPaymentIntent} from '../apiCalls/groupApiCall';
+import {createPaymentIntent} from '../apiCalls/groupApiCalls';
 import {updatePaymentConfirmed} from '../apiCalls/paymentApiCalls';
 import Toast from 'react-native-toast-message';
 
