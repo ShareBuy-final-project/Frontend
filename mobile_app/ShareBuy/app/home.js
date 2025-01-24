@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Text, StyleSheet, View, FlatList, TouchableOpacity, Image } from 'react-native';
 import BaseLayout from './BaseLayout';
 import SearchBar from '../components/SearchBar';
@@ -7,13 +7,13 @@ import { useNavigation } from '@react-navigation/native'; // For navigation
 import { COLORS, FONT } from '../constants/theme';
 import {fetchDeals, saveGroup, unSaveGroup} from '../apiCalls/groupApiCalls'
 import { getToken } from '../utils/userTokens';
+import debounce from 'lodash/debounce';
 
 const Home = () => {
   const [deals, setDeals] = useState([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [search, setSearch] = useState('');
   const [favorites, setFavorites] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [isBusiness, setIsBusiness] = useState(false);
@@ -87,23 +87,25 @@ const Home = () => {
   const isFirstRenderSearchQuery = useRef(true);
 
   useEffect(() => {
-    //console.log('Search query:', searchQuery);
     getDeals();
   }, [page]);
 
-  useEffect(() => {
-    console.log('Search query:', searchQuery);
-    if (isFirstRenderSearchQuery.current) {
-      isFirstRenderSearchQuery.current = false;
-      return;
-    }
-    if(page !== 1) {
-      setPage(1);
-    }
-    else {
-      getDeals();
-    }
-  }, [searchQuery]);
+  const debouncedGetDeals = useCallback(
+    debounce(() => {
+      if (page !== 1) {
+        setPage(1);
+      } else {
+        getDeals();
+      }
+    }, 300),
+    [page]
+  );
+
+  const handleSearchChange = (query) => {
+    console.log('Search query:', query);
+    setSearchQuery(query); // Update the search query state immediately
+    debouncedGetDeals(); // Debounce the page reset or getDeals call
+  };
 
   
   const handleLoadMore = () => {
@@ -153,7 +155,7 @@ const Home = () => {
         </Text>
       </View>
       <View style={styles.DealsContainer}>
-        <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
+        <SearchBar value={searchQuery} onChangeText={handleSearchChange} />
         {deals.length === 0 && !isLoading ? (
           <Text style={styles.noDealsText}>No deals found for the search query.</Text>
         ) : (
