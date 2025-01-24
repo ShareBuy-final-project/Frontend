@@ -3,45 +3,51 @@ import { Text, StyleSheet, View, ActivityIndicator, Image, TouchableOpacity, Ale
 import { useRoute,useNavigation } from '@react-navigation/native'; // For route parameters
 import Icon from 'react-native-vector-icons/MaterialIcons'; // For the button icons
 import BaseLayout from './BaseLayout';
+import {getGroupById, joinGroup, leaveGroup} from '../apiCalls/groupApiCalls'
+import { useNavigation } from '@react-navigation/native'; // For navigation
 
 const DealPage = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { dealName } = route.params; // Get the deal name passed from Home
+  const { dealId } = route.params; // Get the deal id passed from Home
   const [dealDetails, setDealDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isInGroup, setIsInGroup] = useState(false); // Track if the user is part of a group
   const [favorites, setFavorites] = useState([]); // Track favorite deals
+  const navigation = useNavigation(); // Use navigation for page transition
 
   useEffect(() => {
     const fetchDealDetails = async () => {
       setIsLoading(true);
-      // Simulate API call to fetch deal details based on dealName
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate delay
-
-      // Simulated fetched deal details
-      setDealDetails({
-        name: dealName,
-        description: 'This is a detailed description of the deal. A great deal for bulk purchases.',
-        price: '$50',
-        originalPrice: '$100',
-        image: 'https://via.placeholder.com/150', // Placeholder image
-        participants: '3/10',
-        groupId: '51' // Simulated number of participants
-      });
-      setIsLoading(false);
+      try {
+        // Fetch group details using the dealId
+        const group = await getGroupById(dealId);
+        setDealDetails({
+          id: group.id,
+          title: `Deal ${group.name}`,
+          original_price: `$${group.price}`,
+          discounted_price: `$${group.discount}`,
+          image: group.image || 'https://via.placeholder.com/150', // Default placeholder image
+          participants: group.totalAmount || 0, // Participant count from API
+          size: group.size,
+          description: group.description,
+          isSaved: group.isSaved || false});
+      } catch (error) {
+        console.error('Error fetching deal details:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchDealDetails();
-  }, [dealName]);
+  }, [dealId]);
 
   const handleJoinGroup = () => {
-    console.log("price:",dealDetails.price);
     navigation.navigate('CheckoutScreen', {
-      name: dealDetails.name,
-      price: dealDetails.price,
-      groupId: dealDetails.groupId
-    });
+      title: dealDetails.title,
+      price: dealDetails.discounted_price,
+      description: dealDetails.description,
+      groupId: dealDetails.id});
     setIsInGroup(true);
   };
 
@@ -63,12 +69,24 @@ const DealPage = () => {
     );
   };
 
-  const toggleFavorite = (dealId) => {
-    setFavorites((prevFavorites) =>
-      prevFavorites.includes(dealId)
+  const toggleFavorite = async (dealId) => {
+    setFavorites((prevFavorites) => {
+      const isFavorited = prevFavorites.includes(dealId);
+      const newFavorites = isFavorited
         ? prevFavorites.filter((id) => id !== dealId)
-        : [...prevFavorites, dealId]
-    );
+        : [...prevFavorites, dealId];
+  
+      // Call saveGroup or unSaveGroup based on whether the deal is being added or removed from favorites
+      if (isFavorited) {
+        unSaveGroup(dealId)  // Call unSaveGroup when unfavoriting
+          .catch(error => console.error('Error unsaving group:', error));
+      } else {
+        saveGroup(dealId)  // Call saveGroup when favoriting
+          .catch(error => console.error('Error saving group:', error));
+      }
+  
+      return newFavorites;
+    });
   };
 
   if (isLoading) {
@@ -79,6 +97,7 @@ const DealPage = () => {
     );    
   }
 
+  console.log(dealDetails)
   return (
     <BaseLayout>
     <View style={styles.container}>
@@ -86,22 +105,22 @@ const DealPage = () => {
       {/* Heart Icon */}
       <TouchableOpacity
         style={styles.heartButton}
-        onPress={() => toggleFavorite(dealName)} // Use the deal name or unique id for this
+        onPress={() => toggleFavorite(dealDetails?.id)} // Use the deal name or unique id for this
       >
         <Icon
-          name={favorites.includes(dealName) ? 'favorite' : 'favorite-border'}
+          name={favorites.includes(dealDetails?.id) ? 'favorite' : 'favorite-border'}
           size={28} 
           color="#f08080"
         />
       </TouchableOpacity>
       <View style={styles.participantOverlay}>
-          <Text style={styles.participantText}>{dealDetails.participants}</Text>
+          <Text style={styles.participantText}>{dealDetails?.participants}/{dealDetails?.size}</Text>
         </View>
-      <Text style={styles.title}>{dealDetails?.name}</Text>
+      <Text style={styles.title}>{dealDetails?.title}</Text>
       <Text style={styles.description}>{dealDetails?.description}</Text>
       <View style={styles.priceContainer}>
-        <Text style={styles.price}>Price: {dealDetails?.price}</Text>
-        <Text style={styles.originalPrice}>Original Price: {dealDetails?.originalPrice}</Text>
+        <Text style={styles.price}>Price: {dealDetails?.discounted_price}</Text>
+        <Text style={styles.originalPrice}>Original Price: {dealDetails?.original_price}</Text>
       </View>
 
       {/* Participants Circle */}
@@ -129,6 +148,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
     backgroundColor: '#f9f9f9',
+    width: '100%'
   },
   image: {
     width: '100%',

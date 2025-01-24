@@ -9,9 +9,10 @@ import RegisterBusinessDetails from './registerBusinessDetails';
 import RegisterLocation from './registerLocation';
 import RegisterBusinessContactInfo from './registerBusinessContactInfo';
 import RegisterPassword from './registerPassword';
-import FavoritesPage from './favorites';
+import FavoritesPage from './UserSideBarPages/favorites'
 import home from './home';
 import NewDealBasics from './NewDealBasics';
+import NewDealDetails from './NewDealDetails';
 import DealPage from './DealPage';
 import PersonalInformation from './UserSideBarPages/personalInformation';
 
@@ -32,6 +33,7 @@ const AppNavigator = () => {
         <Stack.Screen name="registerBusinessContactInfo" component={RegisterBusinessContactInfo} />
         <Stack.Screen name="favorites" component={FavoritesPage} />
         <Stack.Screen name="NewDealBasics" component={NewDealBasics} />
+        <Stack.Screen name="NewDealDetails" component={NewDealDetails} />
         <Stack.Screen name="DealPage" component={DealPage} />
         <Stack.Screen name="personalInformation" component={PersonalInformation} />
         {/* Add other screens here */}

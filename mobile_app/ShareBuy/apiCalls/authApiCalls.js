@@ -22,7 +22,7 @@ export const login = async (email, password) => {
       saveToken('accessToken', res.data.accessToken);
       saveToken('refreshToken', res.data.refreshToken);
       saveToken('email', email);
-      return "login successful";
+      return { message: "login successful", isBusiness: res.data.isBusiness };
   }
   catch(error) {
       console.error('Login failed:', error);
