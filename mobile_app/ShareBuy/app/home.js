@@ -106,7 +106,6 @@ const Home = () => {
     if (isFirstRenderSearchQuery.current) {
       isFirstRenderSearchQuery.current = false;
     } else {
-      console.log('search query after 250', debouncedQuery);
       setDeals([]);
       if (page !== 1) {
         setPage(1);
@@ -179,7 +178,7 @@ const Home = () => {
           <FlatList
             data={deals}
             renderItem={renderDealCard}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item, index) => `${item.id}_${index}`}
             key={'grid'}
             contentContainerStyle={styles.listContainer}
             numColumns={2}
