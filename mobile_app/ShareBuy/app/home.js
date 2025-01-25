@@ -132,7 +132,7 @@ const Home = () => {
     };
 
     const renderDealCard = ({ item }) => (
-      <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('DealPage', { dealId: item.id })}>
+      <TouchableOpacity style={[styles.card,{ width: deals.length === 1 ? '100%' : '48%' } ]}   onPress={() => navigation.navigate('DealPage', { dealId: item.id })}>
         <View style={styles.imageContainer}>
         <Image source={item?.image ? { uri: item.image } : DefaultPic} style={styles.cardImage} resizeMode="contain"/>
         <TouchableOpacity
@@ -248,6 +248,7 @@ const styles = StyleSheet.create({
   cardImage: {
     width: '100%',
     height: 150,
+    marginTop: 10,
   },
   participantOverlay: {
     position: 'absolute',
