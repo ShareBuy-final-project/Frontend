@@ -227,11 +227,15 @@ export const getUserCurrentGroups = async (page = 1, limit = 10) => {
 export const createPaymentIntent = async (groupId, amount) => {
   try{
       const res = await excuteAPICallPOST('group/joinGroup', {groupId, amount});
+      if (res.status !== 200) {
+        throw new Error('Creating payment intent failed');
+      }
       return res.data;
-  }
+  } 
   catch(error) {
-      console.error('Creating payment intent failed', error);
-      throw error;
+    
+      console.log('Creating payment intent failed', error.response.data.error);
+      return {error: error.response.data.error};
   }
 };
 

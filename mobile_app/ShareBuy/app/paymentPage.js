@@ -29,6 +29,9 @@ const CheckoutScreen = () => {
   const setupPaymentSheet = async () => {
       try{
         const response = await createPaymentIntent(dealDetails.groupId, amount);
+        if(response.error){
+          return {error: response.error};
+        }
         const {     
           paymentIntent,
           ephemeralKey,
@@ -60,15 +63,16 @@ const CheckoutScreen = () => {
         });
     
         if (error) {
-          console.error('Error initializing Payment Sheet:', error);
+          console.log('Error initializing Payment Sheet:', error);
           return {error};
         }
     
         console.log('Payment Sheet initialized successfully');
-        return paymentIntentId;
+        return {paymentIntentId};
     }
     catch(error) {
-        console.error('Error setting up Payment Sheet:', error);
+      const errorMessage = error.response.data.error;
+        console.log('Error setting up Payment Sheet:', errorMessage);
         return {error};
     }
   };
@@ -86,7 +90,13 @@ const CheckoutScreen = () => {
         return;
     }
     setIsLoading(true);
-    const paymentIntentId = await setupPaymentSheet();
+    const result = await setupPaymentSheet();
+    if(result.error){
+      Alert.alert(result.error);
+      setIsLoading(false);
+      return;
+    }
+    const { paymentIntentId } = result;
     setIsLoading(false);
     const { error } = await presentPaymentSheet();
     if (error) {
