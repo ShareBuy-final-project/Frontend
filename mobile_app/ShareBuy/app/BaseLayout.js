@@ -50,9 +50,15 @@ const BaseLayout = ({ children }) => {
   }
 
   const handleCurrentGroupsPress= () => {
-    business? navigation.navigate('groups'): navigation.navigate('myGroups');
+    navigation.navigate('myGroups');
     closeSidebar(); 
   }
+
+  const handleCreatedGroupsPress= () => {
+    navigation.navigate('groups')
+    closeSidebar(); 
+  }
+
 
   const handleLogout = async () => {
     if(await isLoggedIn()) {
@@ -143,6 +149,11 @@ const BaseLayout = ({ children }) => {
               <Icon name="group" size={20} color="#fff" style={styles.sidebarIcon}/>
               <Text style={styles.sidebarItemText}>Active Groups</Text>
             </TouchableOpacity>
+            {business && (
+            <TouchableOpacity style={styles.sidebarItem} onPress={handleCreatedGroupsPress}>
+              <Icon name="folder" size={20} color="#fff" style={styles.sidebarIcon} />
+              <Text style={styles.sidebarItemText}>My Created Groups</Text>
+            </TouchableOpacity>)}
             <TouchableOpacity style={styles.sidebarItem} onPress={async () => {await handleLogout();}}>
               <Icon name="logout" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>Sign Out</Text>
