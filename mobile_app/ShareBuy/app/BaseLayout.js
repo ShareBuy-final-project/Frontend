@@ -147,12 +147,12 @@ const BaseLayout = ({ children }) => {
             </TouchableOpacity>
             <TouchableOpacity style={styles.sidebarItem} onPress={handleCurrentGroupsPress}>
               <Icon name="group" size={20} color="#fff" style={styles.sidebarIcon}/>
-              <Text style={styles.sidebarItemText}>Active Groups</Text>
+              <Text style={styles.sidebarItemText}>My Groups</Text>
             </TouchableOpacity>
             {business && (
             <TouchableOpacity style={styles.sidebarItem} onPress={handleCreatedGroupsPress}>
-              <Icon name="folder" size={20} color="#fff" style={styles.sidebarIcon} />
-              <Text style={styles.sidebarItemText}>My Created Groups</Text>
+              <Icon name="business" size={20} color="#fff" style={styles.sidebarIcon} />
+              <Text style={styles.sidebarItemText}>Business Groups</Text>
             </TouchableOpacity>)}
             <TouchableOpacity style={styles.sidebarItem} onPress={async () => {await handleLogout();}}>
               <Icon name="logout" size={20} color="#fff" style={styles.sidebarIcon} />
