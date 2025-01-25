@@ -23,14 +23,15 @@ const DealPage = () => {
         const group = await getGroupById(dealId);
         setDealDetails({
           id: group.id,
-          title: `Deal ${group.name}`,
+          title: `${group.name}`,
           original_price: `$${group.price}`,
           discounted_price: `$${group.discount}`,
-          image: group.imageBase64,
+          image: group.imageBase64, // The backend now sends the complete base64 string
           participants: group.totalAmount || 0, // Participant count from API
           size: group.size,
           description: group.description,
-          isSaved: group.isSaved || false});
+          isSaved: group.isSaved || false
+        });
       } catch (error) {
         console.error('Error fetching deal details:', error);
       } finally {
@@ -96,11 +97,11 @@ const DealPage = () => {
     );    
   }
 
-  console.log(dealDetails)
+  //console.log(dealDetails)
   return (
     <BaseLayout>
     <View style={styles.container}>
-      <Image source={dealDetails?.image ? { uri: dealDetails.image } : DefaultPic} style={styles.image} resizeMode="contain"/>
+      <Image source={{ uri: dealDetails?.image }} style={styles.image} resizeMode="contain"/>
       {/* Heart Icon */}
       <TouchableOpacity
         style={styles.heartButton}

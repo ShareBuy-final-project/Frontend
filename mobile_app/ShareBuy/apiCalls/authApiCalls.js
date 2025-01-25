@@ -13,7 +13,7 @@ export const login = async (email, password) => {
     }
   try{
       const res = await excuteAPICallPOST('auth/login', {email, password});
-      console.log("login res:\n" ,res);
+      //console.log("login res:\n" ,res);
       if(res.status !== 200 || !res.data.accessToken || !res.data.refreshToken) {
           console.log("Login failed");
           throw new Error('Login failed');
