@@ -6,6 +6,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import BaseLayout from './BaseLayout';
 import * as ImagePicker from 'expo-image-picker';
 import { createGroup } from '../apiCalls/groupApiCalls';
+import * as FileSystem from 'expo-file-system';
 
 const NewDealDetails = () => {
   const navigation = useNavigation();
@@ -36,15 +37,17 @@ const NewDealDetails = () => {
     }
   };
 
-  const saveImage = async (image) => {
+  const saveImage = async (imageUri) => {
     try {
-      setImage(image);
+      const base64 = await FileSystem.readAsStringAsync(imageUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      setImage(base64); 
     } catch (error) {
-      console.error('Error saving image:', error);
-      Alert.alert('Error', 'Failed to save image. Please try again.');
+      console.error('Error converting image to Base64:', error);
     }
   };
-
+  
   const handleTakePicture = async () => {
     try {
       await ImagePicker.getCameraPermissionsAsync();

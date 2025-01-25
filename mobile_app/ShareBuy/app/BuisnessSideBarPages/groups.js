@@ -141,7 +141,7 @@ const groups = () => {
           <FlatList
             data={deals}
             renderItem={renderDealCard}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item, index) => `${item.id}_${index}`}
             key={'grid'}
             contentContainerStyle={styles.listContainer}
             numColumns={2}
