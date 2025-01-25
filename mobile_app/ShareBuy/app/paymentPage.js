@@ -40,7 +40,6 @@ const CheckoutScreen = () => {
           paymentIntentId } = response;
           
         const { error } = await initPaymentSheet({
-          merchantDisplayName: 'Merchant Name',
           customerId: customer,
           merchantDisplayName: 'Merchant Name',
           customerEphemeralKeySecret: ephemeralKey,
