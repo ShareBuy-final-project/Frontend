@@ -17,6 +17,9 @@ const Home = () => {
   const [favorites, setFavorites] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [isBusiness, setIsBusiness] = useState(false);
+  const searchTimer = useRef(null); // Add this ref for the timer
+  const isFirstRenderSearchQuery = useRef(true);
+  const [debouncedQuery, setDebouncedQuery] = useState('');
 
   const navigation = useNavigation(); // Use navigation for page transition
 
@@ -42,7 +45,6 @@ const Home = () => {
   
   const getDeals = async () => {
     setIsLoading(true);
-    setDeals([]); // Clear the deals before fetching new ones
     try {
       // Call the API fetchDeals function
       const apiDeals = await fetchDeals({text: searchQuery}, page, 10); 
@@ -83,30 +85,45 @@ const Home = () => {
     fetchIsBusiness();
   }, []);
 
-  const isFirstRenderSearchQuery = useRef(true);
-
   useEffect(() => {
     getDeals();
   }, [page]);
 
-  const debouncedGetDeals = useCallback(
-    debounce(() => {
+  const handleSearchChange = (query) => {
+    if (searchTimer.current) {
+      clearTimeout(searchTimer.current);
+    }
+    
+    setSearchQuery(query);
+    searchTimer.current = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 250);
+  };
+
+  // Add this effect to watch for debouncedQuery changes
+  useEffect(() => {
+    if (isFirstRenderSearchQuery.current) {
+      isFirstRenderSearchQuery.current = false;
+    } else {
+      console.log('search query after 250', debouncedQuery);
+      setDeals([]);
       if (page !== 1) {
         setPage(1);
       } else {
         getDeals();
       }
-    }, 300),
-    [page]
-  );
+    }
+  }, [debouncedQuery]);
 
-  const handleSearchChange = (query) => {
-    console.log('Search query:', query);
-    setSearchQuery(query); // Update the search query state immediately
-    debouncedGetDeals(); // Debounce the page reset or getDeals call
-  };
+  // Clean up timer when component unmounts
+  useEffect(() => {
+    return () => {
+      if (searchTimer.current) {
+        clearTimeout(searchTimer.current);
+      }
+    };
+  }, []);
 
-  
   const handleLoadMore = () => {
     if (!isLoading && hasMore) {
       setPage((prevPage) => prevPage + 1);
