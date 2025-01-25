@@ -37,7 +37,8 @@
     "react-native-tab-view": "^4.0.5",
     "react-native-toast-message": "^2.2.1",
     "react-native-vector-icons": "^10.2.0",
-    "react-native-web": "~0.19.13"
+    "react-native-web": "~0.19.13",
+    "expo-file-system": "~18.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2"

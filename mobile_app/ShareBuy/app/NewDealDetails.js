@@ -6,6 +6,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import BaseLayout from './BaseLayout';
 import * as ImagePicker from 'expo-image-picker';
 import { createGroup } from '../apiCalls/groupApiCalls';
+import * as FileSystem from 'expo-file-system';
 
 const NewDealDetails = () => {
   const navigation = useNavigation();
