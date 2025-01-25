@@ -42,6 +42,7 @@ const CheckoutScreen = () => {
         const { error } = await initPaymentSheet({
           merchantDisplayName: 'Merchant Name',
           customerId: customer,
+          merchantDisplayName: 'Merchant Name',
           customerEphemeralKeySecret: ephemeralKey,
           paymentIntentClientSecret: paymentIntent,
           // Set `allowsDelayedPaymentMethods` to true if your business can handle payment

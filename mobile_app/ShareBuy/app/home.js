@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Text, StyleSheet, View, FlatList, TouchableOpacity, Image } from 'react-native';
 import BaseLayout from './BaseLayout';
 import SearchBar from '../components/SearchBar';

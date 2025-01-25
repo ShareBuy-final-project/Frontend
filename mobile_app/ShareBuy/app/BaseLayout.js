@@ -1,18 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing, TouchableWithoutFeedback, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import { logout } from '../apiCalls/authApiCalls';
 import { isLoggedIn } from '../utils/userTokens';
+import { getToken } from '../utils/userTokens';
 
 const BaseLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarAnimation = useState(new Animated.Value(0))[0]; // Sidebar animation value
   const [business, setBusiness] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const fetchIsBusiness = async () => {
+      const is_buisness = await getToken('isBusiness');
+      setIsBusiness(is_buisness === 'true');
+    };
+    fetchIsBusiness();
+  }, []);
+
+  useEffect(() => {
+    const fetchEmail = async () => {
+      const email = await getToken('email');
+      setUserEmail(email);
+    };
+    fetchEmail();
+  }, []);
 
   const handleHomePress = () => {
     navigation.navigate('home');
+    closeSidebar(); 
   };
 
   const handleFavoritesPress = () => {
@@ -22,7 +41,18 @@ const BaseLayout = ({ children }) => {
 
   const handleProfilePress = () => {
     navigation.navigate('personalInformation');
+    closeSidebar(); 
   };
+
+  const handleHistoryPress= () => {
+    navigation.navigate('purchaseHistory');
+    closeSidebar(); 
+  }
+
+  const handleCurrentGroupsPress= () => {
+    navigation.navigate('myGroups');
+    closeSidebar(); 
+  }
 
   const handleLogout = async () => {
     if(await isLoggedIn()) {
@@ -96,22 +126,21 @@ const BaseLayout = ({ children }) => {
       >
         <TouchableWithoutFeedback>
           <View>
-            <Text style={styles.sidebarHeader}>Amit Levints</Text>
+            <Text style={styles.sidebarHeader}>{userEmail}</Text>
             <TouchableOpacity style={styles.sidebarItem} onPress={handleProfilePress}>
               <Icon name="person" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>{business ? "Business Profile" : "Profile"}</Text>
             </TouchableOpacity>
-            {!business && (
             <TouchableOpacity style={styles.sidebarItem} onPress={handleFavoritesPress}>
               <Icon name="favorite" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>Favorites</Text>
-            </TouchableOpacity>)}
-            <TouchableOpacity style={styles.sidebarItem}>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.sidebarItem} onPress={handleHistoryPress}>
               <Icon name="history" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>History</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.sidebarItem}>
-              <Icon name="group" size={20} color="#fff" style={styles.sidebarIcon} />
+            <TouchableOpacity style={styles.sidebarItem} onPress={handleCurrentGroupsPress}>
+              <Icon name="group" size={20} color="#fff" style={styles.sidebarIcon}/>
               <Text style={styles.sidebarItemText}>Active Groups</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.sidebarItem} onPress={async () => {await handleLogout();}}>
@@ -168,7 +197,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
   },
   sidebarHeader: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#fff',
