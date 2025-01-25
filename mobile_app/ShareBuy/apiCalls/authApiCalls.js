@@ -51,29 +51,20 @@ export async function refreshAccessToken() {
     if (!refreshToken) {
       return null;
     }
-  
     try {
-        const response = await axios.post(`${baseRoute}/auth/token`, 
-            {
-                refreshToken
-            }, 
-            {
-                headers: {
-                'Content-Type': 'application/json',
-                },
-            }
-        );
-  
-      if (!response.ok) {
-        throw new Error('Failed to refresh token');
-      }
-  
-      const data = await response.json();
-      const newAccessToken = data.accessToken;
-      await saveToken('accessToken', newAccessToken);
-      return newAccessToken;
+      console.log("url:", baseRoute + 'auth/token');
+      const response = await axios({
+        method: 'post',
+        url: baseRoute + 'auth/token',
+        headers: {
+          'Content-Type': 'application/json',
+          },
+        data: {refreshToken}
+    });
+      const {accessToken} = response.data;
+      await saveToken('accessToken', accessToken);
+      return accessToken;
     } catch (error) {
-      console.error('Error refreshing token:', error);
       return null;
     }
   }
