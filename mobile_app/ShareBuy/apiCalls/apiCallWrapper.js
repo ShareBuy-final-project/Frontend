@@ -19,11 +19,9 @@ const baseRoute = Constants.expoConfig.extra.BASE_ROUTE;
 
 
 const excuteAPICall = async (route, type, params) => {
-    console.log('Executing API call:4444444444444444444')
     if (!baseRoute) {
         throw new Error('BASE_ROUTE is not defined');
     }
-
     let body = JSON.stringify(params);
     let accessToken = await getToken('accessToken');
     let headers = {
@@ -62,7 +60,7 @@ const excuteAPICall = async (route, type, params) => {
                     throw retryError;
                 }
             } else {
-                console.error('Failed to refresh token');
+                console.log('Failed to refresh token');
                 throw error;
             }
         } else {
