@@ -22,7 +22,6 @@ const excuteAPICall = async (route, type, params) => {
     if (!baseRoute) {
         throw new Error('BASE_ROUTE is not defined');
     }
-
     let body = JSON.stringify(params);
     let accessToken = await getToken('accessToken');
     let headers = {
