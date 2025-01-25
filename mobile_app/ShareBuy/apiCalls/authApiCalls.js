@@ -47,11 +47,12 @@ export const logout = async () => {
  * @returns {Promise<string|null>} - The new access token or null if refresh failed.
  */
 export async function refreshAccessToken() {
+  console.log('calling to refresh token 8888888888888888')
     const refreshToken = await getToken('refreshToken');
     if (!refreshToken) {
       return null;
     }
-  
+    console.log('refresh token:some_refresh_token');
     try {
         const response = await axios.post(`${baseRoute}/auth/token`, 
             {
