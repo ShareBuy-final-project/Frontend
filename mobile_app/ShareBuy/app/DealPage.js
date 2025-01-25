@@ -101,7 +101,7 @@ const DealPage = () => {
   return (
     <BaseLayout>
     <View style={styles.container}>
-      <Image source={{ uri: dealDetails?.image }} style={styles.image} resizeMode="contain"/>
+    <Image source={dealDetails?.image ? { uri: dealDetails.image } : DefaultPic} style={styles.image} resizeMode="contain"/>
       {/* Heart Icon */}
       <TouchableOpacity
         style={styles.heartButton}

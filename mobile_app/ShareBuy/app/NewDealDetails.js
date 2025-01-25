@@ -7,7 +7,6 @@ import BaseLayout from './BaseLayout';
 import * as ImagePicker from 'expo-image-picker';
 import { createGroup } from '../apiCalls/groupApiCalls';
 import * as FileSystem from 'expo-file-system';
-import { manipulateAsync } from 'expo-image-manipulator';
 
 const NewDealDetails = () => {
   const navigation = useNavigation();
