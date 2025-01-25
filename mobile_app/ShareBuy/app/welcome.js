@@ -12,8 +12,8 @@ const Welcome = () => {
 
   const  handleSignIn = async () => {
     try {
-        if (email === '' || password === '') {
-          Alert.alert('Please fill in all fields!', [{ text: 'OK' }]);
+        if (email == '' || password == '') {
+          Alert.alert('Please fill in all fields!');
           return
         }
         const res = await login(email, password)
@@ -22,7 +22,7 @@ const Welcome = () => {
         navigation.navigate('home');
       }
       catch (error) {
-        Alert.alert('Login Failed', error.message, [{ text: 'OK' }]);
+        Alert.alert('Login Failed, make sure the email and password are correct!');
       }
   };
 
