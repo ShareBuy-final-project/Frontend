@@ -13,7 +13,6 @@ const NewDealDetails = () => {
   const route = useRoute();
   const { dealName, amountBefore, amountAfter, minimumAmount } = route.params;
   const [description, setDescription] = useState('');
-  const [picture, setPicture] = useState(null);
   const [image, setImage] = useState(null);
 
   const handleDone = async () => {
@@ -21,10 +20,17 @@ const NewDealDetails = () => {
       Alert.alert('Invalid Input', 'Deal Name field must be filled in.'); 
     } else {
       try {
+        let base64Image = null;
+        if (image) {
+          const base64 = await FileSystem.readAsStringAsync(image, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+          base64Image = `data:image/jpeg;base64,${base64}`;
+        }
         await createGroup({
           name: dealName,
           description,
-          image,
+          base64Image,
           price: amountBefore,
           discount: amountAfter,
           size: minimumAmount
@@ -39,10 +45,7 @@ const NewDealDetails = () => {
 
   const saveImage = async (imageUri) => {
     try {
-      const base64 = await FileSystem.readAsStringAsync(imageUri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-      setImage(base64); 
+      setImage(imageUri); 
     } catch (error) {
       console.error('Error converting image to Base64:', error);
     }

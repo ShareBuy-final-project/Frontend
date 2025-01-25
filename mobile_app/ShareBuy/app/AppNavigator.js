@@ -15,10 +15,10 @@ import NewDealBasics from './NewDealBasics';
 import NewDealDetails from './NewDealDetails';
 import DealPage from './DealPage';
 import PersonalInformation from './UserSideBarPages/personalInformation';
-import purchasesHistory from './UserSideBarPages/purchasesHistory';
-import myGroups from './UserSideBarPages/myGroups';
-import history from './BuisnessSideBarPages/history';
-import groups from './BuisnessSideBarPages/groups';
+import PurchasesHistory from './UserSideBarPages/purchasesHistory';
+import MyGroups from './UserSideBarPages/myGroups';
+import History from './BuisnessSideBarPages/history';
+import Groups from './BuisnessSideBarPages/groups';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,10 +40,10 @@ const AppNavigator = () => {
         <Stack.Screen name="NewDealDetails" component={NewDealDetails} />
         <Stack.Screen name="DealPage" component={DealPage} />
         <Stack.Screen name="personalInformation" component={PersonalInformation} />
-        <Stack.Screen name="purchaseHistory" component={purchasesHistory} />
-        <Stack.Screen name="myGroups" component={myGroups} />
-        <Stack.Screen name="history" component={history} />
-        <Stack.Screen name="groups" component={groups} />
+        <Stack.Screen name="purchaseHistory" component={PurchasesHistory} />
+        <Stack.Screen name="myGroups" component={MyGroups} />
+        <Stack.Screen name="history" component={History} />
+        <Stack.Screen name="groups" component={Groups} />
       </Stack.Navigator>
       <Toast/>
     </>

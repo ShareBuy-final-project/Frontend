@@ -10,7 +10,7 @@ import debounce from 'lodash/debounce';
 import DefaultPic from '../../assets/images/default_pic.png';
 
 
-const myGroups = () => {
+const MyGroups = () => {
   const [deals, setDeals] = useState([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -283,4 +283,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default myGroups;
+export default MyGroups;
