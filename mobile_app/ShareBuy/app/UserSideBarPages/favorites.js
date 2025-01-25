@@ -7,6 +7,7 @@ import { COLORS, FONT } from '../../constants/theme';
 import {getSavedGroups, saveGroup, unSaveGroup} from '../../apiCalls/groupApiCalls'
 import { getToken } from '../../utils/userTokens';
 import debounce from 'lodash/debounce';
+import DefaultPic from '../../assets/images/default_pic.png';
 
 
 const FavoritesPage = () => {
@@ -55,7 +56,7 @@ const FavoritesPage = () => {
         title: `${deal.name}`,
         original_price: `$${deal.price}`,
         discounted_price: `$${deal.discount}`,
-        image: deal.imageBase64 || 'https://via.placeholder.com/150', // Default placeholder image
+        image: deal.imageBase64, // Default placeholder image
         participants: deal.totalAmount || 0, // Participant count from API
         size: deal.size,
         isSaved: deal.isSaved || false,
@@ -107,7 +108,7 @@ const FavoritesPage = () => {
     const renderDealCard = ({ item }) => (
       <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('DealPage', { dealId: item.id })}>
         <View style={styles.imageContainer}>
-          <Image source={{ uri: item.image }} style={styles.cardImage} />
+        <Image source={item?.image ? { uri: item.image } : DefaultPic} style={styles.cardImage} resizeMode="contain"/>
           <TouchableOpacity
             style={styles.heartButton}
             onPress={() => toggleFavorite(item.id)}

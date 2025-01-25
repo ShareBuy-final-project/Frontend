@@ -139,7 +139,7 @@ export const leaveGroup = async (groupId) => {
  */
 export const getBusinessHistory = async () => {
   try {
-    const res = await excuteAPICallGET('group/businessHistory');
+    const res = await excuteAPICallPOST('group/businessHistory');
     if (res.status !== 200) {
       throw new Error('Failed to fetch business history');
     }
@@ -223,6 +223,25 @@ export const getUserCurrentGroups = async (page = 1, limit = 10) => {
     throw error;
   }
 };
+
+export const getBuisnessCurrentGroups = async (page = 1, limit = 10) => {
+  try {
+    const res = await excuteAPICallPOST('group/getBuisnessGroups', {
+      page,
+      limit,
+    });
+
+    if (res.status !== 200) {
+      throw new Error('Failed to fetch user current deals');
+    }
+
+    return res.data;
+  } catch (error) {
+    console.error('Error fetching user current  deals:', error);
+    throw error;
+  }
+};
+
 
 export const createPaymentIntent = async (groupId, amount) => {
   try{
