@@ -1,26 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Text, StyleSheet, View, FlatList, TouchableOpacity, Image } from 'react-native';
-import BaseLayout from './BaseLayout';
-import SearchBar from '../components/SearchBar';
+import BaseLayout from '../BaseLayout';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native'; // For navigation
-import { COLORS, FONT } from '../constants/theme';
-import {fetchDeals, saveGroup, unSaveGroup} from '../apiCalls/groupApiCalls'
-import { getToken } from '../utils/userTokens';
+import { COLORS, FONT } from '../../constants/theme';
+import {getBusinessHistory, saveGroup, unSaveGroup} from '../../apiCalls/groupApiCalls'
+import { getToken } from '../../utils/userTokens';
 import debounce from 'lodash/debounce';
-import DefaultPic from '../assets/images/default_pic.png';
+import DefaultPic from '../../assets/images/default_pic.png';
 
-const Home = () => {
+
+const history = () => {
   const [deals, setDeals] = useState([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [favorites, setFavorites] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [isBusiness, setIsBusiness] = useState(false);
-  const searchTimer = useRef(null); // Add this ref for the timer
-  const isFirstRenderSearchQuery = useRef(true);
-  const [debouncedQuery, setDebouncedQuery] = useState('');
 
   const navigation = useNavigation(); // Use navigation for page transition
 
@@ -46,9 +42,10 @@ const Home = () => {
   
   const getDeals = async () => {
     setIsLoading(true);
+    setDeals([]); // Clear the deals before fetching new ones
     try {
       // Call the API fetchDeals function
-      const apiDeals = await fetchDeals({text: searchQuery}, page, 10); 
+      const apiDeals = await getBusinessHistory(page, 10); 
       if (apiDeals.length === 0) {
         setHasMore(false); // No more deals available
         return;
@@ -86,45 +83,22 @@ const Home = () => {
     fetchIsBusiness();
   }, []);
 
+
   useEffect(() => {
     getDeals();
   }, [page]);
 
-  const handleSearchChange = (query) => {
-    if (searchTimer.current) {
-      clearTimeout(searchTimer.current);
-    }
-    
-    setSearchQuery(query);
-    searchTimer.current = setTimeout(() => {
-      setDebouncedQuery(query);
-    }, 250);
-  };
-
-  // Add this effect to watch for debouncedQuery changes
-  useEffect(() => {
-    if (isFirstRenderSearchQuery.current) {
-      isFirstRenderSearchQuery.current = false;
-    } else {
-      console.log('search query after 250', debouncedQuery);
-      setDeals([]);
+  const debouncedGetDeals = useCallback(
+    debounce(() => {
       if (page !== 1) {
         setPage(1);
       } else {
         getDeals();
       }
-    }
-  }, [debouncedQuery]);
-
-  // Clean up timer when component unmounts
-  useEffect(() => {
-    return () => {
-      if (searchTimer.current) {
-        clearTimeout(searchTimer.current);
-      }
-    };
-  }, []);
-
+    }, 300),
+    [page]
+  );
+  
   const handleLoadMore = () => {
     if (!isLoading && hasMore) {
       setPage((prevPage) => prevPage + 1);
@@ -135,7 +109,7 @@ const Home = () => {
       <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('DealPage', { dealId: item.id })}>
         <View style={styles.imageContainer}>
         <Image source={item?.image ? { uri: item.image } : DefaultPic} style={styles.cardImage} resizeMode="contain"/>
-        <TouchableOpacity
+          <TouchableOpacity
             style={styles.heartButton}
             onPress={() => toggleFavorite(item.id)}
           >
@@ -157,24 +131,11 @@ const Home = () => {
       </TouchableOpacity>
     );
     
-  // const filteredDeals = deals.filter((deal) =>
-  //   deal.title.toLowerCase().includes(searchQuery.toLowerCase())
-  // );
-
   return (
     <BaseLayout>
-      <View style={styles.messageContainer}>
-        <Text style={styles.secondSubMessage}>
-          {isBusiness ? 'Want to create a new deal? ' : 'Want to create a new suggested deal? '} 
-          <Text style={{ color: COLORS.black, textDecorationLine: 'underline', fontWeight: 'bold' }} onPress={() => navigation.navigate(isBusiness ? 'NewDealBasics' : 'suggestedDeal')}>
-            Create one
-          </Text>
-        </Text>
-      </View>
       <View style={styles.DealsContainer}>
-        <SearchBar value={searchQuery} onChangeText={handleSearchChange} />
         {deals.length === 0 && !isLoading ? (
-          <Text style={styles.noDealsText}>No deals found for the search query.</Text>
+          <Text style={styles.noDealsText}>You do not have any history groups YET!</Text>
         ) : (
           <FlatList
             data={deals}
@@ -222,7 +183,7 @@ const styles = StyleSheet.create({
   },
   DealsContainer: {
     marginTop: -10,
-    alignItems: 'center', // Center the SearchBar
+    alignItems: 'center', 
   },
   listContainer: {
     paddingHorizontal: 10,
@@ -321,4 +282,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default history;

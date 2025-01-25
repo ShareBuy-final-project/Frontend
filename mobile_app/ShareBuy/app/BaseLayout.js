@@ -16,7 +16,7 @@ const BaseLayout = ({ children }) => {
   useEffect(() => {
     const fetchIsBusiness = async () => {
       const is_buisness = await getToken('isBusiness');
-      setIsBusiness(is_buisness === 'true');
+      setBusiness(is_buisness === 'true');
     };
     fetchIsBusiness();
   }, []);
@@ -45,12 +45,12 @@ const BaseLayout = ({ children }) => {
   };
 
   const handleHistoryPress= () => {
-    navigation.navigate('purchaseHistory');
+    business? navigation.navigate('history'): navigation.navigate('purchaseHistory');
     closeSidebar(); 
   }
 
   const handleCurrentGroupsPress= () => {
-    navigation.navigate('myGroups');
+    business? navigation.navigate('groups'): navigation.navigate('myGroups');
     closeSidebar(); 
   }
 
