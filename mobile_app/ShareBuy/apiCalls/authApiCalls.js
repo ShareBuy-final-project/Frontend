@@ -25,7 +25,7 @@ export const login = async (email, password) => {
       return { message: "login successful", isBusiness: res.data.isBusiness };
   }
   catch(error) {
-      console.error('Login failed:', error);
+      console.log('Login failed:', error);
       throw error;
   }
 };
@@ -38,7 +38,7 @@ export const logout = async () => {
     await deleteAllTokens();
     return res;
   } catch (error) {
-    console.error('Logout failed:', error);
+    console.log('Logout failed:', error);
     throw error;
   }
 }
