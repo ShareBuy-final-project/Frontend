@@ -6,6 +6,7 @@ import InputField from '../components/InputField';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { registerBusiness } from '../apiCalls/userApiCalls';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
 const RegisterBusinessContactInfo = () => {
   const navigation = useNavigation();
@@ -34,7 +35,7 @@ const RegisterBusinessContactInfo = () => {
         contactEmail,
       });
 
-      if (res.status === 201) {
+      if (response.status === 201) {
         Toast.show({
           type: 'success',
           text1: 'Registration Successful 🎉',
