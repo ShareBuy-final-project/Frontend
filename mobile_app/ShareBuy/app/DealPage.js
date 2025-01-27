@@ -3,7 +3,7 @@ import { Text, StyleSheet, View, ActivityIndicator, Image, TouchableOpacity, Ale
 import { useRoute,useNavigation } from '@react-navigation/native'; // For route parameters
 import Icon from 'react-native-vector-icons/MaterialIcons'; // For the button icons
 import BaseLayout from './BaseLayout';
-import {getGroupById, joinGroup, leaveGroup} from '../apiCalls/groupApiCalls'
+import {getGroupById, saveGroup, unSaveGroup} from '../apiCalls/groupApiCalls'
 import DefaultPic from '../assets/images/default_pic.png';
 
 const DealPage = () => {
@@ -32,6 +32,9 @@ const DealPage = () => {
           description: group.description,
           isSaved: group.isSaved || false
         });
+        if (group.isSaved) {
+          setFavorites((prevFavorites) => [...prevFavorites, group.id]);
+        }
       } catch (error) {
         console.error('Error fetching deal details:', error);
       } finally {
