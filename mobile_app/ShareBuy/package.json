@@ -15,6 +15,7 @@
     "axios": "^1.7.9",
     "expo": "~52.0.26",
     "expo-constants": "~17.0.4",
+    "expo-file-system": "~18.0.7",
     "expo-font": "~13.0.3",
     "expo-image-picker": "16.0.4",
     "expo-linking": "~7.0.4",
@@ -38,7 +39,7 @@
     "react-native-toast-message": "^2.2.1",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.13",
-    "expo-file-system": "~18.0.7"
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2"

@@ -1,32 +1,52 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, ScrollView, View, TextInput, StyleSheet, Alert, Text, Platform, TouchableOpacity } from 'react-native';
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { login } from '../apiCalls/authApiCalls';
-import { isLoggedIn, saveToken } from '../utils/userTokens';
+import { saveToken } from '../utils/userTokens';
+import { useSocket } from '../context/SocketContext';
+import io from 'socket.io-client';
+console.log("Welcome - Component file loaded");
 
 const Welcome = () => {
+  console.log("Welcome - Component rendering");
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const  handleSignIn = async () => {
+  const navigation = useNavigation();
+  
+  console.log("Welcome - Starting to use socket context");
+  const socketContext = useSocket();
+  
+  const handleSignIn = async () => {
+    console.log('handleSignIn - START');
     try {
-        if (email == '' || password == '') {
-          Alert.alert('Please fill in all fields!');
-          return
-        }
-        const res = await login(email, password)
-        await saveToken('isBusiness', res.isBusiness.toString());
-        Alert.alert('Login Successful', 'You have successfully logged in!', [{ text: 'OK' }]);
-        navigation.navigate('home');
+      if (email == '' || password == '') {
+        Alert.alert('Please fill in all fields!');
+        return;
       }
-      catch (error) {
-        Alert.alert('Login Failed, make sure the email and password are correct!');
+      const res = await login(email, password);
+      await saveToken('isBusiness', res.isBusiness.toString());
+      
+      // Initialize socket connection after successful login
+      console.log("Welcome - Attempting to initialize socket");
+      if (typeof socketContext.initializeSocket === 'function') {
+        socketContext.initializeSocket();
+       
+      } else {
+        console.error("Welcome - initializeSocket is not a function:", socketContext);
+        Alert.alert('Error', 'Failed to initialize chat connection');
+        return;
       }
+      
+      Alert.alert('Login Successful', 'You have successfully logged in!', [{ text: 'OK' }]);
+      navigation.navigate('home');
+    } catch (error) {
+      console.error('Login error:', error);
+      Alert.alert('Login Failed', 'Make sure the email and password are correct!');
+    }
   };
 
-  const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
@@ -63,7 +83,7 @@ const Welcome = () => {
             onChangeText={setPassword}
           />
         </View>
-        <TouchableOpacity style={styles.buttonContainer} onPress={() => { handleSignIn(); }}>
+        <TouchableOpacity style={styles.buttonContainer} onPress={handleSignIn}>
           <Text style={{color : COLORS.white}}>Sign In</Text>
         </TouchableOpacity>
         <View style={styles.messageContainer}>
@@ -71,7 +91,6 @@ const Welcome = () => {
             don't have an account? <Text style={{ color: COLORS.black, textDecorationLine: 'underline' }} onPress={() => navigation.navigate('registerTypeSelection')}>Create one</Text>
           </Text>
         </View>
-        
       </ScrollView>
     </SafeAreaView>
   );
