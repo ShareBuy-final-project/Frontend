@@ -19,6 +19,7 @@ export const SocketProvider = ({ children }) => {
   console.log("SocketProvider - Rendering");
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [activeChat, setActiveChat] = useState(null); // Add activeChat state
 
   const initializeSocket = () => {
     console.log("initializeSocket called");
@@ -35,7 +36,7 @@ export const SocketProvider = ({ children }) => {
       reconnection: true,
       reconnectionAttempts: 2,
       reconnectionDelay: 1000
-  });
+    });
     console.log("New socket created:");
     newSocket.on('connect', () => {
       console.log('Socket connected successfully');
@@ -64,12 +65,12 @@ export const SocketProvider = ({ children }) => {
     }
   };
 
-  const sendMessage = (message) => {
+  const sendMessage = (groupId, message) => {
     if (!socket || !isConnected) {
       console.error('Socket not connected');
       return;
     }
-    socket.emit('sendMessage', message);
+    socket.emit('sendMessage', { groupId, message });
   };
 
   useEffect(() => {
@@ -85,9 +86,10 @@ export const SocketProvider = ({ children }) => {
     isConnected,
     initializeSocket,
     disconnectSocket,
-    sendMessage
+    sendMessage,
+    activeChat, // Add activeChat to context value
+    setActiveChat // Add setActiveChat to context value
   };
-
 
   return (
     <SocketContext.Provider value={contextValue}>

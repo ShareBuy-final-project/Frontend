@@ -26,7 +26,7 @@ export const getMyChats = async () => {
  */
 export const getChatById = async (groupId, pageNumber = 1) => {
   try {
-    const res = await excuteAPICallGET(`chat/get?id=${groupId}&page=${pageNumber}`);
+    const res = await excuteAPICallPOST('chat/group/getGroupChat',{groupId, pageNumber});
     if (res.status !== 200) {
       throw new Error('Failed to fetch group');
     }

@@ -30,7 +30,21 @@ const ChatPage = ({ route }) => {
     
     setIsLoading(true);
     try {
-      const response = await getChatById(groupId, pageNumber);
+      // const response = await getChatById(groupId, pageNumber);
+      const response = [
+        {
+          id: 1,
+          content: "Hello, this is a mock message!",
+          userEmail: "user@example.com",
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: 2,
+          content: "This is another mock message.",
+          userEmail: "otheruser@example.com",
+          createdAt: new Date().toISOString()
+        }
+      ];
       if (!response || response.length === 0) {
         setHasMore(false);
         return;
@@ -39,9 +53,9 @@ const ChatPage = ({ route }) => {
       // Transform the API response to match our UI structure
       const formattedMessages = response.map(msg => ({
         id: msg.id,
-        text: msg.message,
-        sender: msg.isUser ? "user" : "other",
-        timestamp: new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        text: msg.content,
+        sender: msg.userEmail,
+        timestamp: new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       }));
 
       // If it's the first page, replace messages. Otherwise, append to existing messages
@@ -113,6 +127,7 @@ const ChatPage = ({ route }) => {
         styles.messageBubble,
         item.sender === "user" ? styles.userBubble : styles.otherBubble
       ]}>
+        <Text style={styles.senderText}>{item.sender}</Text>
         <Text style={[
           styles.messageText,
           item.sender === "user" ? styles.userMessageText : styles.otherMessageText
@@ -140,7 +155,7 @@ const ChatPage = ({ route }) => {
           contentContainerStyle={styles.messagesContainer}
           refreshing={isLoading}
           onRefresh={() => fetchMessages(1)}
-          onEndReached={handleLoadMore}
+          //onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           ListEmptyComponent={
             !isLoading && (
@@ -288,7 +303,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: FONT.arial,
   },
+  senderText: {
+    fontSize: 14,
+    fontFamily: FONT.arialBold,
+    color: COLORS.gray,
+    marginBottom: 2,
+  },
 });
 
-export default ChatPage; 
+export default ChatPage;
 
