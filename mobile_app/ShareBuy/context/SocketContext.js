@@ -30,7 +30,7 @@ export const SocketProvider = ({ children }) => {
     const baseRoute = Constants.expoConfig.extra.BASE_ROUTE;
     console.log("Creating new socket connection to:", baseRoute);
     
-    const newSocket = io('http://132.73.84.56:443/', {
+    const newSocket = io('http://132.73.84.56:443/chat', {
       transports: ['websocket'],
       reconnection: true,
       reconnectionAttempts: 2,
