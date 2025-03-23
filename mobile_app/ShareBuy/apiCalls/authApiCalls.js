@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { saveToken, isLoggedIn, getToken } from '../utils/userTokens';
-import {excuteAPICallPOST} from './apiCallWrapper';
+import { saveToken, isLoggedIn, getToken, deleteAllTokens } from '../utils/userTokens';
+import {excuteAPICallPOST, excuteAPICallDELETE} from './apiCallWrapper';
 import Constants from 'expo-constants';
 
 const baseRoute = Constants.expoConfig.extra.BASE_ROUTE;
@@ -13,7 +13,7 @@ export const login = async (email, password) => {
     }
   try{
       const res = await excuteAPICallPOST('auth/login', {email, password});
-      console.log("login res:\n" ,res);
+      //console.log("login res:\n" ,res);
       if(res.status !== 200 || !res.data.accessToken || !res.data.refreshToken) {
           console.log("Login failed");
           throw new Error('Login failed');
@@ -22,14 +22,26 @@ export const login = async (email, password) => {
       saveToken('accessToken', res.data.accessToken);
       saveToken('refreshToken', res.data.refreshToken);
       saveToken('email', email);
-      return "login successful";
+      return { message: "login successful", isBusiness: res.data.isBusiness };
   }
   catch(error) {
-      console.error('Login failed:', error);
+      console.log('Login failed:', error);
       throw error;
   }
 };
 
+export const logout = async () => {
+  try {
+    console.log("Logging out");
+    const refreshToken = await getToken('refreshToken');
+    const res = await excuteAPICallDELETE('auth/logout', {token: refreshToken});
+    await deleteAllTokens();
+    return res;
+  } catch (error) {
+    console.log('Logout failed:', error);
+    throw error;
+  }
+}
 /**
  * Refresh the access token using the refresh token.
  * @returns {Promise<string|null>} - The new access token or null if refresh failed.
@@ -39,29 +51,20 @@ export async function refreshAccessToken() {
     if (!refreshToken) {
       return null;
     }
-  
     try {
-        const response = await axios.post(`${baseRoute}/auth/token`, 
-            {
-                refreshToken
-            }, 
-            {
-                headers: {
-                'Content-Type': 'application/json',
-                },
-            }
-        );
-  
-      if (!response.ok) {
-        throw new Error('Failed to refresh token');
-      }
-  
-      const data = await response.json();
-      const newAccessToken = data.accessToken;
-      await saveToken('accessToken', newAccessToken);
-      return newAccessToken;
+      console.log("url:", baseRoute + 'auth/token');
+      const response = await axios({
+        method: 'post',
+        url: baseRoute + 'auth/token',
+        headers: {
+          'Content-Type': 'application/json',
+          },
+        data: {refreshToken}
+    });
+      const {accessToken} = response.data;
+      await saveToken('accessToken', accessToken);
+      return accessToken;
     } catch (error) {
-      console.error('Error refreshing token:', error);
       return null;
     }
   }

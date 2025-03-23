@@ -9,24 +9,26 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@react-native-picker/picker": "^2.10.2",
+    "@react-native-picker/picker": "^2.9.0",
     "@react-navigation/stack": "^7.1.1",
-    "@stripe/stripe-react-native": "^0.38.6",
+    "@stripe/stripe-react-native": "^0.41.0",
     "axios": "^1.7.9",
-    "expo": "^52.0.25",
+    "expo": "~52.0.26",
     "expo-constants": "~17.0.4",
     "expo-font": "~13.0.3",
+    "expo-image-picker": "16.0.4",
     "expo-linking": "~7.0.4",
-    "expo-router": "~4.0.16",
+    "expo-router": "~4.0.17",
     "expo-secure-store": "~14.0.1",
-    "expo-splash-screen": "~0.29.20",
+    "expo-splash-screen": "^0.29.21",
     "expo-status-bar": "~2.0.1",
-    "expo-web-browser": "^14.0.2",
+    "lodash": "^4.17.21",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "0.76.6",
     "react-native-dotenv": "^3.4.11",
     "react-native-dropdown-picker": "^5.4.6",
+    "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-image-picker": "^7.2.3",
     "react-native-picker-select": "^9.3.1",
@@ -35,7 +37,8 @@
     "react-native-tab-view": "^4.0.5",
     "react-native-toast-message": "^2.2.1",
     "react-native-vector-icons": "^10.2.0",
-    "react-native-web": "~0.19.13"
+    "react-native-web": "~0.19.13",
+    "expo-file-system": "~18.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2"

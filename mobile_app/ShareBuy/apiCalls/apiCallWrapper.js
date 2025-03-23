@@ -22,7 +22,6 @@ const excuteAPICall = async (route, type, params) => {
     if (!baseRoute) {
         throw new Error('BASE_ROUTE is not defined');
     }
-
     let body = JSON.stringify(params);
     let accessToken = await getToken('accessToken');
     let headers = {
@@ -42,7 +41,8 @@ const excuteAPICall = async (route, type, params) => {
         //console.log('Response:', response);
         return response;
     } catch (error) {
-        if (error.response && error.response.status === 401) {
+        if (error.response.status == 401) {
+            console.log('Token expired, trying to refresh');
             // Token might be invalid, try to refresh it
             accessToken = await refreshAccessToken();
             if (accessToken) {
@@ -60,11 +60,10 @@ const excuteAPICall = async (route, type, params) => {
                     throw retryError;
                 }
             } else {
-                console.error('Failed to refresh token');
+                console.log('Failed to refresh token');
                 throw error;
             }
         } else {
-            console.error('API call failed:', error);
             throw error;
         }
     }
@@ -81,4 +80,3 @@ export const excuteAPICallPOST = async (route, params) => {
 export const excuteAPICallDELETE = async (route, params) => {
     return await excuteAPICall(route, 'delete', params);
 };
-

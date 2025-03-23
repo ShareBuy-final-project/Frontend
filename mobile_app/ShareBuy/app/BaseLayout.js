@@ -1,16 +1,37 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing, TouchableWithoutFeedback } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Easing, TouchableWithoutFeedback, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+import { logout } from '../apiCalls/authApiCalls';
+import { isLoggedIn } from '../utils/userTokens';
+import { getToken } from '../utils/userTokens';
 
 const BaseLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarAnimation = useState(new Animated.Value(0))[0]; // Sidebar animation value
   const [business, setBusiness] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const fetchIsBusiness = async () => {
+      const is_buisness = await getToken('isBusiness');
+      setBusiness(is_buisness === 'true');
+    };
+    fetchIsBusiness();
+  }, []);
+
+  useEffect(() => {
+    const fetchEmail = async () => {
+      const email = await getToken('email');
+      setUserEmail(email);
+    };
+    fetchEmail();
+  }, []);
 
   const handleHomePress = () => {
     navigation.navigate('home');
+    closeSidebar(); 
   };
 
   const handleFavoritesPress = () => {
@@ -20,8 +41,40 @@ const BaseLayout = ({ children }) => {
 
   const handleProfilePress = () => {
     navigation.navigate('personalInformation');
+    closeSidebar(); 
   };
 
+  const handleHistoryPress= () => {
+    business? navigation.navigate('history'): navigation.navigate('purchaseHistory');
+    closeSidebar(); 
+  }
+
+  const handleCurrentGroupsPress= () => {
+    navigation.navigate('myGroups');
+    closeSidebar(); 
+  }
+
+  const handleCreatedGroupsPress= () => {
+    navigation.navigate('groups')
+    closeSidebar(); 
+  }
+
+
+  const handleLogout = async () => {
+    if(await isLoggedIn()) {
+      const res = await logout();
+      if(res.status === 200) {
+        Alert.alert('Logout Successful', 'You have successfully logged out!', [{ text: 'OK' }]);
+        navigation.navigate('welcome');
+      }
+      else{
+        Alert.alert('Error', 'Error logging out', [{ text: 'ERROR' }]);
+      }
+    }
+    else{
+      Alert.alert('Error', 'You are not logged in', [{ text: 'ERROR' }]);
+    }
+  };
 
   const toggleSidebar = () => {
     const toValue = isSidebarOpen ? 0 : 1;
@@ -79,25 +132,29 @@ const BaseLayout = ({ children }) => {
       >
         <TouchableWithoutFeedback>
           <View>
-            <Text style={styles.sidebarHeader}>Amit Levints</Text>
+            <Text style={styles.sidebarHeader}>{userEmail}</Text>
             <TouchableOpacity style={styles.sidebarItem} onPress={handleProfilePress}>
               <Icon name="person" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>{business ? "Business Profile" : "Profile"}</Text>
             </TouchableOpacity>
-            {!business && (
             <TouchableOpacity style={styles.sidebarItem} onPress={handleFavoritesPress}>
               <Icon name="favorite" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>Favorites</Text>
-            </TouchableOpacity>)}
-            <TouchableOpacity style={styles.sidebarItem}>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.sidebarItem} onPress={handleHistoryPress}>
               <Icon name="history" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>History</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.sidebarItem}>
-              <Icon name="group" size={20} color="#fff" style={styles.sidebarIcon} />
-              <Text style={styles.sidebarItemText}>Active Groups</Text>
+            <TouchableOpacity style={styles.sidebarItem} onPress={handleCurrentGroupsPress}>
+              <Icon name="group" size={20} color="#fff" style={styles.sidebarIcon}/>
+              <Text style={styles.sidebarItemText}>My Groups</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.sidebarItem}>
+            {business && (
+            <TouchableOpacity style={styles.sidebarItem} onPress={handleCreatedGroupsPress}>
+              <Icon name="business" size={20} color="#fff" style={styles.sidebarIcon} />
+              <Text style={styles.sidebarItemText}>Business Groups</Text>
+            </TouchableOpacity>)}
+            <TouchableOpacity style={styles.sidebarItem} onPress={async () => {await handleLogout();}}>
               <Icon name="logout" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>Sign Out</Text>
             </TouchableOpacity>
@@ -151,7 +208,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
   },
   sidebarHeader: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#fff',
@@ -189,4 +246,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BaseLayout;
+export default BaseLayout

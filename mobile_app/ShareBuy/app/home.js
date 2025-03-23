@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Text, StyleSheet, View, FlatList, TouchableOpacity, Image } from 'react-native';
 import BaseLayout from './BaseLayout';
 import SearchBar from '../components/SearchBar';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native'; // For navigation
 import { COLORS, FONT } from '../constants/theme';
+import {fetchDeals, saveGroup, unSaveGroup} from '../apiCalls/groupApiCalls'
+import { getToken } from '../utils/userTokens';
+import debounce from 'lodash/debounce';
+import DefaultPic from '../assets/images/default_pic.png';
 
 const Home = () => {
   const [deals, setDeals] = useState([]);
@@ -12,96 +16,178 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [favorites, setFavorites] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [isBusiness, setIsBusiness] = useState(false);
+  const searchTimer = useRef(null); // Add this ref for the timer
+  const isFirstRenderSearchQuery = useRef(true);
+  const [debouncedQuery, setDebouncedQuery] = useState('');
 
   const navigation = useNavigation(); // Use navigation for page transition
 
-  const toggleFavorite = (dealId) => {
-    setFavorites((prevFavorites) =>
-      prevFavorites.includes(dealId)
+  const toggleFavorite = async (dealId) => {
+    setFavorites((prevFavorites) => {
+      const isFavorited = prevFavorites.includes(dealId);
+      const newFavorites = isFavorited
         ? prevFavorites.filter((id) => id !== dealId)
-        : [...prevFavorites, dealId]
-    );
+        : [...prevFavorites, dealId];
+  
+      // Call saveGroup or unSaveGroup based on whether the deal is being added or removed from favorites
+      if (isFavorited) {
+        unSaveGroup(dealId)  // Call unSaveGroup when unfavoriting
+          .catch(error => console.error('Error unsaving group:', error));
+      } else {
+        saveGroup(dealId)  // Call saveGroup when favoriting
+          .catch(error => console.error('Error saving group:', error));
+      }
+  
+      return newFavorites;
+    });
   };
-
-  // Mock API call to fetch deals
-  const fetchDeals = async (pageNumber) => {
+  
+  const getDeals = async () => {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
+    try {
+      // Call the API fetchDeals function
+      const apiDeals = await fetchDeals({text: searchQuery}, page, 10); 
+      if (apiDeals.length === 0) {
+        setHasMore(false); // No more deals available
+        return;
+      }  
+      // Map the API response to match your component's requirements
+      const formattedDeals = apiDeals.map((deal) => ({
+        id: deal.id,
+        title: `${deal.name}`,
+        original_price: `$${deal.price}`,
+        discounted_price: `$${deal.discount}`,
+        image: deal.imageBase64, // Default placeholder image
+        participants: deal.totalAmount || 0, // Participant count from API
+        size: deal.size,
+        isSaved: deal.isSaved || false,
+      }));
 
-    const newDeals = Array.from({ length: 10 }, (_, index) => ({
-      id: `deal-${pageNumber}-${index + 1}-${Date.now()}`,
-      title: `Deal ${index + 1 + (pageNumber - 1) * 10}`,
-      original_price: `$${(Math.random() * 100).toFixed(2)}`,
-      descounted_price: `$${(Math.random() * 100).toFixed(2)}`,
-      image: 'https://via.placeholder.com/150', // Placeholder image
-      participants: `${Math.floor(Math.random() * 10) + 1}/10`, // Random participant count
-    }));
+      // Update favorites based on the deals received
+      const initialFavorites = formattedDeals.filter(deal => deal.isSaved).map(deal => deal.id);
+      setFavorites(initialFavorites);
 
-    setDeals((prevDeals) => [...prevDeals, ...newDeals]);
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    fetchDeals(page);
-  }, [page]);
-
-  const handleLoadMore = () => {
-    if (!isLoading) {
-      setPage((prevPage) => prevPage + 1);
+      // Update the state with the new deals
+      setDeals((prevDeals) => [...prevDeals, ...formattedDeals]);
+    } catch (error) {
+      console.error('Error fetching deals:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const renderDealCard = ({ item }) => (
-    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('DealPage', { dealName: item.title })}>
-      <View style={styles.imageContainer}>
-        <Image source={{ uri: item.image }} style={styles.cardImage} />
-        <TouchableOpacity
-          style={styles.heartButton}
-          onPress={() => toggleFavorite(item.id)}
-        >
-          <Icon
-            name={favorites.includes(item.id) ? 'favorite' : 'favorite-border'}
-            size={24}
-            color="#f08080"
-          />
-        </TouchableOpacity>
-        <View style={styles.participantOverlay}>
-          <Text style={styles.participantText}>{item.participants}</Text>
-        </View>
-      </View>
-      <Text style={styles.cardTitle}>{item.title}</Text>
-      <View style={styles.priceContainer}>
-        <Text style={styles.cardPriceOriginal}>{item.original_price}</Text>
-        <Text style={styles.cardPriceDiscounted}>{item.descounted_price}</Text>
-      </View>
-    </TouchableOpacity>
-  );
+  useEffect(() => {
+    const fetchIsBusiness = async () => {
+      const value = await getToken('isBusiness');
+      setIsBusiness(value === 'true');
+    };
+    fetchIsBusiness();
+  }, []);
 
-  const filteredDeals = deals.filter((deal) =>
-    deal.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => {
+    getDeals();
+  }, [page]);
+
+  const handleSearchChange = (query) => {
+    if (searchTimer.current) {
+      clearTimeout(searchTimer.current);
+    }
+    
+    setSearchQuery(query);
+    searchTimer.current = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 250);
+  };
+
+  // Add this effect to watch for debouncedQuery changes
+  useEffect(() => {
+    if (isFirstRenderSearchQuery.current) {
+      isFirstRenderSearchQuery.current = false;
+    } else {
+      setDeals([]);
+      if (page !== 1) {
+        setPage(1);
+      } else {
+        getDeals();
+      }
+    }
+  }, [debouncedQuery]);
+
+  // Clean up timer when component unmounts
+  useEffect(() => {
+    return () => {
+      if (searchTimer.current) {
+        clearTimeout(searchTimer.current);
+      }
+    };
+  }, []);
+
+  const handleLoadMore = () => {
+    if (!isLoading && hasMore) {
+      setPage((prevPage) => prevPage + 1);
+    }
+    };
+
+    const renderDealCard = ({ item }) => (
+      <TouchableOpacity style={[styles.card,{ width: deals.length === 1 ? '100%' : '48%' } ]}   onPress={() => navigation.navigate('DealPage', { dealId: item.id })}>
+        <View style={styles.imageContainer}>
+        <Image source={item?.image ? { uri: item.image } : DefaultPic} style={styles.cardImage} resizeMode="contain"/>
+        <TouchableOpacity
+            style={styles.heartButton}
+            onPress={() => toggleFavorite(item.id)}
+          >
+            <Icon
+              name={favorites.includes(item.id) ? 'favorite' : 'favorite-border'}
+              size={24}
+              color="#f08080"
+            />
+          </TouchableOpacity>
+          <View style={styles.participantOverlay}>
+            <Text style={styles.participantText}>{item.participants}/{item.size}</Text>
+          </View>
+        </View>
+        <Text style={styles.cardTitle}>{item.title}</Text>
+        <View style={styles.priceContainer}>
+          <Text style={styles.cardPriceOriginal}>{item.original_price}</Text>
+          <Text style={styles.cardPriceDiscounted}>{item.discounted_price}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+    
+  // const filteredDeals = deals.filter((deal) =>
+  //   deal.title.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
 
   return (
     <BaseLayout>
       <View style={styles.messageContainer}>
         <Text style={styles.secondSubMessage}>
-          Want to create a new suggested deal? <Text style={{ color: COLORS.black, textDecorationLine: 'underline' }} onPress={() => navigation.replace('NewDealBasics')}>Create one</Text>
+          {isBusiness ? 'Want to create a new deal? ' : 'Want to create a new suggested deal? '} 
+          <Text style={{ color: COLORS.black, textDecorationLine: 'underline', fontWeight: 'bold' }} onPress={() => navigation.navigate(isBusiness ? 'NewDealBasics' : 'suggestedDeal')}>
+            Create one
+          </Text>
         </Text>
       </View>
       <View style={styles.DealsContainer}>
-        <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
-        <FlatList
-          data={filteredDeals}
-          renderItem={renderDealCard}
-          keyExtractor={(item) => item.id}
-          key={'grid'}
-          contentContainerStyle={styles.listContainer}
-          numColumns={2}
-          columnWrapperStyle={styles.row}
-          onEndReached={handleLoadMore}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={isLoading && <Text style={styles.loadingText}>Loading more deals...</Text>}
-        />
+        <SearchBar value={searchQuery} onChangeText={handleSearchChange} />
+        {deals.length === 0 && !isLoading ? (
+          <Text style={styles.noDealsText}>No deals found for the search query.</Text>
+        ) : (
+          <FlatList
+            data={deals}
+            renderItem={renderDealCard}
+            keyExtractor={(item, index) => `${item.id}_${index}`}
+            key={'grid'}
+            contentContainerStyle={styles.listContainer}
+            numColumns={2}
+            columnWrapperStyle={styles.row}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={isLoading && <Text style={styles.loadingText}>Loading more deals...</Text>}
+          />
+        )}
       </View>
     </BaseLayout>
   );
@@ -135,6 +221,7 @@ const styles = StyleSheet.create({
   },
   DealsContainer: {
     marginTop: -10,
+    alignItems: 'center', // Center the SearchBar
   },
   listContainer: {
     paddingHorizontal: 10,
@@ -160,6 +247,7 @@ const styles = StyleSheet.create({
   cardImage: {
     width: '100%',
     height: 150,
+    marginTop: 10,
   },
   participantOverlay: {
     position: 'absolute',
@@ -224,6 +312,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: FONT.arial,
     backgroundColor: COLORS.glowingYeloow,
+  },
+  noDealsText: {
+    textAlign: 'center',
+    marginVertical: 20,
+    color: '#888',
+    fontSize: 16,
   },
 });
 

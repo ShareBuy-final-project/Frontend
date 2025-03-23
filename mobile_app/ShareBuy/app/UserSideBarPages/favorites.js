@@ -4,13 +4,13 @@ import BaseLayout from '../BaseLayout';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native'; // For navigation
 import { COLORS, FONT } from '../../constants/theme';
-import {getUserCurrentGroups, saveGroup, unSaveGroup} from '../../apiCalls/groupApiCalls'
+import {getSavedGroups, saveGroup, unSaveGroup} from '../../apiCalls/groupApiCalls'
 import { getToken } from '../../utils/userTokens';
 import debounce from 'lodash/debounce';
 import DefaultPic from '../../assets/images/default_pic.png';
 
 
-const MyGroups = () => {
+const FavoritesPage = () => {
   const [deals, setDeals] = useState([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,7 +45,7 @@ const MyGroups = () => {
     setDeals([]); // Clear the deals before fetching new ones
     try {
       // Call the API fetchDeals function
-      const apiDeals = await getUserCurrentGroups(page, 10); 
+      const apiDeals = await getSavedGroups(page, 10); 
       if (apiDeals.length === 0) {
         setHasMore(false); // No more deals available
         return;
@@ -135,7 +135,7 @@ const MyGroups = () => {
     <BaseLayout>
       <View style={styles.DealsContainer}>
         {deals.length === 0 && !isLoading ? (
-          <Text style={styles.noDealsText}>You have not joined any purchasing groups YET!</Text>
+          <Text style={styles.noDealsText}>You do not have any favorite groups</Text>
         ) : (
           <FlatList
             data={deals}
@@ -205,6 +205,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     position: 'relative',
+    width: '100%'
   },
   cardImage: {
     width: '100%',
@@ -283,4 +284,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyGroups;
+export default FavoritesPage;

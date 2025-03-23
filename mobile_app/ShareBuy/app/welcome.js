@@ -4,7 +4,7 @@ import { SafeAreaView, ScrollView, View, TextInput, StyleSheet, Alert, Text, Pla
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { login } from '../apiCalls/authApiCalls';
-import { isLoggedIn } from '../utils/userTokens';
+import { isLoggedIn, saveToken } from '../utils/userTokens';
 
 const Welcome = () => {
   const [email, setEmail] = useState('');
@@ -12,16 +12,17 @@ const Welcome = () => {
 
   const  handleSignIn = async () => {
     try {
-        if (email === '' || password === '') {
-          Alert.alert('Please fill in all fields!', [{ text: 'OK' }]);
+        if (email == '' || password == '') {
+          Alert.alert('Please fill in all fields!');
           return
         }
         const res = await login(email, password)
+        await saveToken('isBusiness', res.isBusiness.toString());
         Alert.alert('Login Successful', 'You have successfully logged in!', [{ text: 'OK' }]);
         navigation.navigate('home');
       }
       catch (error) {
-        Alert.alert('Login Failed', error.message, [{ text: 'OK' }]);
+        Alert.alert('Login Failed, make sure the email and password are correct!');
       }
   };
 

@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginVertical: 10,
     marginHorizontal: 15,
+    width: 300, // Add fixed width
   },
   input: {
     flex: 1,
