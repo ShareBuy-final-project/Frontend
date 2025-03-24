@@ -20,6 +20,8 @@ import MyGroups from './UserSideBarPages/myGroups';
 import History from './BuisnessSideBarPages/history';
 import Groups from './BuisnessSideBarPages/groups';
 import RegisterBusinessBankDetails from './registerBusinessBankDetails';
+import ChatPage from './ChatPage';
+import MyChats from './UserSideBarPages/MyChats';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +30,7 @@ const AppNavigator = () => {
     <>
       <Stack.Navigator initialRouteName="welcome" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="CheckoutScreen" component={CheckoutScreen} />
+        <Stack.Screen name='ChatPage' component={ChatPage} />
         <Stack.Screen name="welcome" component={Welcome} />
         <Stack.Screen name="RegisterBusinessBankDetails" component={RegisterBusinessBankDetails} />
         <Stack.Screen name="home" component={home} />
@@ -46,6 +49,7 @@ const AppNavigator = () => {
         <Stack.Screen name="myGroups" component={MyGroups} />
         <Stack.Screen name="history" component={History} />
         <Stack.Screen name="groups" component={Groups} />
+        <Stack.Screen name="myChats" component={MyChats} />
       </Stack.Navigator>
       <Toast/>
     </>

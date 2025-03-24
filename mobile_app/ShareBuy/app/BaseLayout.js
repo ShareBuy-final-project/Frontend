@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { logout } from '../apiCalls/authApiCalls';
 import { isLoggedIn } from '../utils/userTokens';
 import { getToken } from '../utils/userTokens';
+import { COLORS, FONT } from '../constants/theme';
 
 const BaseLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -12,6 +13,8 @@ const BaseLayout = ({ children }) => {
   const [business, setBusiness] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const navigation = useNavigation();
+  // const { getUnreadCount } = useContext(getContext());
+  const getUnreadCount =()=> 5;
 
   useEffect(() => {
     const fetchIsBusiness = async () => {
@@ -149,6 +152,15 @@ const BaseLayout = ({ children }) => {
               <Icon name="group" size={20} color="#fff" style={styles.sidebarIcon}/>
               <Text style={styles.sidebarItemText}>My Groups</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.sidebarItem} onPress={() => navigation.navigate('myChats')}>
+              <Icon name="chat" size={20} color="#fff" style={styles.sidebarIcon}/>
+              <Text style={styles.sidebarItemText}>My Chats</Text>
+              {getUnreadCount('total') > 0 && (
+                <View style={styles.unreadBadge}>
+                  <Text style={styles.unreadText}>{getUnreadCount('total')}</Text>
+                </View>
+              )}
+            </TouchableOpacity>
             {business && (
             <TouchableOpacity style={styles.sidebarItem} onPress={handleCreatedGroupsPress}>
               <Icon name="business" size={20} color="#fff" style={styles.sidebarIcon} />
@@ -243,6 +255,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 60,
     padding: 10,
+  },
+  unreadBadge: {
+    backgroundColor: COLORS.glowingYeloow,
+    borderRadius: 12,
+    minWidth: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
+    paddingHorizontal: 6,
+  },
+  unreadText: {
+    color: COLORS.black,
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 });
 
