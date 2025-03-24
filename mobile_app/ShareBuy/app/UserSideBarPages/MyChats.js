@@ -183,4 +183,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyChats; 
+export default MyChats;
