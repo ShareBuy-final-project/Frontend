@@ -5,17 +5,20 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS, FONT } from '../../constants/theme';
 import DefaultPic from '../../assets/images/default_pic.png';
+import iphonePic from '../../assets/images/iphone_pic.png';
+import macbookPic from '../../assets/images/macbook_pic.png';
+import { getMyChats } from '../../apiCalls/chatApiCalls';
 
 const MyChats = () => {
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
 
-  // TODO: Replace with actual API call to get user's chats
   const getChats = async () => {
     setIsLoading(true);
     try {
-      // Mock data for now - replace with actual API call
+      // Mock data for reference
+      /*
       const mockChats = [
         {
           id: 1,
@@ -23,7 +26,8 @@ const MyChats = () => {
           lastMessage: "Hey, when is the next meeting?",
           timestamp: "10:30 AM",
           unreadCount: 2,
-          image: null
+          image: iphonePic
+          owner: true
         },
         {
           id: 2,
@@ -31,11 +35,13 @@ const MyChats = () => {
           lastMessage: "Great deal everyone!",
           timestamp: "Yesterday",
           unreadCount: 0,
-          image: null
+          image: macbookPic
+          owner: false
         },
-        // Add more mock chats as needed
       ];
-      setChats(mockChats);
+      */
+      const chatsData = await getMyChats();
+      setChats(chatsData);
     } catch (error) {
       console.error('Error fetching chats:', error);
     } finally {
@@ -57,7 +63,7 @@ const MyChats = () => {
     >
       <View style={styles.chatImageContainer}>
         <Image 
-          source={item.image ? { uri: item.image } : DefaultPic} 
+          source={item.image ? item.image : DefaultPic} 
           style={styles.chatImage}
         />
         {item.unreadCount > 0 && (
@@ -82,7 +88,7 @@ const MyChats = () => {
     <BaseLayout>
       <View style={styles.container}>
         {chats.length === 0 && !isLoading ? (
-          <Text style={styles.noChatsText}>You don't have any chats yet!</Text>
+          <Text style={styles.noChatsText}>you don't have any chats yet! Join or create a group to be part of one.</Text>
         ) : (
           <FlatList
             data={chats}

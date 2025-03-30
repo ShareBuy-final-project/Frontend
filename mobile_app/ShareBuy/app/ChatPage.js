@@ -3,7 +3,7 @@ import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, Flat
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BaseLayout from './BaseLayout';
-import { sendMessage as sendMessageApi, getChatById } from '../apiCalls/chatApiCalss';
+import { sendMessage as sendMessageApi, getChatById } from '../apiCalls/chatApiCalls';
 import { useSocket } from '../context/SocketContext';
 
 const ChatPage = ({ route }) => {
@@ -34,14 +34,14 @@ const ChatPage = ({ route }) => {
       const response = [
         {
           id: 1,
-          content: "Hello, this is a mock message!",
-          userEmail: "user@example.com",
+          content: "Hello!",
+          userEmail: "user1",
           createdAt: new Date().toISOString()
         },
         {
           id: 2,
-          content: "This is another mock message.",
-          userEmail: "otheruser@example.com",
+          content: "Hi, what a nice feature!",
+          userEmail: "user2",
           createdAt: new Date().toISOString()
         }
       ];
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     borderRadius: 0,
   },
   userBubble: {
-    backgroundColor: COLORS.black,
+    backgroundColor: COLORS.lightPurple,
   },
   otherBubble: {
     backgroundColor: COLORS.glowingYeloow,
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT.arial,
   },
   userMessageText: {
-    color: COLORS.white,
+    color: COLORS.black,
   },
   otherMessageText: {
     color: COLORS.black,

@@ -8,13 +8,13 @@ import { io } from 'socket.io-client';
  */
 export const getMyChats = async () => {
   try {
-    const res = await excuteAPICallGET('chat/get');
-    if (res.status !== 201) {
-      throw new Error('Failed to create group');
+    const res = await excuteAPICallGET('chat/getGroupChatsOfUser');
+    if (res.status !== 200) {
+      throw new Error('Failed to fetch chats');
     }
     return res.data;
   } catch (error) {
-    console.error('Error getting chats:', error);
+    console.error('Error fetching chats:', error);
     throw error;
   }
 };
