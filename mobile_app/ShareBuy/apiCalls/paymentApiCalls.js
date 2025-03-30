@@ -6,12 +6,12 @@ export const updatePaymentConfirmed = async (paymentIntentId) => {
 
 export const createBusinessConnectedAccount = async (businessUserEmail) => {
     const response = await excuteAPICallPOST('payment/create-connected-account', {businessUserEmail});
-    return response.data;
+    return response;
 };
 
 export const generateBankRegistrationAccountLink = async (accountId) => {
-    const response = await excuteAPICallPOST('payment/generate-bank-registration-account-link', {accountId});
-    return response.data;
+    const response = await excuteAPICallPOST('payment/create-account-link', {accountId});
+    return response;
 };
 
 

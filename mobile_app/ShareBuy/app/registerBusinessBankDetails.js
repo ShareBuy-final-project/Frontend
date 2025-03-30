@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, Linking, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, Linking, StyleSheet, ActivityIndicator } from 'react-native';
 import * as LinkingExpo from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import BaseLayout from './BaseLayout';
@@ -12,6 +12,7 @@ import Toast from 'react-native-toast-message';
 const RegisterBusinessBankDetails = () => {
   const [accountId, setAccountId] = useState(null); // To store the Stripe account ID
   const [deepLinkHandled, setDeepLinkHandled] = useState(false); // To prevent duplicate handling of deep links
+  const [isLoading, setIsLoading] = useState(false);  // Add this line
   const route = useRoute();
   const navigation = useNavigation();
   const { fullName,
@@ -109,15 +110,18 @@ const RegisterBusinessBankDetails = () => {
    * Step 1: Create a Connected Account
    */
   const createConnectedAccount = async () => {
+    setIsLoading(true);  // Start loading
     try {
       const response = await createBusinessConnectedAccount(email);
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error('Failed to create a connected account.');
       }
-      const { id } = await response.json(); // Get the account ID
-      setAccountId(id); // Store the account ID
+      const { id } = await response.data;
+      setAccountId(id);
     } catch (error) {
       Alert.alert('Error', error.message);
+    } finally {
+      setIsLoading(false);  // End loading regardless of success/failure
     }
   };
 
@@ -132,12 +136,11 @@ const RegisterBusinessBankDetails = () => {
 
     try {
       const response = await generateBankRegistrationAccountLink(accountId);
-
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error('Failed to generate an account link.');
       }
 
-      const { url } = await response.json(); // Get the account onboarding link
+      const { url } = await response.data; // Get the account onboarding link
 
       const canOpen = await Linking.canOpenURL(url);
       if (canOpen) {
@@ -178,8 +181,21 @@ const RegisterBusinessBankDetails = () => {
                 <Text style={styles.noteText}>This is a one-time setup required for receiving payments.</Text>
             </View>
 
-            <TouchableOpacity onPress={createConnectedAccount} style={styles.button}>
-                <Text style={styles.buttonText}>Register bank details</Text>
+            <TouchableOpacity 
+                onPress={createConnectedAccount} 
+                style={[styles.button, isLoading && styles.disabledButton]}
+                disabled={isLoading}
+            >
+                {isLoading ? (
+                    <View style={styles.loadingContainer}>
+                        <ActivityIndicator size="large" color={COLORS.white} />
+                        <Text style={[styles.buttonText, styles.loadingText]}>
+                            Creating Account...
+                        </Text>
+                    </View>
+                ) : (
+                    <Text style={styles.buttonText}>Register bank details</Text>
+                )}
             </TouchableOpacity>
 
             <TouchableOpacity 
@@ -282,9 +298,20 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         width: '100%',
     },
+    loadingContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+    },
+    loadingText: {
+        marginLeft: 10,
+        fontSize: 16,
+    },
     disabledButton: {
         backgroundColor: COLORS.gray2,
-        opacity: 0.7
+        opacity: 0.8,
+        transform: [{ scale: 0.98 }],
     },
     disabledText: {
         color: COLORS.gray
