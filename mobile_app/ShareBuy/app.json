@@ -1,6 +1,6 @@
 {
   "expo": {
-    "scheme": "acme",
+    "scheme": "myapp",
     "plugins": [
       "expo-router",
       "expo-secure-store"

@@ -19,6 +19,7 @@ import PurchasesHistory from './UserSideBarPages/purchasesHistory';
 import MyGroups from './UserSideBarPages/myGroups';
 import History from './BuisnessSideBarPages/history';
 import Groups from './BuisnessSideBarPages/groups';
+import RegisterBusinessBankDetails from './registerBusinessBankDetails';
 import ChatPage from './ChatPage';
 import MyChats from './UserSideBarPages/MyChats';
 
@@ -31,6 +32,7 @@ const AppNavigator = () => {
         <Stack.Screen name="CheckoutScreen" component={CheckoutScreen} />
         <Stack.Screen name='ChatPage' component={ChatPage} />
         <Stack.Screen name="welcome" component={Welcome} />
+        <Stack.Screen name="RegisterBusinessBankDetails" component={RegisterBusinessBankDetails} />
         <Stack.Screen name="home" component={home} />
         <Stack.Screen name="register" component={Register} />
         <Stack.Screen name="registerPassword" component={RegisterPassword} />

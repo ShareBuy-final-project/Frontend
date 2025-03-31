@@ -16,8 +16,7 @@ const RegisterBusinessContactInfo = () => {
   const [contactEmail, setContactEmail] = useState('');
 
   const handleNext = async () => {
-    try {
-      const response = await registerBusiness({
+      navigation.navigate('RegisterBusinessBankDetails', { 
         fullName,
         email,
         phone,
@@ -32,36 +31,7 @@ const RegisterBusinessContactInfo = () => {
         description,
         category,
         websiteLink,
-        contactEmail,
-      });
-
-      if (response.status === 201) {
-        Toast.show({
-          type: 'success',
-          text1: 'Registration Successful 🎉',
-          text2: 'You can now login to your account',
-        });
-        navigation.navigate('welcome');
-      } 
-      else {
-        Alert.alert('Registration Error', response.data.error);
-        throw new Error(response.data.error);
-      }
-    } catch (error) {
-      if (error.response) {
-        // Server responded with a status other than 201 range
-        console.error('Registration Error:', error.response.data);
-        Alert.alert('Registration Error', `Server Error: ${error.response.data.error}`);
-      } else if (error.request) {
-        // Request was made but no response received
-        console.error('Registration Error:', error.request);
-        Alert.alert('Registration Error', 'No response from server. Please check your network connection.');
-      } else {
-        // Something else happened
-        console.error('Registration Error:', error.message);
-        Alert.alert('Registration Error', `An error occurred: ${error.message}`);
-      }
-    }
+        contactEmail, });
   };
 
   return (
@@ -88,7 +58,7 @@ const RegisterBusinessContactInfo = () => {
         />
         <View style={[styles.buttonContainer, { width: '50%', marginTop: 40 }]}>
           <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-            <Text style={styles.buttonText}>finish registration</Text>
+            <Text style={styles.buttonText}>Next</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

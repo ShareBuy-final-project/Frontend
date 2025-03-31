@@ -39,6 +39,8 @@
     "react-native-toast-message": "^2.2.1",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.13",
+    "expo-file-system": "~18.0.7",
+    "expo-web-browser": "~14.0.2",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1"
   },
