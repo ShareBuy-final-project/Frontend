@@ -30,25 +30,25 @@ const ChatPage = ({ route }) => {
     
     setIsLoading(true);
     try {
-      // const response = await getChatById(groupId, pageNumber);
-      const response = [
-        {
-          id: 1,
-          content: "Hello!",
-          userEmail: "user1",
-          createdAt: new Date().toISOString()
-        },
-        {
-          id: 2,
-          content: "Hi, what a nice feature!",
-          userEmail: "user2",
-          createdAt: new Date().toISOString()
-        }
-      ];
-      if (!response || response.length === 0) {
-        setHasMore(false);
-        return;
-      }
+      const response = await getChatById(groupId, pageNumber);
+      // const response = [
+      //   {
+      //     id: 1,
+      //     content: "Hello!",
+      //     userEmail: "user1",
+      //     createdAt: new Date().toISOString()
+      //   },
+      //   {
+      //     id: 2,
+      //     content: "Hi, what a nice feature!",
+      //     userEmail: "user2",
+      //     createdAt: new Date().toISOString()
+      //   }
+      // ];
+      // if (!response || response.length === 0) {
+      //   setHasMore(false);
+      //   return;
+      // }
 
       // Transform the API response to match our UI structure
       const formattedMessages = response.map(msg => ({

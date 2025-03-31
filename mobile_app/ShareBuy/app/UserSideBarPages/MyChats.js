@@ -53,36 +53,47 @@ const MyChats = () => {
     getChats();
   }, []);
 
-  const renderChatItem = ({ item }) => (
-    <TouchableOpacity 
-      style={styles.chatItem}
-      onPress={() => navigation.navigate('ChatPage', { 
-        groupId: item.id,
-        groupName: item.groupName 
-      })}
-    >
-      <View style={styles.chatImageContainer}>
-        <Image 
-          source={item.image ? item.image : DefaultPic} 
-          style={styles.chatImage}
-        />
-        {item.unreadCount > 0 && (
-          <View style={styles.unreadBadge}>
-            <Text style={styles.unreadText}>{item.unreadCount}</Text>
-          </View>
-        )}
-      </View>
-      <View style={styles.chatInfo}>
-        <View style={styles.chatHeader}>
-          <Text style={styles.groupName}>{item.groupName}</Text>
-          <Text style={styles.timestamp}>{item.timestamp}</Text>
+  const renderChatItem = ({ item }) => {
+    const formatTimestamp = (timestamp) => {
+      if (!timestamp) return null; // Return null if timestamp is null
+      const date = new Date(timestamp);
+      const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      return date.toLocaleDateString(undefined, options);
+    };
+
+    return (
+      <TouchableOpacity 
+        style={styles.chatItem}
+        onPress={() => navigation.navigate('ChatPage', { 
+          groupId: item.id,
+          groupName: item.groupName 
+        })}
+      >
+        <View style={styles.chatImageContainer}>
+          <Image 
+            source={item.image ? { uri: item.image } : DefaultPic} 
+            style={styles.chatImage}
+          />
+          {item.unreadCount > 0 && (
+            <View style={styles.unreadBadge}>
+              <Text style={styles.unreadText}>{item.unreadCount}</Text>
+            </View>
+          )}
         </View>
-        <Text style={styles.lastMessage} numberOfLines={1}>
-          {item.lastMessage}
-        </Text>
-      </View>
-    </TouchableOpacity>
-  );
+        <View style={styles.chatInfo}>
+          <View style={styles.chatHeader}>
+            <Text style={styles.groupName}>{item.groupName}</Text>
+            {item.timestamp && (
+              <Text style={styles.timestamp}>{formatTimestamp(item.timestamp)}</Text>
+            )}
+          </View>
+          <Text style={styles.lastMessage} numberOfLines={1}>
+            {item.lastMessage}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <BaseLayout>

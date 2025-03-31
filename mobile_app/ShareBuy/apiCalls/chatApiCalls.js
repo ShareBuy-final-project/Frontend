@@ -8,7 +8,7 @@ import { io } from 'socket.io-client';
  */
 export const getMyChats = async () => {
   try {
-    const res = await excuteAPICallGET('chat/getGroupChatsOfUser');
+    const res = await excuteAPICallGET('chat/group/getGroupChatsOfUser');
     if (res.status !== 200) {
       throw new Error('Failed to fetch chats');
     }
@@ -24,9 +24,10 @@ export const getMyChats = async () => {
  * @param {String} groupId - ID of the group to fetch its chat
  * @returns {Promise<Object>} - The requested chat
  */
-export const getChatById = async (groupId, pageNumber = 1) => {
+export const getChatById = async (groupId) => {
   try {
-    const res = await excuteAPICallPOST('chat/group/getGroupChat',{groupId, pageNumber});
+    console.log('fetching chat message gor group id:', groupId);
+    const res = await excuteAPICallPOST('chat/group/getGroupChat',{groupId});
     if (res.status !== 200) {
       throw new Error('Failed to fetch group');
     }

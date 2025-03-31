@@ -11,7 +11,7 @@ import DropDown from '../components/DropDown';
 import {createPaymentIntent} from '../apiCalls/groupApiCalls';
 import {updatePaymentConfirmed} from '../apiCalls/paymentApiCalls';
 import Toast from 'react-native-toast-message';
-
+import { useSocket } from '../context/SocketContext';
 
 const CheckoutScreen = () => {
   const navigation = useNavigation();
@@ -25,6 +25,7 @@ const CheckoutScreen = () => {
   const [isTermsVisible, setIsTermsVisible] = useState(false);
   const [isConsentChecked, setIsConsentChecked] = useState(false);
   const [amount, setAmount] = useState(1);
+  const { socket } = useSocket(); // Import socket context
 
   const setupPaymentSheet = async () => {
       try{
@@ -112,6 +113,10 @@ const CheckoutScreen = () => {
         type: 'success',
         text1: 'Your payment was successful 🎉',
       });
+
+      // Emit joinGroup event
+      socket.emit('joinGroup', { groupId: dealDetails.groupId });
+      
       navigation.navigate('home')
     }
   };
