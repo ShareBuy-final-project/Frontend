@@ -66,7 +66,8 @@ const MyChats = () => {
         style={styles.chatItem}
         onPress={() => navigation.navigate('ChatPage', { 
           groupId: item.id,
-          groupName: item.groupName 
+          groupName: item.groupName,
+          groupImage: item.image // Pass the image to ChatPage
         })}
       >
         <View style={styles.chatImageContainer}>

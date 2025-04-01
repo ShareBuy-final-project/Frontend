@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList, Platform, Alert } from 'react-native';
+import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList, Platform, Alert, Image } from 'react-native';
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BaseLayout from './BaseLayout';
@@ -7,7 +7,7 @@ import { sendMessage as sendMessageApi, getChatById } from '../apiCalls/chatApiC
 import { useSocket } from '../context/SocketContext';
 
 const ChatPage = ({ route }) => {
-  const { groupId, groupName } = route.params || { groupId: null, groupName: 'Group Name' };
+  const { groupId, groupName, groupImage } = route.params || { groupId: null, groupName: 'Group Name', groupImage: null };
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -142,6 +142,12 @@ const ChatPage = ({ route }) => {
       <SafeAreaView style={styles.container}>
         {/* Chat Header */}
         <View style={styles.header}>
+          {groupImage && (
+            <Image 
+              source={groupImage ? { uri: groupImage } : null} 
+              style={styles.groupImage} 
+            />
+          )}
           <Text style={styles.groupName}>{groupName}</Text>
         </View>
 
@@ -199,19 +205,24 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   header: {
+    flexDirection: 'row', // Align items horizontally
+    alignItems: 'center', // Center items vertically
     padding: 15,
     backgroundColor: COLORS.glowingYeloow,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.gray2,
     width: '100%',
   },
-
+  groupImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 10, // Add spacing between the image and the title
+  },
   groupName: {
     fontSize: 25,
     color: COLORS.black,
-    textAlign: 'center',
     fontFamily: FONT.arialBold,
-    backgroundColor: COLORS.glowingYeloow,
   },
   messagesList: {
     flex: 1,
