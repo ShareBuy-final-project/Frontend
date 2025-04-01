@@ -25,6 +25,12 @@ const ChatPage = ({ route }) => {
     };
   }, [groupId]);
 
+  useEffect(() => {
+    if (activeChat?.groupId === groupId) {
+      setMessages(activeChat.messages);
+    }
+  }, [activeChat]);
+
   const fetchMessages = async (pageNumber = 1) => {
     if (!groupId) return;
     

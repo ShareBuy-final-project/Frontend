@@ -96,6 +96,34 @@ export const SocketProvider = ({ children }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (socket) {
+      socket.on('newMessage', (message) => {
+        console.log('New message received:', message);
+
+        // Update activeChat if the user is in the ChatPage for this group
+        if (activeChat?.groupId === message.groupId) {
+          setActiveChat((prev) => ({
+            ...prev,
+            messages: [...(prev?.messages || []), {
+              id: message.id,
+              text: message.content,
+              sender: message.userEmail,
+              timestamp: new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            }],
+          }));
+        }
+
+        // Notify other components (e.g., MyChats) about the new message
+        // This can be done via a callback or a global state management solution
+      });
+
+      return () => {
+        socket.off('newMessage');
+      };
+    }
+  }, [socket, activeChat]);
+
   const contextValue = {
     socket,
     isConnected,

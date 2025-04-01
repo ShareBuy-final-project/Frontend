@@ -53,6 +53,29 @@ const MyChats = () => {
     getChats();
   }, []);
 
+  useEffect(() => {
+    if (socket) {
+      socket.on('newMessage', (message) => {
+        setChats((prevChats) =>
+          prevChats.map((chat) =>
+            chat.id === message.groupId
+              ? {
+                  ...chat,
+                  lastMessage: message.content,
+                  timestamp: new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                  unreadCount: chat.unreadCount + 1,
+                }
+              : chat
+          )
+        );
+      });
+
+      return () => {
+        socket.off('newMessage');
+      };
+    }
+  }, [socket]);
+
   const renderChatItem = ({ item }) => {
     const formatTimestamp = (timestamp) => {
       if (!timestamp) return null; // Return null if timestamp is null
