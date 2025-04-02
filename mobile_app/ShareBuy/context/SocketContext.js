@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { getToken } from '../utils/userTokens';
 import io from 'socket.io-client';
 import Constants from 'expo-constants';
+import { getUserCurrentGroups } from '../apiCalls/groupApiCalls'; 
 
 console.log("Creating SocketContext");
 const SocketContext = createContext();
@@ -38,9 +40,20 @@ export const SocketProvider = ({ children }) => {
       reconnectionDelay: 1000
     });
     console.log("New socket created:");
-    newSocket.on('connect', () => {
+    newSocket.on('connect', async () => {
       console.log('Socket connected successfully');
       setIsConnected(true);
+
+      // Fetch user's groups and emit joinGroup for each
+      try {
+        const userGroups = await getUserCurrentGroups(1, Number.MAX_SAFE_INTEGER);
+        userGroups.forEach(group => {
+          console.log(`Emitting joinGroup for groupId: ${group.id}`);
+          newSocket.emit('joinGroup', { groupId: group.id });
+        });
+      } catch (error) {
+        console.error('Error fetching user groups:', error);
+      }
     });
 
     newSocket.on('connect_error', (error) => {
@@ -65,12 +78,14 @@ export const SocketProvider = ({ children }) => {
     }
   };
 
-  const sendMessage = (groupId, message) => {
+  const sendMessage = async (groupId, content) => {
     if (!socket || !isConnected) {
       console.error('Socket not connected');
       return;
     }
-    socket.emit('sendMessage', { groupId, message });
+    const userEmail = await getToken('email');
+    console.log('Sending message:', { groupId, userEmail, content });
+    socket.emit('sendMessage', { groupId, userEmail, content });
   };
 
   useEffect(() => {
