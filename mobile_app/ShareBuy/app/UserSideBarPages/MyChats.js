@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View, FlatList, TouchableOpacity, Image } from 'react-native';
 import BaseLayout from '../BaseLayout';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+// import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS, FONT } from '../../constants/theme';
 import DefaultPic from '../../assets/images/default_pic.png';
-import iphonePic from '../../assets/images/iphone_pic.png';
-import macbookPic from '../../assets/images/macbook_pic.png';
+// import iphonePic from '../../assets/images/iphone_pic.png';
+// import macbookPic from '../../assets/images/macbook_pic.png';
 import { getMyChats } from '../../apiCalls/chatApiCalls';
 
 const MyChats = () => {
