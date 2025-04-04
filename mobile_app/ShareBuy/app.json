@@ -1,14 +1,35 @@
 {
   "expo": {
-    "scheme": "myapp",
-    "plugins": [
-      "expo-router",
-      "expo-secure-store"
-    ],
     "name": "ShareBuy",
     "slug": "ShareBuy",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sharebuy.app"
+    },
+    "android": {
+      "package": "com.sharebuy.app",
+      "versionCode": 1,
+      "permissions": [
+        "INTERNET",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
     "extra": {
-      "BASE_ROUTE": "http://132.73.84.56:443/"
+      "baseRoute": "http://localhost:3000",
+      "eas": {
+        "projectId": "eff00592-56ca-4580-83d4-e8cd876d25eb"
+      }
     }
   }
 }
