@@ -5,11 +5,13 @@ import { useNavigation } from '@react-navigation/native';
 import { COLORS, FONT } from '../../constants/theme';
 import DefaultPic from '../../assets/images/default_pic.png';
 import { getMyChats } from '../../apiCalls/chatApiCalls';
+import { useSocket } from '../../context/SocketContext'; // Import useSocket
 
 const MyChats = () => {
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+  const { socket } = useSocket(); // Access socket from useSocket
 
   const getChats = async () => {
     setIsLoading(true);
