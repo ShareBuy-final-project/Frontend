@@ -8,39 +8,15 @@ import { getMyChats } from '../../apiCalls/chatApiCalls';
 import { useSocket } from '../../context/SocketContext'; // Import useSocket
 
 const MyChats = () => {
-  const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
-  const { socket } = useSocket(); // Access socket from useSocket
+  const { chats, setChats } = useSocket(); // Use chats and setChats from SocketContext
 
   const getChats = async () => {
     setIsLoading(true);
     try {
-      // Mock data for reference
-      /*
-      const mockChats = [
-        {
-          id: 1,
-          groupName: "iPhone 15 Pro Group",
-          lastMessage: "Hey, when is the next meeting?",
-          timestamp: "10:30 AM",
-          unreadCount: 2,
-          image: iphonePic
-          owner: true
-        },
-        {
-          id: 2,
-          groupName: "MacBook Air Group",
-          lastMessage: "Great deal everyone!",
-          timestamp: "Yesterday",
-          unreadCount: 0,
-          image: macbookPic
-          owner: false
-        },
-      ];
-      */
       const chatsData = await getMyChats();
-      setChats(chatsData);
+      setChats(chatsData); // Update chats using setChats from context
     } catch (error) {
       console.error('Error fetching chats:', error);
     } finally {
@@ -51,29 +27,6 @@ const MyChats = () => {
   useEffect(() => {
     getChats();
   }, []);
-
-  useEffect(() => {
-    if (socket) {
-      socket.on('newMessage', (message) => {
-        setChats((prevChats) =>
-          prevChats.map((chat) =>
-            chat.id === message.groupId
-              ? {
-                  ...chat,
-                  lastMessage: message.content,
-                  timestamp: new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                  unreadCount: chat.unreadCount + 1,
-                }
-              : chat
-          )
-        );
-      });
-
-      return () => {
-        socket.off('newMessage');
-      };
-    }
-  }, [socket]);
 
   const renderChatItem = ({ item }) => {
     const formatTimestamp = (timestamp) => {

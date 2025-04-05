@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { login } from '../apiCalls/authApiCalls';
 import { saveToken } from '../utils/userTokens';
 import { useSocket } from '../context/SocketContext';
+import { getMyChats } from '../apiCalls/chatApiCalls';
 import io from 'socket.io-client';
 console.log("Welcome - Component file loaded");
 
@@ -32,12 +33,15 @@ const Welcome = () => {
       console.log("Welcome - Attempting to initialize socket");
       if (typeof socketContext.initializeSocket === 'function') {
         socketContext.initializeSocket();
-       
       } else {
         console.error("Welcome - initializeSocket is not a function:", socketContext);
         Alert.alert('Error', 'Failed to initialize chat connection');
         return;
       }
+
+      // Fetch chats and update unread count
+      // const chatsData = await getMyChats();
+      // socketContext.setChats(chatsData);
       
       Alert.alert('Login Successful', 'You have successfully logged in!', [{ text: 'OK' }]);
       navigation.navigate('home');
