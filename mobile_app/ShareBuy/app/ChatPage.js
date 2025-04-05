@@ -59,7 +59,7 @@ const ChatPage = ({ route }) => {
         id: msg.id,
         text: msg.content,
         sender: msg.userEmail === currentUserEmail ? "user" : msg.userEmail,
-        timestamp: new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        timestamp: new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         isOwner: owner
       }));
 
@@ -135,9 +135,9 @@ const ChatPage = ({ route }) => {
             styles.messageBubble,
             item.sender === "user" ? styles.userBubble : styles.otherBubble
           ]}>
-            <Text style=styles.senderText}>
+            <Text style={styles.senderText}>
               {item.sender}
-              {item.isOwner && <Text style={styles.ownerTag}> (Owner)
+              {item.isOwner && <Text style={styles.ownerTag}> (Owner)</Text>}
             </Text>
             <Text style={[
               styles.messageText,
