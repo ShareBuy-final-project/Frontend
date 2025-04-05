@@ -8,7 +8,21 @@
     "name": "ShareBuy",
     "slug": "ShareBuy",
     "extra": {
-      "BASE_ROUTE": "http://132.73.84.56:443/"
+      "BASE_ROUTE": "http://132.73.84.56:443/",
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "eff00592-56ca-4580-83d4-e8cd876d25eb"
+      }
+    },
+    "splash": {
+      "image": "./assets/splashscreen_logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "android": {
+      "package": "com.idonagler.ShareBuy"
     }
   }
 }
