@@ -11,7 +11,8 @@ import {
   Alert, 
   Image,
   Keyboard,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  ScrollView
 } from 'react-native';
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -168,41 +169,6 @@ const ChatPage = ({ route }) => {
     }
   };
 
-  const renderMessage = ({ item, index }) => {
-    const isUnreadBanner = unreadCount > 0 && index === messages.length - unreadCount;
-
-    return (
-      <>
-        {isUnreadBanner && (
-          <View style={styles.unreadBanner}>
-            <Text style={styles.unreadBannerText}>
-              {unreadCount} new message{unreadCount > 1 ? 's' : ''}
-            </Text>
-          </View>
-        )}
-        <View style={[
-          styles.messageContainer,
-          item.sender === "user" ? styles.userMessage : styles.otherMessage
-        ]}>
-          <View style={[
-            styles.messageBubble,
-            item.sender === "user" ? styles.userBubble : styles.otherBubble
-          ]}>
-            <Text style={styles.senderText}>
-              {item.sender}
-              {/* {item.isOwner && <Text style={styles.ownerTag}> (Owner)</Text>} */}
-            </Text>
-            <Text style={[
-              styles.messageText,
-              item.sender === "user" ? styles.userMessageText : styles.otherMessageText
-            ]}>{item.text}</Text>
-            <Text style={styles.timestamp}>{item.timestamp}</Text>
-          </View>
-        </View>
-      </>
-    );
-  };
-
   return (
     <BaseLayout>
       <SafeAreaView style={styles.safeArea}>
@@ -217,42 +183,75 @@ const ChatPage = ({ route }) => {
           <Text style={styles.groupName}>{groupName}</Text>
         </View>
 
-        <View style={[styles.messagesListContainer, keyboardStatus && styles.keyboardVisible]}>
-          <View style={{ flex: 1}}>
-            <FlatList
-              ref={flatListRef}
-              data={messages}
-              renderItem={renderMessage}
-              keyExtractor={(item) => item.id.toString()}
-              style={styles.messagesList}
-              contentContainerStyle={styles.messagesContainer}
-              showsVerticalScrollIndicator={true}
-              scrollEnabled={true}
-              refreshing={isLoading}
-              onRefresh={() => fetchMessages({ pageNumber: 1 })}
-              onEndReached={handleLoadOlderMessages}
-              onEndReachedThreshold={0.5}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              windowSize={10}
-              removeClippedSubviews={false}
-              alwaysBounceVertical={true}
-              maintainVisibleContentPosition={{
-                minIndexForVisible: 0,
-                autoscrollToTopThreshold: 100,
-              }}
-              ListEmptyComponent={
-                !isLoading && (
+        <View style={[styles.messagesListContainer, keyboardStatus ? styles.keyboardVisible : null]}>
+          <ScrollView 
+            ref={flatListRef}
+            style={{flex: 1, width: '100%', height: '100%'}}
+            contentContainerStyle={{paddingVertical: 15, paddingBottom: 70}}
+            scrollEnabled={true}
+            showsVerticalScrollIndicator={true}
+            scrollEventThrottle={16}
+            onStartShouldSetResponder={() => true}
+            onStartShouldSetResponderCapture={() => true}
+            onMoveShouldSetResponder={() => true}
+            onMoveShouldSetResponderCapture={() => true}
+            onScroll={(event) => {
+              const offsetY = event.nativeEvent.contentOffset.y;
+              if (offsetY < 10 && !isLoading && hasMoreOlder) {
+                handleLoadOlderMessages();
+              }
+            }}
+          >
+            <TouchableWithoutFeedback>
+              <View style={{width: '100%', paddingHorizontal: 15}}>
+                {messages.length === 0 && !isLoading && (
                   <Text style={styles.noMessagesText}>No messages yet. Start the conversation!</Text>
-                )
-              }
-              ListFooterComponent={
-                isLoading && hasMoreOlder && (
+                )}
+                
+                {isLoading && hasMoreOlder && (
                   <Text style={styles.loadingText}>Loading older messages...</Text>
-                )
-              }
-            />
-          </View>
+                )}
+                
+                {messages.map((item, index) => {
+                  const isUnreadBanner = unreadCount > 0 && index === messages.length - unreadCount;
+                
+                  return (
+                    <React.Fragment key={`message-${item.id}-${index}`}>
+                      {isUnreadBanner && (
+                        <View style={styles.unreadBanner}>
+                          <Text style={styles.unreadBannerText}>
+                            {unreadCount} new message{unreadCount > 1 ? 's' : ''}
+                          </Text>
+                        </View>
+                      )}
+                      <View 
+                        style={[
+                          styles.messageContainer,
+                          item.sender === "user" ? styles.userMessage : styles.otherMessage
+                        ]}
+                      >
+                        <View 
+                          style={[
+                            styles.messageBubble,
+                            item.sender === "user" ? styles.userBubble : styles.otherBubble
+                          ]}
+                        >
+                          <Text style={styles.senderText}>
+                            {item.sender}
+                          </Text>
+                          <Text style={[
+                            styles.messageText,
+                            item.sender === "user" ? styles.userMessageText : styles.otherMessageText
+                          ]}>{item.text}</Text>
+                          <Text style={styles.timestamp}>{item.timestamp}</Text>
+                        </View>
+                      </View>
+                    </React.Fragment>
+                  );
+                })}
+              </View>
+            </TouchableWithoutFeedback>
+          </ScrollView>
         </View>
 
         <View style={styles.inputContainer}>
@@ -310,23 +309,23 @@ const styles = StyleSheet.create({
   },
   messagesList: {
     width: '100%',
-    flexGrow: 1,
+    height: '100%',
+    flex: 1,
   },
   messagesListContainer: {
-    flex: 1,
     width: '100%',
     backgroundColor: COLORS.lightWhite,
-    height: '70%', // Added height
+    flex: 1, // Changed from fixed height to flex: 1
   },
   keyboardVisible: {
-    flex: 1,
+    height: '100%', // Use full height when keyboard is open
   },
   messagesContainer: {
     padding: 15,
     width: '100%',
     paddingBottom: 20,
+    minHeight: '100%',
     flexGrow: 1,
-    justifyContent: 'flex-start',
   },
   messageContainer: {
     marginVertical: 5,
@@ -373,6 +372,10 @@ const styles = StyleSheet.create({
     borderTopColor: COLORS.gray2,
     alignItems: 'center',
     width: '100%',
+    position: 'absolute', // Added to fix at bottom
+    bottom: 0, // Added to fix at bottom
+    left: 0, // Added to fix at bottom
+    right: 0, // Added to fix at bottom
   },
   input: {
     flex: 1,
@@ -432,6 +435,20 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.primary,
     fontFamily: FONT.arialBold,
+  },
+  scrollViewContent: {
+    padding: 15,
+    width: '100%',
+    paddingBottom: 20,
+    minHeight: '100%',
+    flexGrow: 1,
+  },
+  messagesContent: {
+    padding: 15,
+    width: '100%',
+    paddingBottom: 20,
+    minHeight: '100%',
+    flexGrow: 1,
   },
 });
 
