@@ -217,42 +217,36 @@ const ChatPage = ({ route }) => {
           <Text style={styles.groupName}>{groupName}</Text>
         </View>
 
-        <View style={[styles.messagesListContainer, keyboardStatus && styles.keyboardVisible]}>
-          <View style={{ flex: 1}}>
-            <FlatList
-              ref={flatListRef}
-              data={messages}
-              renderItem={renderMessage}
-              keyExtractor={(item) => item.id.toString()}
-              style={styles.messagesList}
-              contentContainerStyle={styles.messagesContainer}
-              showsVerticalScrollIndicator={true}
-              scrollEnabled={true}
-              refreshing={isLoading}
-              onRefresh={() => fetchMessages({ pageNumber: 1 })}
-              onEndReached={handleLoadOlderMessages}
-              onEndReachedThreshold={0.5}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              windowSize={10}
-              removeClippedSubviews={false}
-              alwaysBounceVertical={true}
-              maintainVisibleContentPosition={{
-                minIndexForVisible: 0,
-                autoscrollToTopThreshold: 100,
-              }}
-              ListEmptyComponent={
-                !isLoading && (
-                  <Text style={styles.noMessagesText}>No messages yet. Start the conversation!</Text>
-                )
-              }
-              ListFooterComponent={
-                isLoading && hasMoreOlder && (
-                  <Text style={styles.loadingText}>Loading older messages...</Text>
-                )
-              }
-            />
-          </View>
+        <View style={[styles.messagesListContainer]}>
+          <FlatList 
+            ref={flatListRef}
+            data={messages}
+            renderItem={renderMessage}
+            keyExtractor={(item) => item.id.toString()}
+            style={{flex: 1}}
+            contentContainerStyle={styles.messagesContainer}
+            showsVerticalScrollIndicator={true}
+            scrollEnabled={true}
+            refreshing={isLoading}
+            // onRefresh={() => fetchMessages({ pageNumber: 1 })}
+            onEndReached={handleLoadOlderMessages}
+            onEndReachedThreshold={0.5}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            windowSize={10}
+            removeClippedSubviews={false}
+            alwaysBounceVertical={true}
+            ListEmptyComponent={
+              !isLoading && (
+                <Text style={styles.noMessagesText}>No messages yet. Start the conversation!</Text>
+              )
+            }
+            ListFooterComponent={
+              isLoading && hasMoreOlder && (
+                <Text style={styles.loadingText}>Loading older messages...</Text>
+              )
+            }
+          />
         </View>
 
         <View style={styles.inputContainer}>
@@ -284,7 +278,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   container: {
-    flex: 1,
+    //flex: 1,
     backgroundColor: COLORS.lightWhite,
     width: '100%',
   },
@@ -308,25 +302,17 @@ const styles = StyleSheet.create({
     color: COLORS.black,
     fontFamily: FONT.arialBold,
   },
-  messagesList: {
-    width: '100%',
-    flexGrow: 1,
-  },
   messagesListContainer: {
     flex: 1,
     width: '100%',
     backgroundColor: COLORS.lightWhite,
-    height: '70%', // Added height
   },
   keyboardVisible: {
     flex: 1,
   },
   messagesContainer: {
     padding: 15,
-    width: '100%',
     paddingBottom: 20,
-    flexGrow: 1,
-    justifyContent: 'flex-start',
   },
   messageContainer: {
     marginVertical: 5,
