@@ -169,13 +169,15 @@ const ChatPage = ({ route }) => {
   };
 
   const renderMessage = ({ item, index }) => {
-    const isUnreadBanner = item.isUnread && (index === messages.length - unreadCount);
+    const isUnreadBanner = unreadCount > 0 && index === messages.length - unreadCount;
 
     return (
       <>
         {isUnreadBanner && (
           <View style={styles.unreadBanner}>
-            <Text style={styles.unreadBannerText}>Unread Messages</Text>
+            <Text style={styles.unreadBannerText}>
+              {unreadCount} new message{unreadCount > 1 ? 's' : ''}
+            </Text>
           </View>
         )}
         <View style={[
