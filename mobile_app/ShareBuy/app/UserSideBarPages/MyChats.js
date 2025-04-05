@@ -41,7 +41,9 @@ const MyChats = () => {
         style={styles.chatItem}
         onPress={() => navigation.navigate('ChatPage', { 
           groupId: item.id,
-          groupName: item.groupName 
+          groupName: item.groupName,
+          groupImage: item.image, // Pass the image to ChatPage
+          owner: item.owner // Pass the owner field to ChatPage
         })}
       >
         <View style={styles.chatImageContainer}>
@@ -57,7 +59,10 @@ const MyChats = () => {
         </View>
         <View style={styles.chatInfo}>
           <View style={styles.chatHeader}>
-            <Text style={styles.groupName}>{item.groupName}</Text>
+            <Text style={styles.groupName}>
+              {item.groupName}
+              {item.owner && <Text style={styles.ownerTag}> (Owner)</Text>}
+            </Text>
             {item.timestamp && (
               <Text style={styles.timestamp}>{formatTimestamp(item.timestamp)}</Text>
             )}
@@ -172,6 +177,11 @@ const styles = StyleSheet.create({
     color: COLORS.gray,
     fontSize: 16,
     fontFamily: FONT.arial,
+  },
+  ownerTag: {
+    fontSize: 12,
+    color: COLORS.primary,
+    fontFamily: FONT.arialBold,
   },
 });
 

@@ -30,7 +30,9 @@ const DealPage = () => {
           participants: group.totalAmount || 0, // Participant count from API
           size: group.size,
           description: group.description,
-          isSaved: group.isSaved || false
+          isSaved: group.isSaved || false,
+          businessName: group.businessName,
+          businessNumber: group.businessNumber
         });
         if (group.isSaved) {
           setFavorites((prevFavorites) => [...prevFavorites, group.id]);
@@ -101,6 +103,9 @@ const DealPage = () => {
   }
 
   //console.log(dealDetails)
+  console.log("businessNumber", dealDetails?.businessNumber)
+  console.log("businessName", dealDetails?.businessName)
+
   return (
     <BaseLayout>
     <View style={styles.container}>
@@ -119,7 +124,13 @@ const DealPage = () => {
       <View style={styles.participantOverlay}>
           <Text style={styles.participantText}>{dealDetails?.participants}/{dealDetails?.size}</Text>
         </View>
+        <View style={styles.titleContainer}>
       <Text style={styles.title}>{dealDetails?.title}</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('BusinessPage', { businessNumber: dealDetails?.businessNumber })} style={styles.businessContainer}>
+      <Icon name="store" size={18} color="rgba(0, 0, 0, 0.7)" />
+      <Text style={styles.businessName}>{dealDetails?.businessName}</Text>
+    </TouchableOpacity>
+    </View>
       <Text style={styles.description}>{dealDetails?.description}</Text>
       <View style={styles.priceContainer}>
         <Text style={styles.price}>Price: {dealDetails?.discounted_price}</Text>
@@ -241,6 +252,24 @@ const styles = StyleSheet.create({
     left: 20,
     zIndex: 10,
   },
-});
+  titleContainer: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 5,
+  },
+  businessContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  businessName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: 'rgba(0, 0, 0, 0.7)',
+    textDecorationLine: 'underline',
+    marginLeft: 5, 
+  }
+ });
 
 export default DealPage;

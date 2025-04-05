@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList, Platform, Alert } from 'react-native';
+import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList, Platform, Alert, Image } from 'react-native';
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BaseLayout from './BaseLayout';
@@ -9,7 +9,7 @@ import { getToken } from '../utils/userTokens';
 import { useFocusEffect } from '@react-navigation/native';
 
 const ChatPage = ({ route }) => {
-  const { groupId, groupName } = route.params || { groupId: null, groupName: 'Group Name' };
+  const { groupId, groupName, groupImage, owner } = route.params || { groupId: null, groupName: 'Group Name', groupImage: null, owner: false };
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -60,6 +60,7 @@ const ChatPage = ({ route }) => {
         text: msg.content,
         sender: msg.userEmail === currentUserEmail ? "user" : msg.userEmail,
         timestamp: new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        isOwner: owner
       }));
 
       if (pageNumber === 1) {
@@ -134,7 +135,10 @@ const ChatPage = ({ route }) => {
             styles.messageBubble,
             item.sender === "user" ? styles.userBubble : styles.otherBubble
           ]}>
-            <Text style={styles.senderText}>{item.sender}</Text>
+            <Text style=styles.senderText}>
+              {item.sender}
+              {item.isOwner && <Text style={styles.ownerTag}> (Owner)
+            </Text>
             <Text style={[
               styles.messageText,
               item.sender === "user" ? styles.userMessageText : styles.otherMessageText
@@ -146,11 +150,18 @@ const ChatPage = ({ route }) => {
     );
   };
 
+
   return (
     <BaseLayout>
       <SafeAreaView style={styles.container}>
 {/* Chat Header */}
         <View style={styles.header}>
+          {groupImage && (
+            <Image 
+              source={groupImage ? { uri: groupImage } : null} 
+              style={styles.groupImage} 
+            />
+          )}
           <Text style={styles.groupName}>{groupName}</Text>
         </View>
 
@@ -205,18 +216,24 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   header: {
+    flexDirection: 'row', // Align items horizontally
+    alignItems: 'center', // Center items vertically
     padding: 15,
     backgroundColor: COLORS.glowingYeloow,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.gray2,
     width: '100%',
   },
+  groupImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 10, 
+  },
   groupName: {
     fontSize: 25,
     color: COLORS.black,
-    textAlign: 'center',
     fontFamily: FONT.arialBold,
-    backgroundColor: COLORS.glowingYeloow,
   },
   messagesList: {
     flex: 1,
@@ -244,7 +261,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.lightPurple,
   },
   otherBubble: {
-    backgroundColor: COLORS.glowingYeloow,
+    backgroundColor: COLORS.lightYellow,
   },
   messageText: {
     fontSize: 18,
@@ -324,6 +341,11 @@ const styles = StyleSheet.create({
   unreadBannerText: {
     color: COLORS.white,
     fontSize: 14,
+    fontFamily: FONT.arialBold,
+  },
+    ownerTag: {
+    fontSize: 12,
+    color: COLORS.primary,
     fontFamily: FONT.arialBold,
   },
 });
