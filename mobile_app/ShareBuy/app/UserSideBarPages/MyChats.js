@@ -1,47 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View, FlatList, TouchableOpacity, Image } from 'react-native';
 import BaseLayout from '../BaseLayout';
-// import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS, FONT } from '../../constants/theme';
 import DefaultPic from '../../assets/images/default_pic.png';
-// import iphonePic from '../../assets/images/iphone_pic.png';
-// import macbookPic from '../../assets/images/macbook_pic.png';
 import { getMyChats } from '../../apiCalls/chatApiCalls';
+import { useSocket } from '../../context/SocketContext'; // Import useSocket
 
 const MyChats = () => {
-  const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+  const { chats, setChats } = useSocket(); // Use chats and setChats from SocketContext
 
   const getChats = async () => {
     setIsLoading(true);
     try {
-      // Mock data for reference
-      /*
-      const mockChats = [
-        {
-          id: 1,
-          groupName: "iPhone 15 Pro Group",
-          lastMessage: "Hey, when is the next meeting?",
-          timestamp: "10:30 AM",
-          unreadCount: 2,
-          image: iphonePic
-          owner: true
-        },
-        {
-          id: 2,
-          groupName: "MacBook Air Group",
-          lastMessage: "Great deal everyone!",
-          timestamp: "Yesterday",
-          unreadCount: 0,
-          image: macbookPic
-          owner: false
-        },
-      ];
-      */
       const chatsData = await getMyChats();
-      setChats(chatsData);
+      setChats(chatsData); // Update chats using setChats from context
     } catch (error) {
       console.error('Error fetching chats:', error);
     } finally {

@@ -5,6 +5,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import BaseLayout from './BaseLayout';
 import { sendMessage as sendMessageApi, getChatById } from '../apiCalls/chatApiCalls';
 import { useSocket } from '../context/SocketContext';
+import { getToken } from '../utils/userTokens';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ChatPage = ({ route }) => {
   const { groupId, groupName, groupImage, owner } = route.params || { groupId: null, groupName: 'Group Name', groupImage: null, owner: false };
@@ -13,33 +15,54 @@ const ChatPage = ({ route }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [unreadCount, setUnreadCount] = useState(0);
   const flatListRef = useRef(null);
-  const { activeChat, setActiveChat, sendMessage: sendMessageSocket } = useSocket();
+  const { activeChat, setActiveChat, sendMessage: sendMessageSocket, updateLastSeen, chats } = useSocket();
 
   useEffect(() => {
     if (groupId) {
+      const chat = chats.find(chat => chat.id === groupId);
+      setUnreadCount(chat?.unreadCount || 0);
       setActiveChat({ groupId, messages: [] });
+      updateLastSeen(groupId);
     }
-    return () => {
-      setActiveChat(null);
-    };
   }, [groupId]);
+
+  useEffect(() => {
+    if (activeChat?.groupId === groupId) {
+      setMessages(activeChat.messages);
+    }
+  }, [activeChat]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('ChatPage is focused');
+      return () => {
+        console.log('Cleaning up ChatPage');
+        if (groupId) {
+          updateLastSeen(groupId);
+        }
+        setActiveChat(null);
+      };
+    }, [groupId])
+  );
 
   const fetchMessages = async (pageNumber = 1) => {
     if (!groupId) return;
     
     setIsLoading(true);
     try {
+      const currentUserEmail = await getToken('email');
       const response = await getChatById(groupId, pageNumber);
+
       const formattedMessages = response.map(msg => ({
         id: msg.id,
         text: msg.content,
-        sender: msg.userEmail,
-        timestamp: new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        sender: msg.userEmail === currentUserEmail ? "user" : msg.userEmail,
+        timestamp: new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         isOwner: owner
       }));
 
-      // If it's the first page, replace messages. Otherwise, append to existing messages
       if (pageNumber === 1) {
         setMessages(formattedMessages);
         setActiveChat(prev => ({ ...prev, messages: formattedMessages }));
@@ -70,9 +93,8 @@ const ChatPage = ({ route }) => {
     if (!newMessage.trim() || !groupId) return;
 
     try {
-      // Optimistically add the message to the UI
       const tempMessage = {
-        id: Date.now(), // Temporary ID
+        id: Date.now(),
         text: newMessage,
         sender: "user",
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -81,16 +103,10 @@ const ChatPage = ({ route }) => {
       setActiveChat(prev => ({ ...prev, messages: [...(prev?.messages || []), tempMessage] }));
       setNewMessage('');
 
-      // Send the message through both the API and socket
-    //   await sendMessageApi(groupId, newMessage);
       sendMessageSocket(groupId, newMessage);
-      
-      // The socket listener will handle adding the actual message
-      // No need to refresh messages here
     } catch (error) {
       console.error('Error sending message:', error);
       Alert.alert('Error', 'Failed to send message. Please try again.');
-      // Remove the optimistic message if sending failed
       setMessages(prev => prev.filter(msg => msg.id !== tempMessage.id));
       setActiveChat(prev => ({
         ...prev,
@@ -99,32 +115,46 @@ const ChatPage = ({ route }) => {
     }
   };
 
-  const renderMessage = ({ item }) => (
-    <View style={[
-      styles.messageContainer,
-      item.sender === "user" ? styles.userMessage : styles.otherMessage
-    ]}>
-      <View style={[
-        styles.messageBubble,
-        item.sender === "user" ? styles.userBubble : styles.otherBubble
-      ]}>
-        <Text style={styles.senderText}>
-          {item.sender}
-          {item.isOwner && <Text style={styles.ownerTag}> (Owner)</Text>}
-        </Text>
-        <Text style={[
-          styles.messageText,
-          item.sender === "user" ? styles.userMessageText : styles.otherMessageText
-        ]}>{item.text}</Text>
-        <Text style={styles.timestamp}>{item.timestamp}</Text>
-      </View>
-    </View>
-  );
+  const renderMessage = ({ item, index }) => {
+    const isUnreadBanner = unreadCount > 0 && index === messages.length - unreadCount;
+
+    return (
+      <>
+        {isUnreadBanner && (
+          <View style={styles.unreadBanner}>
+            <Text style={styles.unreadBannerText}>
+              {unreadCount} new message{unreadCount > 1 ? 's' : ''}
+            </Text>
+          </View>
+        )}
+        <View style={[
+          styles.messageContainer,
+          item.sender === "user" ? styles.userMessage : styles.otherMessage
+        ]}>
+          <View style={[
+            styles.messageBubble,
+            item.sender === "user" ? styles.userBubble : styles.otherBubble
+          ]}>
+            <Text style=styles.senderText}>
+              {item.sender}
+              {item.isOwner && <Text style={styles.ownerTag}> (Owner)
+            </Text>
+            <Text style={[
+              styles.messageText,
+              item.sender === "user" ? styles.userMessageText : styles.otherMessageText
+            ]}>{item.text}</Text>
+            <Text style={styles.timestamp}>{item.timestamp}</Text>
+          </View>
+        </View>
+      </>
+    );
+  };
+
 
   return (
     <BaseLayout>
       <SafeAreaView style={styles.container}>
-        {/* Chat Header */}
+{/* Chat Header */}
         <View style={styles.header}>
           {groupImage && (
             <Image 
@@ -135,7 +165,6 @@ const ChatPage = ({ route }) => {
           <Text style={styles.groupName}>{groupName}</Text>
         </View>
 
-        {/* Messages List */}
         <FlatList
           ref={flatListRef}
           data={messages}
@@ -145,7 +174,6 @@ const ChatPage = ({ route }) => {
           contentContainerStyle={styles.messagesContainer}
           refreshing={isLoading}
           onRefresh={() => fetchMessages(1)}
-          //onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           ListEmptyComponent={
             !isLoading && (
@@ -159,7 +187,6 @@ const ChatPage = ({ route }) => {
           }
         />
 
-        {/* Message Input */}
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -201,7 +228,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    marginRight: 10, // Add spacing between the image and the title
+    marginRight: 10, 
   },
   groupName: {
     fontSize: 25,
@@ -304,7 +331,19 @@ const styles = StyleSheet.create({
     color: COLORS.gray,
     marginBottom: 2,
   },
-  ownerTag: {
+  unreadBanner: {
+    alignSelf: 'center',
+    backgroundColor: COLORS.gray,
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 10,
+  },
+  unreadBannerText: {
+    color: COLORS.white,
+    fontSize: 14,
+    fontFamily: FONT.arialBold,
+  },
+    ownerTag: {
     fontSize: 12,
     color: COLORS.primary,
     fontFamily: FONT.arialBold,
