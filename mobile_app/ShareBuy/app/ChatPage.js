@@ -1,5 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, FlatList, Platform, Alert, Image } from 'react-native';
+import { 
+  SafeAreaView, 
+  View, 
+  StyleSheet, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  FlatList, 
+  Platform, 
+  Alert, 
+  Image,
+  Keyboard,
+  TouchableWithoutFeedback
+} from 'react-native';
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BaseLayout from './BaseLayout';
@@ -14,8 +27,10 @@ const ChatPage = ({ route }) => {
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMoreOlder, setHasMoreOlder] = useState(true);
+  const [hasMoreNewer, setHasMoreNewer] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [keyboardStatus, setKeyboardStatus] = useState(false);
   const flatListRef = useRef(null);
   const { activeChat, setActiveChat, sendMessage: sendMessageSocket, updateLastSeen, chats } = useSocket();
 
@@ -47,28 +62,46 @@ const ChatPage = ({ route }) => {
     }, [groupId])
   );
 
-  const fetchMessages = async (pageNumber = 1) => {
+  const fetchMessages = async ({ pageNumber = 1 } = {}) => {
     if (!groupId) return;
-    
+
     setIsLoading(true);
     try {
       const currentUserEmail = await getToken('email');
-      const response = await getChatById(groupId, pageNumber);
+      const response = await getChatById(groupId, pageNumber, 10); // Fetch unread and read messages
 
-      const formattedMessages = response.map(msg => ({
+      const unreadMessages = response.unreadMessages.map(msg => ({
         id: msg.id,
         text: msg.content,
         sender: msg.userEmail === currentUserEmail ? "user" : msg.userEmail,
         timestamp: new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        isOwner: owner
+        isUnread: true,
+        isOwner: owner,
       }));
 
-      if (pageNumber === 1) {
-        setMessages(formattedMessages);
-        setActiveChat(prev => ({ ...prev, messages: formattedMessages }));
-      } else {
-        setMessages(prev => [...formattedMessages, ...prev]);
-        setActiveChat(prev => ({ ...prev, messages: [...formattedMessages, ...(prev?.messages || [])] }));
+      const readMessages = response.readMessages.map(msg => ({
+        id: msg.id,
+        text: msg.content,
+        sender: msg.userEmail === currentUserEmail ? "user" : msg.userEmail,
+        timestamp: new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        isUnread: false,
+        isOwner: owner,
+      }));
+
+      // Combine messages: read messages first, unread messages at the bottom
+      const combinedMessages = [...readMessages, ...unreadMessages];
+
+      setMessages(prev => [...combinedMessages, ...prev]);
+      setHasMoreOlder(readMessages.length === 10); // Check if more older messages exist
+
+      setActiveChat(prev => ({
+        ...prev,
+        messages: [...(prev?.messages || []), ...combinedMessages],
+      }));
+
+      // Scroll to the bottom to show unread messages
+      if (unreadMessages.length > 0 && flatListRef.current) {
+        setTimeout(() => flatListRef.current.scrollToEnd({ animated: true }), 100);
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -79,13 +112,33 @@ const ChatPage = ({ route }) => {
   };
 
   useEffect(() => {
-    fetchMessages(1);
+    const loadInitialMessages = async () => {
+      if (!groupId) return;
+
+      const chat = chats.find(chat => chat.id === groupId);
+      if (chat?.unreadCount > 0) {
+        // Fetch unread messages
+        await fetchMessages({ pageNumber: 1, direction: 'newer' });
+      } else {
+        // Fetch the last page of messages
+        await fetchMessages({ pageNumber: 1, direction: 'older' });
+      }
+    };
+
+    loadInitialMessages();
   }, [groupId]);
 
-  const handleLoadMore = () => {
-    if (!isLoading && hasMore) {
+  const handleLoadOlderMessages = () => {
+    if (!isLoading && hasMoreOlder) {
       setPage(prevPage => prevPage + 1);
-      fetchMessages(page + 1);
+      fetchMessages({ pageNumber: page + 1, direction: 'older' });
+    }
+  };
+
+  const handleLoadNewerMessages = () => {
+    if (!isLoading && hasMoreNewer) {
+      setPage(prevPage => prevPage + 1);
+      fetchMessages({ pageNumber: page + 1, direction: 'newer' });
     }
   };
 
@@ -116,15 +169,13 @@ const ChatPage = ({ route }) => {
   };
 
   const renderMessage = ({ item, index }) => {
-    const isUnreadBanner = unreadCount > 0 && index === messages.length - unreadCount;
+    const isUnreadBanner = item.isUnread && (index === messages.length - unreadCount);
 
     return (
       <>
         {isUnreadBanner && (
           <View style={styles.unreadBanner}>
-            <Text style={styles.unreadBannerText}>
-              {unreadCount} new message{unreadCount > 1 ? 's' : ''}
-            </Text>
+            <Text style={styles.unreadBannerText}>Unread Messages</Text>
           </View>
         )}
         <View style={[
@@ -137,7 +188,7 @@ const ChatPage = ({ route }) => {
           ]}>
             <Text style={styles.senderText}>
               {item.sender}
-              {item.isOwner && <Text style={styles.ownerTag}> (Owner)</Text>}
+              {/* {item.isOwner && <Text style={styles.ownerTag}> (Owner)</Text>} */}
             </Text>
             <Text style={[
               styles.messageText,
@@ -150,11 +201,10 @@ const ChatPage = ({ route }) => {
     );
   };
 
-
   return (
     <BaseLayout>
-      <SafeAreaView style={styles.container}>
-{/* Chat Header */}
+      <SafeAreaView style={styles.safeArea}>
+        {/* Chat Header */}
         <View style={styles.header}>
           {groupImage && (
             <Image 
@@ -165,27 +215,43 @@ const ChatPage = ({ route }) => {
           <Text style={styles.groupName}>{groupName}</Text>
         </View>
 
-        <FlatList
-          ref={flatListRef}
-          data={messages}
-          renderItem={renderMessage}
-          keyExtractor={(item) => item.id.toString()}
-          style={styles.messagesList}
-          contentContainerStyle={styles.messagesContainer}
-          refreshing={isLoading}
-          onRefresh={() => fetchMessages(1)}
-          onEndReachedThreshold={0.5}
-          ListEmptyComponent={
-            !isLoading && (
-              <Text style={styles.noMessagesText}>No messages yet. Start the conversation!</Text>
-            )
-          }
-          ListFooterComponent={
-            isLoading && hasMore && (
-              <Text style={styles.loadingText}>Loading older messages...</Text>
-            )
-          }
-        />
+        <View style={[styles.messagesListContainer, keyboardStatus && styles.keyboardVisible]}>
+          <View style={{ flex: 1}}>
+            <FlatList
+              ref={flatListRef}
+              data={messages}
+              renderItem={renderMessage}
+              keyExtractor={(item) => item.id.toString()}
+              style={styles.messagesList}
+              contentContainerStyle={styles.messagesContainer}
+              showsVerticalScrollIndicator={true}
+              scrollEnabled={true}
+              refreshing={isLoading}
+              onRefresh={() => fetchMessages({ pageNumber: 1 })}
+              onEndReached={handleLoadOlderMessages}
+              onEndReachedThreshold={0.5}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              windowSize={10}
+              removeClippedSubviews={false}
+              alwaysBounceVertical={true}
+              maintainVisibleContentPosition={{
+                minIndexForVisible: 0,
+                autoscrollToTopThreshold: 100,
+              }}
+              ListEmptyComponent={
+                !isLoading && (
+                  <Text style={styles.noMessagesText}>No messages yet. Start the conversation!</Text>
+                )
+              }
+              ListFooterComponent={
+                isLoading && hasMoreOlder && (
+                  <Text style={styles.loadingText}>Loading older messages...</Text>
+                )
+              }
+            />
+          </View>
+        </View>
 
         <View style={styles.inputContainer}>
           <TextInput
@@ -210,14 +276,19 @@ const ChatPage = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: COLORS.lightWhite,
+    width: '100%',
+  },
   container: {
     flex: 1,
     backgroundColor: COLORS.lightWhite,
     width: '100%',
   },
   header: {
-    flexDirection: 'row', // Align items horizontally
-    alignItems: 'center', // Center items vertically
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 15,
     backgroundColor: COLORS.glowingYeloow,
     borderBottomWidth: 1,
@@ -236,12 +307,24 @@ const styles = StyleSheet.create({
     fontFamily: FONT.arialBold,
   },
   messagesList: {
+    width: '100%',
+    flexGrow: 1,
+  },
+  messagesListContainer: {
     flex: 1,
     width: '100%',
+    backgroundColor: COLORS.lightWhite,
+    height: '70%', // Added height
+  },
+  keyboardVisible: {
+    flex: 1,
   },
   messagesContainer: {
     padding: 15,
     width: '100%',
+    paddingBottom: 20,
+    flexGrow: 1,
+    justifyContent: 'flex-start',
   },
   messageContainer: {
     marginVertical: 5,
@@ -343,7 +426,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: FONT.arialBold,
   },
-    ownerTag: {
+  ownerTag: {
     fontSize: 12,
     color: COLORS.primary,
     fontFamily: FONT.arialBold,

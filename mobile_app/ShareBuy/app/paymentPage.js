@@ -25,7 +25,7 @@ const CheckoutScreen = () => {
   const [isTermsVisible, setIsTermsVisible] = useState(false);
   const [isConsentChecked, setIsConsentChecked] = useState(false);
   const [amount, setAmount] = useState(1);
-  const { socket } = useSocket(); // Import socket context
+  const { socket } = useSocket();
 
   const setupPaymentSheet = async () => {
       try{
