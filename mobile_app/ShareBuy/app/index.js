@@ -5,6 +5,7 @@ import { deleteAllTokens } from "../utils/userTokens";
 import AppNavigator from "./AppNavigator";
 import { SocketProvider } from '../context/SocketContext';
 import * as SplashScreen from 'expo-splash-screen';
+import { logout } from "../apiCalls/authApiCalls";
 function App() {
     useEffect(() => {
         async function prepare() {
@@ -23,7 +24,13 @@ function App() {
       
     useEffect(() => {
         // Clear the secure store when the app starts
-        deleteAllTokens();
+        try{
+            console.log("Try to logout before render")
+            logout()
+        }
+        catch{
+            console.log("Couldn't logout, user already loggedout")
+        }
     }, []);
 
     return (

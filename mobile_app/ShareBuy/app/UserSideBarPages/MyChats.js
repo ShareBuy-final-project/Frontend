@@ -1,41 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View, FlatList, TouchableOpacity, Image } from 'react-native';
 import BaseLayout from '../BaseLayout';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS, FONT } from '../../constants/theme';
 import DefaultPic from '../../assets/images/default_pic.png';
+import { getMyChats } from '../../apiCalls/chatApiCalls';
+import { useSocket } from '../../context/SocketContext'; // Import useSocket
 
 const MyChats = () => {
-  const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+  const { chats, setChats } = useSocket(); // Use chats and setChats from SocketContext
 
-  // TODO: Replace with actual API call to get user's chats
   const getChats = async () => {
     setIsLoading(true);
     try {
-      // Mock data for now - replace with actual API call
-      const mockChats = [
-        {
-          id: 1,
-          groupName: "iPhone 15 Pro Group",
-          lastMessage: "Hey, when is the next meeting?",
-          timestamp: "10:30 AM",
-          unreadCount: 2,
-          image: null
-        },
-        {
-          id: 2,
-          groupName: "MacBook Air Group",
-          lastMessage: "Great deal everyone!",
-          timestamp: "Yesterday",
-          unreadCount: 0,
-          image: null
-        },
-        // Add more mock chats as needed
-      ];
-      setChats(mockChats);
+      const chatsData = await getMyChats();
+      setChats(chatsData); // Update chats using setChats from context
     } catch (error) {
       console.error('Error fetching chats:', error);
     } finally {
@@ -47,42 +28,58 @@ const MyChats = () => {
     getChats();
   }, []);
 
-  const renderChatItem = ({ item }) => (
-    <TouchableOpacity 
-      style={styles.chatItem}
-      onPress={() => navigation.navigate('ChatPage', { 
-        groupId: item.id,
-        groupName: item.groupName 
-      })}
-    >
-      <View style={styles.chatImageContainer}>
-        <Image 
-          source={item.image ? { uri: item.image } : DefaultPic} 
-          style={styles.chatImage}
-        />
-        {item.unreadCount > 0 && (
-          <View style={styles.unreadBadge}>
-            <Text style={styles.unreadText}>{item.unreadCount}</Text>
-          </View>
-        )}
-      </View>
-      <View style={styles.chatInfo}>
-        <View style={styles.chatHeader}>
-          <Text style={styles.groupName}>{item.groupName}</Text>
-          <Text style={styles.timestamp}>{item.timestamp}</Text>
+  const renderChatItem = ({ item }) => {
+    const formatTimestamp = (timestamp) => {
+      if (!timestamp) return null; // Return null if timestamp is null
+      const date = new Date(timestamp);
+      const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      return date.toLocaleDateString(undefined, options);
+    };
+
+    return (
+      <TouchableOpacity 
+        style={styles.chatItem}
+        onPress={() => navigation.navigate('ChatPage', { 
+          groupId: item.id,
+          groupName: item.groupName,
+          groupImage: item.image, // Pass the image to ChatPage
+          owner: item.owner // Pass the owner field to ChatPage
+        })}
+      >
+        <View style={styles.chatImageContainer}>
+          <Image 
+            source={item.image ? { uri: item.image } : DefaultPic} 
+            style={styles.chatImage}
+          />
+          {item.unreadCount > 0 && (
+            <View style={styles.unreadBadge}>
+              <Text style={styles.unreadText}>{item.unreadCount}</Text>
+            </View>
+          )}
         </View>
-        <Text style={styles.lastMessage} numberOfLines={1}>
-          {item.lastMessage}
-        </Text>
-      </View>
-    </TouchableOpacity>
-  );
+        <View style={styles.chatInfo}>
+          <View style={styles.chatHeader}>
+            <Text style={styles.groupName}>
+              {item.groupName}
+              {item.owner && <Text style={styles.ownerTag}> (Owner)</Text>}
+            </Text>
+            {item.timestamp && (
+              <Text style={styles.timestamp}>{formatTimestamp(item.timestamp)}</Text>
+            )}
+          </View>
+          <Text style={styles.lastMessage} numberOfLines={1}>
+            {item.lastMessage}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <BaseLayout>
       <View style={styles.container}>
         {chats.length === 0 && !isLoading ? (
-          <Text style={styles.noChatsText}>You don't have any chats yet!</Text>
+          <Text style={styles.noChatsText}>you don't have any chats yet! Join or create a group to be part of one.</Text>
         ) : (
           <FlatList
             data={chats}
@@ -180,6 +177,11 @@ const styles = StyleSheet.create({
     color: COLORS.gray,
     fontSize: 16,
     fontFamily: FONT.arial,
+  },
+  ownerTag: {
+    fontSize: 12,
+    color: COLORS.primary,
+    fontFamily: FONT.arialBold,
   },
 });
 

@@ -6,6 +6,7 @@ import { logout } from '../apiCalls/authApiCalls';
 import { isLoggedIn } from '../utils/userTokens';
 import { getToken } from '../utils/userTokens';
 import { COLORS, FONT } from '../constants/theme';
+import { useSocket } from '../context/SocketContext'; // Import useSocket
 
 const BaseLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -13,8 +14,11 @@ const BaseLayout = ({ children }) => {
   const [business, setBusiness] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const navigation = useNavigation();
-  // const { getUnreadCount } = useContext(getContext());
-  const getUnreadCount =()=> 5;
+  const { chats } = useSocket(); // Get chats from SocketContext
+
+  const getUnreadCount = () => {
+    return chats.reduce((total, chat) => total + (chat.unreadCount || 0), 0);
+  };
 
   useEffect(() => {
     const fetchIsBusiness = async () => {
@@ -106,6 +110,11 @@ const BaseLayout = ({ children }) => {
         <View style={styles.header}>
           <TouchableOpacity onPress={toggleSidebar} style={styles.hamburgerButton}>
             <Icon name="menu" size={30} color="#000" />
+            {getUnreadCount() > 0 && (
+              <View style={styles.alertBadge}>
+                <Icon name="notifications" size={15} color={COLORS.black} />
+              </View>
+            )}
           </TouchableOpacity>
           <TouchableOpacity style={styles.homeButton} onPress={handleHomePress}>
             <Icon name="home" size={30} color="#000" />
@@ -155,9 +164,9 @@ const BaseLayout = ({ children }) => {
             <TouchableOpacity style={styles.sidebarItem} onPress={() => navigation.navigate('myChats')}>
               <Icon name="chat" size={20} color="#fff" style={styles.sidebarIcon}/>
               <Text style={styles.sidebarItemText}>My Chats</Text>
-              {getUnreadCount('total') > 0 && (
+              {getUnreadCount() > 0 && (
                 <View style={styles.unreadBadge}>
-                  <Text style={styles.unreadText}>{getUnreadCount('total')}</Text>
+                  <Text style={styles.unreadText}>{getUnreadCount()}</Text>
                 </View>
               )}
             </TouchableOpacity>
@@ -256,6 +265,18 @@ const styles = StyleSheet.create({
     marginTop: 60,
     padding: 10,
   },
+  alertBadge: {
+    position: 'absolute',
+    top: -5,
+    right: -5,
+    backgroundColor: COLORS.glowingYeloow,
+    borderRadius: 12,
+    minWidth: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+  },
   unreadBadge: {
     backgroundColor: COLORS.glowingYeloow,
     borderRadius: 12,
@@ -273,4 +294,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BaseLayout
+export default BaseLayout;
