@@ -23,7 +23,7 @@ import { getToken } from '../utils/userTokens';
 import { useFocusEffect } from '@react-navigation/native';
 
 const ChatPage = ({ route }) => {
-  const { groupId, groupName, groupImage, owner } = route.params || { groupId: null, groupName: 'Group Name', groupImage: null, owner: false };
+  const { groupId, groupName, groupImage, owner, totalMessages } = route.params || { groupId: null, groupName: 'Group Name', groupImage: null, owner: false };
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +32,11 @@ const ChatPage = ({ route }) => {
   const [hasMoreNewer, setHasMoreNewer] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
   const [keyboardStatus, setKeyboardStatus] = useState(false);
+  const [contentHeight, setContentHeight] = useState(0); // Track content height
   const flatListRef = useRef(null);
+  const scrollPositionRef = useRef(null); // Initialize with null to detect the first scroll event
+  const contentHeightRef = useRef(0); // Ref to track content height changes
+  const isAdjustingScrollRef = useRef(false); // Ref to track if scroll adjustment is in progress
   const { activeChat, setActiveChat, sendMessage: sendMessageSocket, updateLastSeen, chats } = useSocket();
 
   useEffect(() => {
@@ -63,47 +67,49 @@ const ChatPage = ({ route }) => {
     }, [groupId])
   );
 
-  const fetchMessages = async ({ pageNumber = 1 } = {}) => {
+  const fetchMessages = async (pageNumber = 1, isOlder = true) => {
     if (!groupId) return;
+
+    console.log('Fetching messages for groupId:', groupId, 'Page:', pageNumber, 'isOlder:', isOlder);
 
     setIsLoading(true);
     try {
       const currentUserEmail = await getToken('email');
-      const response = await getChatById(groupId, pageNumber, 10); // Fetch unread and read messages
+      const response = await getChatById(groupId, pageNumber, 10); // Use page number for pagination
 
-      const unreadMessages = response.unreadMessages.map(msg => ({
+      const messages = response.messages.map(msg => ({
         id: msg.id,
         text: msg.content,
         sender: msg.userEmail === currentUserEmail ? "user" : msg.userEmail,
         timestamp: new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        isUnread: true,
-        isOwner: owner,
       }));
 
-      const readMessages = response.readMessages.map(msg => ({
-        id: msg.id,
-        text: msg.content,
-        sender: msg.userEmail === currentUserEmail ? "user" : msg.userEmail,
-        timestamp: new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        isUnread: false,
-        isOwner: owner,
-      }));
+      if (isOlder) {
+        setMessages(prev => [...messages, ...prev]); // Add older messages to the top
+      } else {
+        setMessages(prev => [...prev, ...messages]); // Add newer messages to the bottom
+      }
 
-      // Combine messages: read messages first, unread messages at the bottom
-      const combinedMessages = [...readMessages, ...unreadMessages];
+      // Calculate if the current page is the last page
+      //length of messages const:
+      console.log('totalMessages:', totalMessages);
 
-      setMessages(prev => [...combinedMessages, ...prev]);
-      setHasMoreOlder(readMessages.length === 10); // Check if more older messages exist
+      //const totalMessages = messages.length || 0; // Assume totalMessages is provided in the response
+      const totalPages = Math.ceil(totalMessages / 10); // Calculate total pages based on limit (10)
+      console.log('Total messages:', totalMessages, 'Total pages:', totalPages, 'Current page:', pageNumber);
+
+      console.log('setting hasMoreOlder:', hasMoreOlder && pageNumber > 1);
+      console.log('setting hasMoreNewer:', messages.length < totalMessages && pageNumber < totalPages);
+
+      console.log('messages length:', messages.length);
+
+      setHasMoreNewer(messages.length < totalMessages && pageNumber < totalPages); // Update hasMoreNewer based on messages and page number
+      setHasMoreOlder(prev => prev && pageNumber > 1); // Update hasMoreOlder based on messages and page number
 
       setActiveChat(prev => ({
         ...prev,
-        messages: [...(prev?.messages || []), ...combinedMessages],
+        messages: isOlder ? [...messages, ...(prev?.messages || [])] : [...(prev?.messages || []), ...messages],
       }));
-
-      // Scroll to the bottom to show unread messages
-      if (unreadMessages.length > 0 && flatListRef.current) {
-        setTimeout(() => flatListRef.current.scrollToEnd({ animated: true }), 100);
-      }
     } catch (error) {
       console.error('Error fetching messages:', error);
       Alert.alert('Error', 'Failed to load messages. Please try again later.');
@@ -117,12 +123,30 @@ const ChatPage = ({ route }) => {
       if (!groupId) return;
 
       const chat = chats.find(chat => chat.id === groupId);
+      console.log('unreadCount', chat?.unreadCount);
+
       if (chat?.unreadCount > 0) {
-        // Fetch unread messages
-        await fetchMessages({ pageNumber: 1, direction: 'newer' });
+        // Calculate the first page to fetch unread messages
+        const limit = 10; // Number of messages per page
+        const unreadPage = Math.ceil(chat.unreadCount / limit);
+
+        // Fetch messages starting from the page containing the first unread message
+        await fetchMessages(unreadPage, false);
+
+        // Scroll to the unread messages banner
+        if (flatListRef.current) {
+          setTimeout(() => flatListRef.current.scrollToEnd({ animated: true }), 100);
+        }
       } else {
-        // Fetch the last page of messages
-        await fetchMessages({ pageNumber: 1, direction: 'older' });
+        // Fetch the last page of messages if there are no unread messages
+        const totalMessages = chat?.totalMessages || 0; // Assume totalMessages is provided in the chat object
+        const lastPage = Math.ceil(totalMessages / 10) || 1; // Calculate the last page
+        await fetchMessages(lastPage, false);
+
+        // Scroll to the bottom after messages are loaded
+        if (flatListRef.current) {
+          setTimeout(() => flatListRef.current.scrollToEnd({ animated: false }), 100);
+        }
       }
     };
 
@@ -130,16 +154,91 @@ const ChatPage = ({ route }) => {
   }, [groupId]);
 
   const handleLoadOlderMessages = () => {
-    if (!isLoading && hasMoreOlder) {
-      setPage(prevPage => prevPage + 1);
-      fetchMessages({ pageNumber: page + 1, direction: 'older' });
+    console.log('Loading older messages...');
+    if (!isLoading && hasMoreOlder && !isAdjustingScrollRef.current) {
+      isAdjustingScrollRef.current = true; // Mark scroll adjustment as in progress
+      const currentScrollOffset = scrollPositionRef.current || 0;
+      const initialContentHeight = contentHeightRef.current; // Use ref to track initial content height
+
+      console.log('Current scroll offset:', currentScrollOffset);
+      console.log('Initial content height:', initialContentHeight);
+
+      prevPage = page - 1; // Decrement page for older messages
+      setPage(prevPage);
+
+      fetchMessages(prevPage, true).then(() => {
+        // Wait for the content height to stabilize
+        const stabilizeContentHeight = () => {
+          const updatedContentHeight = contentHeightRef.current; // Use ref to get updated content height
+          const heightDifference = updatedContentHeight - initialContentHeight;
+
+          console.log('Updated content height:', updatedContentHeight);
+          console.log('Height difference:', heightDifference);
+
+          // Adjust the scroll position to maintain the same view
+          flatListRef.current?.scrollTo({ y: currentScrollOffset + heightDifference, animated: false });
+
+          // Check if the content height has stabilized
+          setTimeout(() => {
+            const finalContentHeight = contentHeightRef.current;
+            if (finalContentHeight === updatedContentHeight) {
+              console.log('Content height stabilized:', finalContentHeight);
+              isAdjustingScrollRef.current = false; // Reset the flag after stabilization
+            } else {
+              console.log('Content height changed again, retrying...');
+              stabilizeContentHeight(); // Retry if the content height changed again
+            }
+          }, 100);
+        };
+
+        stabilizeContentHeight(); // Start checking for content height stabilization
+      }).catch(() => {
+        isAdjustingScrollRef.current = false; // Reset the flag in case of an error
+      });
     }
   };
 
   const handleLoadNewerMessages = () => {
-    if (!isLoading && hasMoreNewer) {
-      setPage(prevPage => prevPage + 1);
-      fetchMessages({ pageNumber: page + 1, direction: 'newer' });
+    console.log('Loading newer messages...');
+    if (!isLoading && hasMoreNewer && !isAdjustingScrollRef.current) {
+      isAdjustingScrollRef.current = true; // Mark scroll adjustment as in progress
+      const currentScrollOffset = scrollPositionRef.current || 0;
+      const initialContentHeight = contentHeightRef.current; // Use ref to track initial content height
+
+      console.log('Current scroll offset:', currentScrollOffset);
+      console.log('Initial content height:', initialContentHeight);
+      const nextPage = page + 1; // Increment page for newer messages
+      setPage(nextPage);
+
+      fetchMessages(nextPage, false).then(() => {
+        // Wait for the content height to stabilize
+        const stabilizeContentHeight = () => {
+          const updatedContentHeight = contentHeightRef.current; // Use ref to get updated content height
+          const heightDifference = updatedContentHeight - initialContentHeight;
+
+          console.log('Updated content height:', updatedContentHeight);
+          console.log('Height difference:', heightDifference);
+
+          // Adjust the scroll position to maintain the same view
+          flatListRef.current?.scrollTo({ y: currentScrollOffset, animated: false });
+
+          // Check if the content height has stabilized
+          setTimeout(() => {
+            const finalContentHeight = contentHeightRef.current;
+            if (finalContentHeight === updatedContentHeight) {
+              console.log('Content height stabilized:', finalContentHeight);
+              isAdjustingScrollRef.current = false; // Reset the flag after stabilization
+            } else {
+              console.log('Content height changed again, retrying...');
+              stabilizeContentHeight(); // Retry if the content height changed again
+            }
+          }, 100);
+        };
+
+        stabilizeContentHeight(); // Start checking for content height stabilization
+      }).catch(() => {
+        isAdjustingScrollRef.current = false; // Reset the flag in case of an error
+      });
     }
   };
 
@@ -169,6 +268,39 @@ const ChatPage = ({ route }) => {
     }
   };
 
+  const handleScroll = (event) => {
+    
+    const currentScrollY = event.nativeEvent.contentOffset.y;
+    const offsetY = event.nativeEvent.contentOffset.y;
+    const layoutHeight = event.nativeEvent.layoutMeasurement.height;
+    const contentHeight = event.nativeEvent.contentSize.height;
+    console.log('Scroll event:', { offsetY, layoutHeight, contentHeight, isLoading, hasMoreOlder });
+
+    if (scrollPositionRef.current === null) {
+      // First scroll event
+      console.log('First scroll event:', { offsetY, layoutHeight, contentHeight });
+      scrollPositionRef.current = currentScrollY;
+    } else {
+      // Subsequent scroll events
+      const previousScrollY = scrollPositionRef.current;
+      if (currentScrollY > previousScrollY) {
+        console.log('Scrolling down');
+        if (offsetY + layoutHeight >= contentHeight - 10 && !isLoading && hasMoreNewer) {
+          console.log('Triggering handleLoadNewerMessages');
+          handleLoadNewerMessages();
+        }
+      } else if (currentScrollY < previousScrollY) {
+        console.log('Scrolling up');
+        if (offsetY <= 10 && contentHeight > layoutHeight && !isLoading && hasMoreOlder) {
+          console.log('Triggering handleLoadOlderMessages');
+          handleLoadOlderMessages();
+        }
+      }
+    }
+
+    scrollPositionRef.current = currentScrollY; // Update the previous scroll position
+  };
+
   return (
     <BaseLayout>
       <SafeAreaView style={styles.safeArea}>
@@ -186,20 +318,16 @@ const ChatPage = ({ route }) => {
         <View style={[styles.messagesListContainer, keyboardStatus ? styles.keyboardVisible : null]}>
           <ScrollView 
             ref={flatListRef}
-            style={{flex: 1, width: '100%', height: '100%'}}
-            contentContainerStyle={{paddingVertical: 15, paddingBottom: 70}}
+            style={{ flex: 1, width: '100%', height: '100%' }}
+            contentContainerStyle={{ flexGrow: 1, paddingVertical: 15, paddingBottom: 70 }}
             scrollEnabled={true}
             showsVerticalScrollIndicator={true}
             scrollEventThrottle={16}
-            onStartShouldSetResponder={() => true}
-            onStartShouldSetResponderCapture={() => true}
-            onMoveShouldSetResponder={() => true}
-            onMoveShouldSetResponderCapture={() => true}
-            onScroll={(event) => {
-              const offsetY = event.nativeEvent.contentOffset.y;
-              if (offsetY < 10 && !isLoading && hasMoreOlder) {
-                handleLoadOlderMessages();
-              }
+            onScroll={handleScroll}
+            onContentSizeChange={(width, height) => {
+              console.log('Updated content height:', height);
+              setContentHeight(height); // Update state for rendering
+              contentHeightRef.current = height; // Update ref for tracking
             }}
           >
             <TouchableWithoutFeedback>
@@ -209,7 +337,7 @@ const ChatPage = ({ route }) => {
                 )}
                 
                 {isLoading && hasMoreOlder && (
-                  <Text style={styles.loadingText}>Loading older messages...</Text>
+                  <Text style={styles.loadingText}>Loading messages...</Text>
                 )}
                 
                 {messages.map((item, index) => {

@@ -33,7 +33,7 @@ export const getChatById = async (groupId, page = 1, limit = 10) => {
     if (res.status !== 200) {
       throw new Error('Failed to fetch group chat messages');
     }
-    return res.data; // Expecting { unreadMessages: [], readMessages: [] }
+    return res.data; // Expecting { messages: [], unreadMessagesCount: number }
   } catch (error) {
     console.error('Error fetching group chat messages:', error);
     throw error;

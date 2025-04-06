@@ -10,7 +10,7 @@ console.log("Creating SocketContext");
 const SocketContext = createContext();
 
 export const useSocket = () => {
-  console.log("useSocket hook called");
+  //console.log("useSocket hook called");
   const context = useContext(SocketContext);
   if (!context) {
     console.error("useSocket - context is null!");
