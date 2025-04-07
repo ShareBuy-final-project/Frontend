@@ -29,7 +29,7 @@ const NewDealDetails = () => {
           });
           base64Image = `data:image/jpeg;base64,${base64}`;
         }
-        await createGroup({
+        const response = await createGroup({
           name: dealName,
           description,
           base64Image,
@@ -37,11 +37,11 @@ const NewDealDetails = () => {
           discount: amountAfter,
           size: minimumAmount
         });
+
+        const groupId = response.groupId; // Extract groupId from the response
+        socket.emit('joinGroup', { groupId }); // Emit joinGroup event with groupId
+
         Alert.alert('Success', 'Your deal has been submitted!');
-
-        // Emit joinGroup event
-        // socket.emit('joinGroup', { groupId: dealDetails.groupId });
-
         navigation.navigate('home', {});
       } catch (error) {
         Alert.alert('Error', error.message);
