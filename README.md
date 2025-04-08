@@ -32,7 +32,7 @@ This project is the frontend for the ShareBuy application, built using React Nat
 
 ## 🛠️ Technologies Used
 
-- **Programming Languages**: JavaScript, TypeScript
+- **Programming Languages**: JavaScript
 - **Framework**: React Native
 - **Development Tools**: Expo CLI
 
@@ -49,7 +49,3 @@ This project is the frontend for the ShareBuy application, built using React Nat
 - `app/`: Contains the screens and navigation structure for the app.
 - `assets/`: Stores static assets like images and fonts.
 - `components/`: Reusable UI components.
-
-## 🤝 Contributing
-
-Feel free to fork this repository and submit pull requests for improvements or bug fixes.
