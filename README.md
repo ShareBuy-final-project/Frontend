@@ -1,11 +1,51 @@
-# React + Vite
+# ShareBuy Frontend
 
-To run the app use the following command:
-npm run dev
+This project is the frontend for the ShareBuy application, built using React Native to deliver a seamless cross-platform experience.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚀 How to Run the Project
 
-Currently, two official plugins are available:
+1. Install dependencies:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+   ```sh
+   npm install
+   ```
+
+2. Start the development server:
+
+   ```sh
+   npx expo start
+   ```
+
+3. If the default port is unavailable, you can specify a different port:
+
+   ```sh
+   npx expo start --port 8083
+   ```
+
+4. Open the Expo Developer Tools in your browser and follow the instructions to run the app on your device or emulator.
+
+## 📱 Connecting with the Expo App
+
+1. Download the Expo Go app from the [App Store](https://apps.apple.com/) or [Google Play](https://play.google.com/).
+2. Scan the QR code displayed in the Expo Developer Tools or terminal using the Expo Go app.
+3. The app will load on your phone, allowing you to test and interact with the project.
+
+## 🛠️ Technologies Used
+
+- **Programming Languages**: JavaScript
+- **Framework**: React Native
+- **Development Tools**: Expo CLI
+
+## 📝 Notes
+
+- Ensure your phone and development machine are on the same network for the Expo Go app to connect successfully.
+- If you encounter issues, try restarting the development server or clearing the cache:
+  ```sh
+  npx expo start --clear
+  ```
+
+## 📂 Project Structure
+
+- `app/`: Contains the screens and navigation structure for the app.
+- `assets/`: Stores static assets like images and fonts.
+- `components/`: Reusable UI components.
