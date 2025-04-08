@@ -42,14 +42,17 @@ const MyGroups = () => {
   
   const getDeals = async () => {
     setIsLoading(true);
-    setDeals([]); // Clear the deals before fetching new ones
+    //setDeals([]); // Clear the deals before fetching new ones
     try {
       // Call the API fetchDeals function
+      //console.log('Fetching deals for page:', page); // Log the current page for debugging
       const apiDeals = await getUserCurrentGroups(page, 10); 
+      //console.log('API Deals:', apiDeals); // Log the API response for debugging
       if (apiDeals.length === 0) {
         setHasMore(false); // No more deals available
         return;
       }  
+      //console.log('Deals fetched'); // Log the fetched deals for debugging
       // Map the API response to match your component's requirements
       const formattedDeals = apiDeals.map((deal) => ({
         id: deal.id,
@@ -88,21 +91,22 @@ const MyGroups = () => {
     getDeals();
   }, [page]);
 
-  const debouncedGetDeals = useCallback(
-    debounce(() => {
-      if (page !== 1) {
-        setPage(1);
-      } else {
-        getDeals();
-      }
-    }, 300),
-    [page]
-  );
+  // const debouncedGetDeals = useCallback(
+  //   debounce(() => {
+  //     if (page !== 1) {
+  //       setPage(1);
+  //     } else {
+  //       getDeals();
+  //     }
+  //   }, 300),
+  //   [page]
+  // );
   
   const handleLoadMore = () => {
-    if (!isLoading && hasMore) {
-      setPage((prevPage) => prevPage + 1);
-    }
+    // console.log('Loading more deals...'); // Log when loading more deals
+    // if (!isLoading && hasMore) {
+    //   setPage((prevPage) => prevPage + 1);
+    // }
     };
 
     const renderDealCard = ({ item }) => (
