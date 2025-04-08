@@ -1,11 +1,13 @@
-# React + Vite
+# Expo Router Example
 
-To run the app use the following command:
-npm run dev
+Use [`expo-router`](https://docs.expo.dev/router/introduction/) to build native navigation using files in the `app/` directory.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚀 How to use
 
-Currently, two official plugins are available:
+```sh
+npx create-expo-app -e with-router
+```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📝 Notes
+
+- [Expo Router: Docs](https://docs.expo.dev/router/introduction/)
