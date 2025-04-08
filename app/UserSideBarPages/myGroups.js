@@ -103,10 +103,10 @@ const MyGroups = () => {
   // );
   
   const handleLoadMore = () => {
-    // console.log('Loading more deals...'); // Log when loading more deals
-    // if (!isLoading && hasMore) {
-    //   setPage((prevPage) => prevPage + 1);
-    // }
+    console.log('Loading more deals...'); // Log when loading more deals
+    if (!isLoading && hasMore) {
+      setPage((prevPage) => prevPage + 1);
+    }
     };
 
     const renderDealCard = ({ item }) => (
