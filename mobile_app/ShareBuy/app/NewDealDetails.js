@@ -7,6 +7,7 @@ import BaseLayout from './BaseLayout';
 import * as ImagePicker from 'expo-image-picker';
 import { createGroup } from '../apiCalls/groupApiCalls';
 import * as FileSystem from 'expo-file-system';
+import { useSocket } from '../context/SocketContext';
 
 const NewDealDetails = () => {
   const navigation = useNavigation();
@@ -14,6 +15,7 @@ const NewDealDetails = () => {
   const { dealName, amountBefore, amountAfter, minimumAmount } = route.params;
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
+  const { socket } = useSocket();
 
   const handleDone = async () => {
     if (!description) {
@@ -27,7 +29,7 @@ const NewDealDetails = () => {
           });
           base64Image = `data:image/jpeg;base64,${base64}`;
         }
-        await createGroup({
+        const response = await createGroup({
           name: dealName,
           description,
           base64Image,
@@ -35,6 +37,10 @@ const NewDealDetails = () => {
           discount: amountAfter,
           size: minimumAmount
         });
+
+        const groupId = response.groupId; // Extract groupId from the response
+        socket.emit('joinGroup', { groupId }); // Emit joinGroup event with groupId
+
         Alert.alert('Success', 'Your deal has been submitted!');
         navigation.navigate('home', {});
       } catch (error) {

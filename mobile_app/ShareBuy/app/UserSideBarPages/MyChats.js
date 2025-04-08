@@ -16,7 +16,11 @@ const MyChats = () => {
     setIsLoading(true);
     try {
       const chatsData = await getMyChats();
-      setChats(chatsData); // Update chats using setChats from context
+      const updatedChats = chatsData.map(chat => ({
+        ...chat,
+        totalMessages: chat.totalMessages || 0, // Ensure totalMessages is included
+      }));
+      setChats(updatedChats); // Update chats using setChats from context
     } catch (error) {
       console.error('Error fetching chats:', error);
     } finally {
@@ -43,7 +47,8 @@ const MyChats = () => {
           groupId: item.id,
           groupName: item.groupName,
           groupImage: item.image, // Pass the image to ChatPage
-          owner: item.owner // Pass the owner field to ChatPage
+          owner: item.owner, // Pass the owner field to ChatPage
+          totalMessages: item.totalMessages, // Pass totalMessages to ChatPage
         })}
       >
         <View style={styles.chatImageContainer}>

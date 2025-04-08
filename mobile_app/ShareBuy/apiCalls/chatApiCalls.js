@@ -20,20 +20,22 @@ export const getMyChats = async () => {
 };
 
 /**
- * Get a group by ID
+ * Get a group by ID with pagination and unread messages
  * @param {String} groupId - ID of the group to fetch its chat
- * @returns {Promise<Object>} - The requested chat
+ * @param {Number} page - Page number for pagination
+ * @param {Number} limit - Number of messages per page
+ * @returns {Promise<Object>} - The requested chat messages, including unread and read messages
  */
-export const getChatById = async (groupId) => {
+export const getChatById = async (groupId, page = 1, limit = 10) => {
   try {
-    console.log('fetching chat message gor group id:', groupId);
-    const res = await excuteAPICallPOST('chat/group/getGroupChat',{groupId});
+    console.log('Fetching chat messages for group id:', groupId, 'Page:', page, 'Limit:', limit);
+    const res = await excuteAPICallPOST('chat/group/getGroupChat', { groupId, page, limit });
     if (res.status !== 200) {
-      throw new Error('Failed to fetch group');
+      throw new Error('Failed to fetch group chat messages');
     }
-    return res.data;
+    return res.data; // Expecting { messages: [], unreadMessagesCount: number }
   } catch (error) {
-    console.error('Error fetching group:', error);
+    console.error('Error fetching group chat messages:', error);
     throw error;
   }
 };
