@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { I18nManager } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { registerRootComponent } from 'expo';
 import { deleteAllTokens } from "../utils/userTokens"; 
@@ -6,6 +7,8 @@ import AppNavigator from "./AppNavigator";
 import { SocketProvider } from '../context/SocketContext';
 import * as SplashScreen from 'expo-splash-screen';
 import { logout } from "../apiCalls/authApiCalls";
+import * as Updates from 'expo-updates';
+
 function App() {
     useEffect(() => {
         async function prepare() {
@@ -31,6 +34,14 @@ function App() {
         catch{
             console.log("Couldn't logout, user already loggedout")
         }
+    }, []);
+
+    useEffect(() => {
+      if (I18nManager.isRTL) {
+        I18nManager.forceRTL(false);
+        I18nManager.allowRTL(false);
+        Updates.reloadAsync(); // force a reload once LTR is enforced
+      }
     }, []);
 
     return (

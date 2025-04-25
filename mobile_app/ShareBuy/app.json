@@ -22,7 +22,26 @@
       "backgroundColor": "#ffffff"
     },
     "android": {
-      "package": "com.idonagler.ShareBuy"
+      "package": "com.idonagler.ShareBuy",
+      "config": {
+        "resizeableActivity": false
+      },
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "permissions": [],
+      "versionCode": 1
+    },
+    "userInterfaceStyle": "light",
+    "orientation": "portrait",
+    "privacy": "public",
+    "platforms": [
+      "android"
+    ],
+    "version": "1.0.0",
+    "ios": {
+      "supportsTablet": true
     }
   }
 }

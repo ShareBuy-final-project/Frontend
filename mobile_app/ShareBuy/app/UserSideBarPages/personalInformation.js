@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { COLORS, FONT } from '../../constants/theme';
 import InputField from '../../components/InputField';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -71,7 +70,6 @@ const PersonalData = ({ userData, setUserData, originalData, setOriginalData }) 
     setIsAddressEditable(false);
   };
 
-  // Add useEffect to update tempUserData when userData changes
   useEffect(() => {
     setTempUserData(userData);
   }, [userData]);
@@ -90,33 +88,11 @@ const PersonalData = ({ userData, setUserData, originalData, setOriginalData }) 
         </Card>
       ) : (
         <Card title="Personal Information">
-          <InputField
-            icon="user"
-            placeholder="Full Name"
-            value={tempUserData.fullName}
-            onChangeText={(text) => setTempUserData({ ...tempUserData, fullName: text })}
-            label="Full Name"
-          />
-          <InputField
-            icon="envelope"
-            placeholder="Email"
-            value={tempUserData.email}
-            onChangeText={(text) => setTempUserData({ ...tempUserData, email: text })}
-            label="Email"
-          />
-          <InputField
-            icon="phone"
-            placeholder="Phone"
-            value={tempUserData.phone}
-            onChangeText={(text) => setTempUserData({ ...tempUserData, phone: text })}
-            label="Phone"
-          />
-          <TouchableOpacity style={styles.updateButton} onPress={handlePersonalUpdate}>
-            <Text style={styles.buttonText}>Update</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelButton} onPress={handlePersonalCancel}>
-            <Text style={styles.buttonText}>Cancel</Text>
-          </TouchableOpacity>
+          <InputField icon="user" placeholder="Full Name" value={tempUserData.fullName} onChangeText={(text) => setTempUserData({ ...tempUserData, fullName: text })} label="Full Name" />
+          <InputField icon="envelope" placeholder="Email" value={tempUserData.email} onChangeText={(text) => setTempUserData({ ...tempUserData, email: text })} label="Email" />
+          <InputField icon="phone" placeholder="Phone" value={tempUserData.phone} onChangeText={(text) => setTempUserData({ ...tempUserData, phone: text })} label="Phone" />
+          <TouchableOpacity style={styles.updateButton} onPress={handlePersonalUpdate}><Text style={styles.buttonText}>Update</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.cancelButton} onPress={handlePersonalCancel}><Text style={styles.buttonText}>Cancel</Text></TouchableOpacity>
         </Card>
       )}
 
@@ -126,56 +102,18 @@ const PersonalData = ({ userData, setUserData, originalData, setOriginalData }) 
           actionButton="Edit Address"
           onActionPress={() => setIsAddressEditable(true)}
         >
-          <Text style={styles.infoText}>
-            {userData.street} {userData.streetNumber}
-          </Text>
-          <Text style={styles.infoText}>
-            {userData.city}, {userData.state}, {userData.zipCode}
-          </Text>
+          <Text style={styles.infoText}>{userData.street} {userData.streetNumber}</Text>
+          <Text style={styles.infoText}>{userData.city}, {userData.state}, {userData.zipCode}</Text>
         </Card>
       ) : (
         <Card title="Address">
-          <InputField
-            icon="map-marker"
-            placeholder="Street"
-            value={tempUserData.street}
-            onChangeText={(text) => setTempUserData({ ...tempUserData, street: text })}
-            label="Street"
-          />
-          <InputField
-            icon="map-marker"
-            placeholder="Street Number"
-            value={tempUserData.streetNumber}
-            onChangeText={(text) => setTempUserData({ ...tempUserData, streetNumber: text })}
-            label="Street Number"
-          />
-          <InputField
-            icon="map-marker"
-            placeholder="City"
-            value={tempUserData.city}
-            onChangeText={(text) => setTempUserData({ ...tempUserData, city: text })}
-            label="City"
-          />
-          <InputField
-            icon="map-marker"
-            placeholder="State"
-            value={tempUserData.state}
-            onChangeText={(text) => setTempUserData({ ...tempUserData, state: text })}
-            label="State"
-          />
-          <InputField
-            icon="map-marker"
-            placeholder="Zip Code"
-            value={tempUserData.zipCode}
-            onChangeText={(text) => setTempUserData({ ...tempUserData, zipCode: text })}
-            label="Zip Code"
-          />
-          <TouchableOpacity style={styles.updateButton} onPress={handleAddressUpdate}>
-            <Text style={styles.buttonText}>Update</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelButton} onPress={handleAddressCancel}>
-            <Text style={styles.buttonText}>Cancel</Text>
-          </TouchableOpacity>
+          <InputField icon="map-marker" placeholder="Street" value={tempUserData.street} onChangeText={(text) => setTempUserData({ ...tempUserData, street: text })} label="Street" />
+          <InputField icon="map-marker" placeholder="Street Number" value={tempUserData.streetNumber} onChangeText={(text) => setTempUserData({ ...tempUserData, streetNumber: text })} label="Street Number" />
+          <InputField icon="map-marker" placeholder="City" value={tempUserData.city} onChangeText={(text) => setTempUserData({ ...tempUserData, city: text })} label="City" />
+          <InputField icon="map-marker" placeholder="State" value={tempUserData.state} onChangeText={(text) => setTempUserData({ ...tempUserData, state: text })} label="State" />
+          <InputField icon="map-marker" placeholder="Zip Code" value={tempUserData.zipCode} onChangeText={(text) => setTempUserData({ ...tempUserData, zipCode: text })} label="Zip Code" />
+          <TouchableOpacity style={styles.updateButton} onPress={handleAddressUpdate}><Text style={styles.buttonText}>Update</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.cancelButton} onPress={handleAddressCancel}><Text style={styles.buttonText}>Cancel</Text></TouchableOpacity>
         </Card>
       )}
     </ScrollView>
@@ -188,34 +126,14 @@ const PasswordChange = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showInfo, setShowInfo] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
-
   const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-  const validatePassword = (password) => {
-    setIsPasswordValid(regex.test(password));
-  };
+  const validatePassword = (password) => setIsPasswordValid(regex.test(password));
 
   const handleChangePassword = async () => {
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      Alert.alert('Error', 'All fields must be filled');
-      return;
-    }
-
-    if (currentPassword === newPassword) {
-      Alert.alert('Error', 'New password must be different from current password');
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
-      return;
-    }
-
-    if (!isPasswordValid) {
-      Alert.alert('Error', 'New password does not meet requirements');
-      return;
-    }
-
+    if (!currentPassword || !newPassword || !confirmPassword) return Alert.alert('Error', 'All fields must be filled');
+    if (currentPassword === newPassword) return Alert.alert('Error', 'New password must be different from current password');
+    if (newPassword !== confirmPassword) return Alert.alert('Error', 'Passwords do not match');
+    if (!isPasswordValid) return Alert.alert('Error', 'New password does not meet requirements');
     try {
       const status = await changePassword({ currentPassword, newPassword });
       Alert.alert('Success', status);
@@ -224,7 +142,6 @@ const PasswordChange = () => {
       setConfirmPassword('');
     } catch (error) {
       Alert.alert('Error', 'Failed to change password');
-      console.error(error);
     }
   };
 
@@ -232,36 +149,12 @@ const PasswordChange = () => {
     <ScrollView contentContainerStyle={styles.scrollView}>
       <View style={styles.passwordContainer}>
         <View style={styles.inputWrapper}>
-          <InputField
-            icon="lock"
-            placeholder="Current Password"
-            value={currentPassword}
-            onChangeText={setCurrentPassword}
-            label="Current Password"
-            secureTextEntry={true}
-            marginBottom={20}
-          />
+          <InputField icon="lock" placeholder="Current Password" value={currentPassword} onChangeText={setCurrentPassword} label="Current Password" secureTextEntry={true} marginBottom={20} />
         </View>
-        
         <View style={styles.inputWrapper}>
-          <InputField
-            icon="lock"
-            placeholder="New Password"
-            value={newPassword}
-            onChangeText={(text) => {
-              setNewPassword(text);
-              validatePassword(text);
-            }}
-            label="New Password"
-            secureTextEntry={true}
-            marginBottom={20}
-            borderColor={newPassword ? (isPasswordValid ? COLORS.green : COLORS.red) : COLORS.black}
-          />
-          <TouchableOpacity onPress={() => setShowInfo(!showInfo)} style={styles.infoButton}>
-            <Icon name="info-circle" size={20} color={COLORS.gray} />
-          </TouchableOpacity>
+          <InputField icon="lock" placeholder="New Password" value={newPassword} onChangeText={(text) => { setNewPassword(text); validatePassword(text); }} label="New Password" secureTextEntry={true} marginBottom={20} borderColor={newPassword ? (isPasswordValid ? COLORS.green : COLORS.red) : COLORS.black} />
+          <TouchableOpacity onPress={() => setShowInfo(!showInfo)} style={styles.infoButton}><Icon name="info-circle" size={20} color={COLORS.gray} /></TouchableOpacity>
         </View>
-
         {showInfo && (
           <View style={styles.infoContainer}>
             <Text style={styles.infoTextBold}>Password requirements:</Text>
@@ -272,214 +165,92 @@ const PasswordChange = () => {
             <Text style={styles.infoText}>- Contain at least one special character</Text>
           </View>
         )}
-
         <View style={styles.inputWrapper}>
-          <InputField
-            icon="lock"
-            placeholder="Confirm New Password"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            label="Confirm New Password"
-            secureTextEntry={true}
-            marginBottom={10}
-            borderColor={confirmPassword ? (newPassword === confirmPassword ? COLORS.green : COLORS.red) : COLORS.black}
-          />
+          <InputField icon="lock" placeholder="Confirm New Password" value={confirmPassword} onChangeText={setConfirmPassword} label="Confirm New Password" secureTextEntry={true} marginBottom={10} borderColor={confirmPassword ? (newPassword === confirmPassword ? COLORS.green : COLORS.red) : COLORS.black} />
         </View>
-
         {confirmPassword && (
-          <Text style={[styles.matchLabel, { color: newPassword === confirmPassword ? COLORS.green : COLORS.red }]}>
-            {newPassword === confirmPassword ? "Passwords match!" : "Passwords don't match!"}
-          </Text>
+          <Text style={[styles.matchLabel, { color: newPassword === confirmPassword ? COLORS.green : COLORS.red }]}> {newPassword === confirmPassword ? "Passwords match!" : "Passwords don't match!"} </Text>
         )}
-
-        <TouchableOpacity style={styles.changePasswordButton} onPress={handleChangePassword}>
-          <Text style={styles.buttonText}>Change Password</Text>
-        </TouchableOpacity>
+        <TouchableOpacity style={styles.changePasswordButton} onPress={handleChangePassword}><Text style={styles.buttonText}>Change Password</Text></TouchableOpacity>
       </View>
     </ScrollView>
   );
 };
 
 const PersonalInformation = () => {
-  const [index, setIndex] = useState(0);
-  const [routes] = useState([
-    { key: 'personalData', title: 'Personal Data' },
-    { key: 'passwordChange', title: 'Password Change' },
-  ]);
-
-  const [userData, setUserData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    state: '',
-    city: '',
-    street: '',
-    streetNumber: '',
-    zipCode: '',
-  });
-
+  const [activeTab, setActiveTab] = useState('personal');
+  const [userData, setUserData] = useState({ fullName: '', email: '', phone: '', state: '', city: '', street: '', streetNumber: '', zipCode: '' });
   const [originalData, setOriginalData] = useState({});
-  //const [isEditable, setIsEditable] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         const data = await fetchPersonalInformation();
-        setUserData(data);
-        setOriginalData(data);
+        if (isMounted) {
+          setUserData(data);
+          setOriginalData(data);
+        }
       } catch (error) {
-        console.error('Fetch Error:', error.message);
         Alert.alert('Fetch Error', `An error occurred: ${error.message}`);
+      } finally {
+        if (isMounted) setIsLoading(false);
       }
     };
-
     fetchData();
+    return () => { isMounted = false; };
   }, []);
 
-  const renderScene = SceneMap({
-    personalData: () => <PersonalData userData={userData} setUserData={setUserData} originalData={originalData} setOriginalData={setOriginalData} />,
-    passwordChange: PasswordChange,
-  });
+  if (isLoading) {
+    return (
+      <BaseLayout>
+        <View style={styles.loadingContainer}><Text>Loading...</Text></View>
+      </BaseLayout>
+    );
+  }
 
   return (
     <BaseLayout>
       <View style={styles.container}>
-        <TabView
-          navigationState={{ index, routes }}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          initialLayout={{ width: '100%' }}
-          style={styles.tabView}
-          renderTabBar={(props) => (
-            <TabBar
-              {...props}
-              indicatorStyle={{ backgroundColor: COLORS.primary }}
-              style={styles.tabBar}
-              labelStyle={styles.tabLabel}
-              activeColor={COLORS.primary}
-              inactiveColor={COLORS.black}
-            />
+        <View style={styles.tabBarContainer}>
+          <TouchableOpacity style={[styles.tabButton, activeTab === 'personal' && styles.tabButtonActive]} onPress={() => setActiveTab('personal')}><Text style={[styles.tabText, activeTab === 'personal' && styles.tabTextActive]}>Personal Data</Text></TouchableOpacity>
+          <TouchableOpacity style={[styles.tabButton, activeTab === 'password' && styles.tabButtonActive]} onPress={() => setActiveTab('password')}><Text style={[styles.tabText, activeTab === 'password' && styles.tabTextActive]}>Password Change</Text></TouchableOpacity>
+        </View>
+        <View style={styles.tabContent}>
+          {activeTab === 'personal' ? (
+            <PersonalData userData={userData} setUserData={setUserData} originalData={originalData} setOriginalData={setOriginalData} />
+          ) : (
+            <PasswordChange />
           )}
-        />
+        </View>
       </View>
     </BaseLayout>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',
-  },
-  tabView: {
-    flex: 1,
-  },
-  tabBar: {
-    backgroundColor: '#f5f5f5',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-  },
-  tabLabel: {
-    color: COLORS.black,
-    fontFamily: FONT.arialBold,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  scrollView: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tabContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  manageButton: {
-    backgroundColor: COLORS.primary,
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  // saveButton: {
-  //   backgroundColor: COLORS.secondary,
-  //   padding: 10,
-  //   borderRadius: 5,
-  //   marginTop: 20,
-  // },
-  cancelButton: {
-    backgroundColor: COLORS.secondary,  // Using the new danger color
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
-    width: '100%',  // Make buttons full width
-  },
-  buttonText: {
-    color: COLORS.white,
-    fontSize: 18,
-    textAlign: 'center',
-  },
-  passwordContainer: {
-    width: '100%',
-    alignItems: 'center',
-  },
-  inputWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'center', 
-    alignItems: 'center',
-    width: '100%',
-    position: 'relative',
-  },
-  infoContainer: {
-    width: '80%',
-    backgroundColor: '#f5f5f5',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
-    alignItems: 'center', 
-  },
-  infoText: {
-    fontSize: 16,
-    marginBottom: 5,
-    color: COLORS.black,
-  },
-  infoTextBold: {
-    color: COLORS.black,
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    textAlign: 'left', 
-    width: '100%', 
-  },
-  matchLabel: {
-    fontSize: 14,
-    marginBottom: 20,
-  },
-  changePasswordButton: {
-    backgroundColor: COLORS.purple,  // Changed from primary to purple
-    padding: 15,
-    borderRadius: 5,
-    width: '60%',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  infoButton: {
-    position: 'absolute',
-    right: 10, 
-    top: '50%',
-    marginTop: -10,
-  },
-  updateButton: {
-    backgroundColor: COLORS.primary,  // Using the new success color
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
-    width: '100%',  // Make buttons full width
-  },
+  container: { flex: 1, width: '100%' },
+  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  scrollView: { flexGrow: 1, justifyContent: 'center', alignItems: 'center' },
+  tabBarContainer: { flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#f5f5f5', paddingVertical: 10, elevation: 2 },
+  tabButton: { paddingVertical: 6, paddingHorizontal: 16, borderRadius: 20 },
+  tabButtonActive: { backgroundColor: COLORS.primary },
+  tabText: { fontSize: 14, color: COLORS.black, fontFamily: FONT.arialBold },
+  tabTextActive: { color: COLORS.white },
+  tabContent: { flex: 1, width: '100%' },
+  infoText: { fontSize: 16, marginBottom: 5, color: COLORS.black },
+  updateButton: { backgroundColor: COLORS.primary, padding: 10, borderRadius: 5, marginTop: 10, width: '100%' },
+  cancelButton: { backgroundColor: COLORS.secondary, padding: 10, borderRadius: 5, marginTop: 10, width: '100%' },
+  buttonText: { color: COLORS.white, fontSize: 18, textAlign: 'center' },
+  passwordContainer: { width: '100%', alignItems: 'center' },
+  inputWrapper: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '100%', position: 'relative' },
+  infoContainer: { width: '80%', backgroundColor: '#f5f5f5', padding: 10, borderRadius: 5, marginBottom: 10, alignItems: 'center' },
+  infoTextBold: { color: COLORS.black, fontSize: 14, fontWeight: 'bold', marginBottom: 5, textAlign: 'left', width: '100%' },
+  matchLabel: { fontSize: 14, marginBottom: 20 },
+  changePasswordButton: { backgroundColor: COLORS.purple, padding: 15, borderRadius: 5, width: '60%', alignItems: 'center', marginTop: 20 },
+  infoButton: { position: 'absolute', right: 10, top: '50%', marginTop: -10 }
 });
 
 export default PersonalInformation;

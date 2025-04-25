@@ -31,6 +31,7 @@ export const getChatById = async (groupId) => {
     if (res.status !== 200) {
       throw new Error('Failed to fetch group');
     }
+    console.log("res:\n", res);
     return res.data;
   } catch (error) {
     console.error('Error fetching group:', error);

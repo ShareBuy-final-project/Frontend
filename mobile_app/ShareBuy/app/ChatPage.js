@@ -54,8 +54,9 @@ const ChatPage = ({ route }) => {
     try {
       const currentUserEmail = await getToken('email');
       const response = await getChatById(groupId, pageNumber);
+      console.log("response:\n", response);
 
-      const formattedMessages = response.map(msg => ({
+      const formattedMessages = response.messages.map(msg => ({
         id: msg.id,
         text: msg.content,
         sender: msg.userEmail === currentUserEmail ? "user" : msg.userEmail,
@@ -72,7 +73,7 @@ const ChatPage = ({ route }) => {
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
-      Alert.alert('Error', 'Failed to load messages. Please try again later.');
+      Alert.alert('Error', `Failed to load messages: ${error.message || error}`);
     } finally {
       setIsLoading(false);
     }
