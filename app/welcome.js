@@ -40,8 +40,8 @@ const Welcome = () => {
       }
 
       // Fetch chats and update unread count
-      // const chatsData = await getMyChats();
-      // socketContext.setChats(chatsData);
+      const chatsData = await getMyChats();
+      socketContext.setChats(chatsData);
       
       Alert.alert('Login Successful', 'You have successfully logged in!', [{ text: 'OK' }]);
       navigation.navigate('home');
