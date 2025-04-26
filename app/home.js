@@ -66,8 +66,8 @@ const Home = () => {
       }));
 
       // Update favorites based on the deals received
-      const initialFavorites = formattedDeals.filter(deal => deal.isSaved).map(deal => deal.id);
-      setFavorites(initialFavorites);
+      const newFavorites = formattedDeals.filter(deal => deal.isSaved).map(deal => deal.id);
+      setFavorites((prevFavorites) => [...new Set([...prevFavorites, ...newFavorites])]);
 
       // Update the state with the new deals
       setDeals((prevDeals) => [...prevDeals, ...formattedDeals]);
@@ -128,33 +128,34 @@ const Home = () => {
     if (!isLoading && hasMore) {
       setPage((prevPage) => prevPage + 1);
     }
-    };
+  };
 
-    const renderDealCard = ({ item }) => (
-      <TouchableOpacity style={[styles.card,{ width: deals.length === 1 ? '100%' : '48%' } ]}   onPress={() => navigation.navigate('DealPage', { dealId: item.id })}>
-        <View style={styles.imageContainer}>
-        <Image source={item?.image ? { uri: item.image } : DefaultPic} style={styles.cardImage} resizeMode="contain"/>
-        <TouchableOpacity
-            style={styles.heartButton}
-            onPress={() => toggleFavorite(item.id)}
-          >
-            <Icon
-              name={favorites.includes(item.id) ? 'favorite' : 'favorite-border'}
-              size={24}
-              color="#f08080"
-            />
-          </TouchableOpacity>
-          <View style={styles.participantOverlay}>
-            <Text style={styles.participantText}>{item.participants}/{item.size}</Text>
-          </View>
+  const renderDealCard = ({ item }) => (
+    <TouchableOpacity style={[styles.card,{ width: deals.length === 1 ? '100%' : '48%' } ]}   onPress={() => navigation.navigate('DealPage', { dealId: item.id })}>
+      <View style={styles.imageContainer}>
+      <Image source={item?.image ? { uri: item.image } : DefaultPic} style={styles.cardImage} resizeMode="contain"/>
+      <TouchableOpacity
+          style={styles.heartButton}
+          onPress={() => toggleFavorite(item.id)}
+        >
+          <Icon
+            name={favorites.includes(item.id) ? 'favorite' : 'favorite-border'}
+            size={24}
+            color="#f08080"
+          />
+        </TouchableOpacity>
+        <View style={styles.participantOverlay}>
+          <Text style={styles.participantText}>{item.participants}/{item.size}</Text>
         </View>
-        <Text style={styles.cardTitle}>{item.title}</Text>
-        <View style={styles.priceContainer}>
-          <Text style={styles.cardPriceOriginal}>{item.original_price}</Text>
-          <Text style={styles.cardPriceDiscounted}>{item.discounted_price}</Text>
-        </View>
-      </TouchableOpacity>
-    );
+      </View>
+      <Text style={styles.cardTitle}>{item.title}</Text>
+      <View style={styles.priceContainer}>
+        <Text style={styles.cardPriceOriginal}>{item.original_price}</Text>
+        <Text style={styles.cardPriceDiscounted}>{item.discounted_price}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+  
     
   // const filteredDeals = deals.filter((deal) =>
   //   deal.title.toLowerCase().includes(searchQuery.toLowerCase())
