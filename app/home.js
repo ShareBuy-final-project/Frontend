@@ -3,26 +3,29 @@ import { Text, StyleSheet, View, FlatList, TouchableOpacity, Image } from 'react
 import BaseLayout from './BaseLayout';
 import SearchBar from '../components/SearchBar';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation } from '@react-navigation/native'; // For navigation
+import { useNavigation } from '@react-navigation/native';
 import { COLORS, FONT } from '../constants/theme';
-import {fetchDeals, saveGroup, unSaveGroup} from '../apiCalls/groupApiCalls'
+import {fetchDeals, saveGroup, unSaveGroup, fetchCategories} from '../apiCalls/groupApiCalls'
 import { getToken } from '../utils/userTokens';
 import debounce from 'lodash/debounce';
 import DefaultPic from '../assets/images/default_pic.png';
+import DropDown from '../components/DropDown'; // Import the generic DropDown component
 
 const Home = () => {
   const [deals, setDeals] = useState([]);
+  const [categories, setCategories] = useState([]); // State to store categories
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [favorites, setFavorites] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [isBusiness, setIsBusiness] = useState(false);
-  const searchTimer = useRef(null); // Add this ref for the timer
+  const searchTimer = useRef(null);
   const isFirstRenderSearchQuery = useRef(true);
   const [debouncedQuery, setDebouncedQuery] = useState('');
 
-  const navigation = useNavigation(); // Use navigation for page transition
+  const navigation = useNavigation();
 
   const toggleFavorite = async (dealId) => {
     setFavorites((prevFavorites) => {
@@ -30,7 +33,7 @@ const Home = () => {
       const newFavorites = isFavorited
         ? prevFavorites.filter((id) => id !== dealId)
         : [...prevFavorites, dealId];
-  
+
       // Call saveGroup or unSaveGroup based on whether the deal is being added or removed from favorites
       if (isFavorited) {
         unSaveGroup(dealId)  // Call unSaveGroup when unfavoriting
@@ -39,20 +42,46 @@ const Home = () => {
         saveGroup(dealId)  // Call saveGroup when favoriting
           .catch(error => console.error('Error saving group:', error));
       }
-  
+
       return newFavorites;
     });
   };
-  
+
+  const fetchCategoriesFromAPI = async () => {
+    try {
+      const data = await fetchCategories(); // Use the new fetchCategories function
+      console.log('Fetched categories:', data);
+
+      // Sort categories alphabetically and prepend "All Categories"
+      const sortedCategories = data.sort((a, b) => a.localeCompare(b));
+      setCategories([{ label: 'All Categories', value: '' }, ...sortedCategories.map((category) => ({ label: category, value: category }))]);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategoriesFromAPI(); // Fetch categories on component mount
+  }, []);
+
   const getDeals = async () => {
     setIsLoading(true);
     try {
-      // Call the API fetchDeals function
-      const apiDeals = await fetchDeals({text: searchQuery}, page, 10); 
+      // Prepare filters dynamically
+      const filters = { text: searchQuery };
+      if (selectedCategory) {
+        filters.category = selectedCategory;
+      }
+
+      // Call the API fetchDeals function with filters and pagination
+      console.log('Fetching deals with filters:', filters);
+      const apiDeals = await fetchDeals(filters, page, 10);
+
       if (apiDeals.length === 0) {
         setHasMore(false); // No more deals available
         return;
-      }  
+      }
+
       // Map the API response to match your component's requirements
       const formattedDeals = apiDeals.map((deal) => ({
         id: deal.id,
@@ -94,7 +123,7 @@ const Home = () => {
     if (searchTimer.current) {
       clearTimeout(searchTimer.current);
     }
-    
+
     setSearchQuery(query);
     searchTimer.current = setTimeout(() => {
       setDebouncedQuery(query);
@@ -113,7 +142,7 @@ const Home = () => {
         getDeals();
       }
     }
-  }, [debouncedQuery]);
+  }, [debouncedQuery, selectedCategory]);
 
   // Clean up timer when component unmounts
   useEffect(() => {
@@ -128,50 +157,71 @@ const Home = () => {
     if (!isLoading && hasMore) {
       setPage((prevPage) => prevPage + 1);
     }
-    };
+  };
 
-    const renderDealCard = ({ item }) => (
-      <TouchableOpacity style={[styles.card,{ width: deals.length === 1 ? '100%' : '48%' } ]}   onPress={() => navigation.navigate('DealPage', { dealId: item.id })}>
-        <View style={styles.imageContainer}>
-        <Image source={item?.image ? { uri: item.image } : DefaultPic} style={styles.cardImage} resizeMode="contain"/>
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+  };
+
+  const renderDealCard = ({ item }) => (
+    <TouchableOpacity
+      style={[styles.card, { width: deals.length === 1 ? '100%' : '48%' }]}
+      onPress={() => navigation.navigate('DealPage', { dealId: item.id })}
+    >
+      <View style={styles.imageContainer}>
+        <Image
+          source={item?.image ? { uri: item.image } : DefaultPic}
+          style={styles.cardImage}
+          resizeMode="contain"
+        />
         <TouchableOpacity
-            style={styles.heartButton}
-            onPress={() => toggleFavorite(item.id)}
-          >
-            <Icon
-              name={favorites.includes(item.id) ? 'favorite' : 'favorite-border'}
-              size={24}
-              color="#f08080"
-            />
-          </TouchableOpacity>
-          <View style={styles.participantOverlay}>
-            <Text style={styles.participantText}>{item.participants}/{item.size}</Text>
-          </View>
+          style={styles.heartButton}
+          onPress={() => toggleFavorite(item.id)}
+        >
+          <Icon
+            name={favorites.includes(item.id) ? 'favorite' : 'favorite-border'}
+            size={24}
+            color="#f08080"
+          />
+        </TouchableOpacity>
+        <View style={styles.participantOverlay}>
+          <Text style={styles.participantText}>
+            {item.participants}/{item.size}
+          </Text>
         </View>
-        <Text style={styles.cardTitle}>{item.title}</Text>
-        <View style={styles.priceContainer}>
-          <Text style={styles.cardPriceOriginal}>{item.original_price}</Text>
-          <Text style={styles.cardPriceDiscounted}>{item.discounted_price}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-    
-  // const filteredDeals = deals.filter((deal) =>
-  //   deal.title.toLowerCase().includes(searchQuery.toLowerCase())
-  // );
+      </View>
+      <Text style={styles.cardTitle}>{item.title}</Text>
+      <View style={styles.priceContainer}>
+        <Text style={styles.cardPriceOriginal}>{item.original_price}</Text>
+        <Text style={styles.cardPriceDiscounted}>{item.discounted_price}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <BaseLayout>
       <View style={styles.messageContainer}>
         <Text style={styles.secondSubMessage}>
-          {isBusiness ? 'Want to create a new deal? ' : 'Want to create a new suggested deal? '} 
-          <Text style={{ color: COLORS.black, textDecorationLine: 'underline', fontWeight: 'bold' }} onPress={() => navigation.navigate(isBusiness ? 'NewDealBasics' : 'suggestedDeal')}>
+          {isBusiness ? 'Want to create a new deal? ' : 'Want to create a new suggested deal? '}
+          <Text
+            style={{ color: COLORS.black, textDecorationLine: 'underline', fontWeight: 'bold' }}
+            onPress={() => navigation.navigate(isBusiness ? 'NewDealBasics' : 'suggestedDeal')}
+          >
             Create one
           </Text>
         </Text>
       </View>
       <View style={styles.DealsContainer}>
         <SearchBar value={searchQuery} onChangeText={handleSearchChange} />
+        <DropDown
+          placeholder="filter by category"
+          marginTop={-5}
+          marginBottom={10}
+          selectedValue={selectedCategory}
+          onValueChange={handleCategoryChange}
+          options={categories}
+          width="90%"
+        />
         {deals.length === 0 && !isLoading ? (
           <Text style={styles.noDealsText}>No deals found for the search query.</Text>
         ) : (
