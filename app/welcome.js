@@ -7,6 +7,7 @@ import { login } from '../apiCalls/authApiCalls';
 import { saveToken } from '../utils/userTokens';
 import { useSocket } from '../context/SocketContext';
 import { getMyChats } from '../apiCalls/chatApiCalls';
+import InputField from '../components/InputField';
 import io from 'socket.io-client';
 console.log("Welcome - Component file loaded");
 
@@ -65,28 +66,37 @@ const Welcome = () => {
             have we ever met?
           </Text>
         </View>
-        <View style={styles.inputContainer}>
-          <Icon name="envelope" size={20} color={COLORS.gray} style={styles.icon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            placeholderTextColor={COLORS.gray}
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Icon name="lock" size={20} color={COLORS.gray} style={styles.icon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor={COLORS.gray}
-            secureTextEntry={true}
-            value={password}
-            onChangeText={setPassword}
-          />
-        </View>
+        {/* <View style={styles.inputContainer}> */}
+        <InputField
+          icon="envelope"
+          placeholder="Email"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
+          //label="Email"
+          //marginTop={10}
+          marginBottom={5}
+          marginLeft={20}
+          marginRight={5}
+          borderColor={email ? COLORS.black : COLORS.gray}
+        />
+        {/* </View> */}
+        {/* <View style={styles.inputContainer}> */}
+        <InputField
+          icon="lock"
+          placeholder="Password"
+          keyboardType="default"
+          value={password}
+          onChangeText={setPassword}
+          //label="Password"
+          secureTextEntry={true}
+          marginTop={5}
+          marginBottom={10}
+          marginLeft={20}
+          marginRight={5}
+          borderColor={password ? COLORS.black : COLORS.gray}
+        />
+        {/* </View> */}
         <TouchableOpacity style={styles.buttonContainer} onPress={handleSignIn}>
           <Text style={{color : COLORS.white}}>Sign In</Text>
         </TouchableOpacity>
@@ -139,7 +149,6 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '80%',
     height: 50,
     borderColor: COLORS.gray2,
     borderWidth: 1,
