@@ -95,8 +95,8 @@ const Home = () => {
       }));
 
       // Update favorites based on the deals received
-      const initialFavorites = formattedDeals.filter(deal => deal.isSaved).map(deal => deal.id);
-      setFavorites(initialFavorites);
+      const newFavorites = formattedDeals.filter(deal => deal.isSaved).map(deal => deal.id);
+      setFavorites((prevFavorites) => [...new Set([...prevFavorites, ...newFavorites])]);
 
       // Update the state with the new deals
       setDeals((prevDeals) => [...prevDeals, ...formattedDeals]);
