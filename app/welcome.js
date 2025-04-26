@@ -7,16 +7,12 @@ import { login } from '../apiCalls/authApiCalls';
 import { saveToken } from '../utils/userTokens';
 import { useSocket } from '../context/SocketContext';
 import { getMyChats } from '../apiCalls/chatApiCalls';
-import io from 'socket.io-client';
-console.log("Welcome - Component file loaded");
 
 const Welcome = () => {
-  console.log("Welcome - Component rendering");
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
   
-  console.log("Welcome - Starting to use socket context");
   const socketContext = useSocket();
   
   const handleSignIn = async () => {
