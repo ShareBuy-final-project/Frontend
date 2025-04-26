@@ -66,37 +66,28 @@ const Welcome = () => {
             have we ever met?
           </Text>
         </View>
-        {/* <View style={styles.inputContainer}> */}
         <InputField
           icon="envelope"
           placeholder="Email"
           keyboardType="email-address"
           value={email}
           onChangeText={setEmail}
-          //label="Email"
-          //marginTop={10}
-          marginBottom={5}
           marginLeft={20}
           marginRight={5}
           borderColor={email ? COLORS.black : COLORS.gray}
         />
-        {/* </View> */}
-        {/* <View style={styles.inputContainer}> */}
         <InputField
           icon="lock"
           placeholder="Password"
           keyboardType="default"
           value={password}
           onChangeText={setPassword}
-          //label="Password"
           secureTextEntry={true}
-          marginTop={5}
-          marginBottom={10}
+          marginBottom={5}
           marginLeft={20}
           marginRight={5}
           borderColor={password ? COLORS.black : COLORS.gray}
         />
-        {/* </View> */}
         <TouchableOpacity style={styles.buttonContainer} onPress={handleSignIn}>
           <Text style={{color : COLORS.white}}>Sign In</Text>
         </TouchableOpacity>
@@ -145,16 +136,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: FONT.arialBold,
     backgroundColor: COLORS.glowingYeloow,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 50,
-    borderColor: COLORS.gray2,
-    borderWidth: 1,
-    borderRadius: 0,
-    paddingHorizontal: 10,
-    marginTop: 20,
   },
   icon: {
     position: 'absolute',
