@@ -6,6 +6,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { login } from '../apiCalls/authApiCalls';
 import { saveToken } from '../utils/userTokens';
 import { useSocket } from '../context/SocketContext';
+import Toast from 'react-native-toast-message';
+
 import { getMyChats } from '../apiCalls/chatApiCalls';
 
 const Welcome = () => {
@@ -30,7 +32,6 @@ const Welcome = () => {
       if (typeof socketContext.initializeSocket === 'function') {
         socketContext.initializeSocket();
       } else {
-        console.error("Welcome - initializeSocket is not a function:", socketContext);
         Alert.alert('Error', 'Failed to initialize chat connection');
         return;
       }
@@ -39,10 +40,15 @@ const Welcome = () => {
       const chatsData = await getMyChats();
       socketContext.setChats(chatsData);
       
-      Alert.alert('Login Successful', 'You have successfully logged in!', [{ text: 'OK' }]);
+      Toast.show({
+        type: 'success',
+        text1: 'Login Successful',
+        text2: 'You have successfully logged in!',
+        position: 'top',
+        visibilityTime: 4000,
+      });
       navigation.navigate('home');
     } catch (error) {
-      console.error('Login error:', error);
       Alert.alert('Login Failed', 'Make sure the email and password are correct!');
     }
   };
