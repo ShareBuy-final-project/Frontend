@@ -271,4 +271,20 @@ export const cancelPaymentIntent = async (groupId, paymentIntentId) => {
     }
   };
 
+  /**
+ * Fetch all unique categories
+ * @returns {Promise<String[]>} - List of unique categories
+ */
+export const fetchCategories = async () => {
+  try {
+    const res = await excuteAPICallGET('group/categories');
+    if (res.status !== 200) {
+      throw new Error('Failed to fetch categories');
+    }
+    return res.data;
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    throw error;
+  }
+};
 
