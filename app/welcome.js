@@ -9,6 +9,8 @@ import { useSocket } from '../context/SocketContext';
 import Toast from 'react-native-toast-message';
 
 import { getMyChats } from '../apiCalls/chatApiCalls';
+import InputField from '../components/InputField';
+import io from 'socket.io-client';
 
 const Welcome = () => {
   const [email, setEmail] = useState('');
@@ -67,28 +69,28 @@ const Welcome = () => {
             have we ever met?
           </Text>
         </View>
-        <View style={styles.inputContainer}>
-          <Icon name="envelope" size={20} color={COLORS.gray} style={styles.icon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            placeholderTextColor={COLORS.gray}
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Icon name="lock" size={20} color={COLORS.gray} style={styles.icon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor={COLORS.gray}
-            secureTextEntry={true}
-            value={password}
-            onChangeText={setPassword}
-          />
-        </View>
+        <InputField
+          icon="envelope"
+          placeholder="Email"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
+          marginLeft={20}
+          marginRight={5}
+          borderColor={email ? COLORS.black : COLORS.gray}
+        />
+        <InputField
+          icon="lock"
+          placeholder="Password"
+          keyboardType="default"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={true}
+          marginBottom={5}
+          marginLeft={20}
+          marginRight={5}
+          borderColor={password ? COLORS.black : COLORS.gray}
+        />
         <TouchableOpacity style={styles.buttonContainer} onPress={handleSignIn}>
           <Text style={{color : COLORS.white}}>Sign In</Text>
         </TouchableOpacity>
@@ -137,17 +139,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: FONT.arialBold,
     backgroundColor: COLORS.glowingYeloow,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '80%',
-    height: 50,
-    borderColor: COLORS.gray2,
-    borderWidth: 1,
-    borderRadius: 0,
-    paddingHorizontal: 10,
-    marginTop: 20,
   },
   icon: {
     position: 'absolute',
