@@ -1,0 +1,10 @@
+appId: com.idonagler.ShareBuy 
+---
+- tapOn: ""
+- tapOn: ", My Chats"
+- tapOn:
+    point: "50%,17%"
+- tapOn: "Type a message..."
+- inputText: "hello"
+- tapOn: ""
+- assertVisible: "hello"

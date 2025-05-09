@@ -1,0 +1,7 @@
+appId: com.idonagler.ShareBuy 
+---
+- tapOn: "Search"
+- inputText: "Treadmill"
+- assertVisible:
+    text: "Treadmill"
+    index: 1

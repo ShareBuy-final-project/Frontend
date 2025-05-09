@@ -1,0 +1,25 @@
+appId: com.idonagler.ShareBuy 
+---
+- tapOn:
+    point: "72%,34%"
+- tapOn: ", Join Group"
+- tapOn: "Proceed to Payment"
+- tapOn:
+    id: "android:id/button1"
+- tapOn: ""
+- tapOn: "Close"
+- tapOn: "Proceed to Payment"
+- tapOn:
+    point: "50%,35%"
+- inputText: "4242424242424242"
+- inputText: "1227"
+- inputText: "789"
+- tapOn:
+    point: "50%,57%"
+- inputText: "12345"
+- "hideKeyboard"
+- tapOn:
+    id: "com.idonagler.ShareBuy:id/primary_button"
+- assertVisible:
+    text: "Your payment was successful 🎉"
+    index: 1

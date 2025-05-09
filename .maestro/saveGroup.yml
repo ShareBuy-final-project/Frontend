@@ -1,0 +1,6 @@
+appId: com.idonagler.ShareBuy 
+---
+- tapOn:
+    text: ""
+    index: 0
+- assertVisible: ""
