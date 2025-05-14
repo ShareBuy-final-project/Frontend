@@ -1,0 +1,7 @@
+appId: com.idonagler.ShareBuy 
+--- #search a group by name from the main screen
+- tapOn: "Search"
+- inputText: "Treadmill"
+- assertVisible:
+    text: "Treadmill"
+    index: 1

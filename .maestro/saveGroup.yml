@@ -1,0 +1,6 @@
+appId: com.idonagler.ShareBuy 
+--- #for saving a group, doesn't work
+- tapOn:
+    text: ""
+    index: 0
+- assertVisible: ""
