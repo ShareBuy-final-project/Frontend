@@ -88,7 +88,11 @@ You can download the APK from the link below:
 - `components/`: Reusable UI components.
 
 ## Run Maestro Tests:
-- Download Maestro
-- Launch the apk
-- For tests that test the UI, login as a user/business account
-- type the command: maestro test .maestro/{test name}.yml
+- Download Maestro https://docs.maestro.dev/getting-started/installing-maestro
+- Enable developer mode on your phone (look up how to do this on your phone)
+- Connect the phone to the computer with a usb cable
+- Launch the apk on the phone
+- For tests that test the UI, login as a user/business account, then ensure you are on the home screen
+- To run a single test, type the command in cmd: maestro test .maestro/{test name}.yml
+- To run all tests type type the command in cmd: maestro test .maestro 
+- Node, running all tests doesn't work yet
