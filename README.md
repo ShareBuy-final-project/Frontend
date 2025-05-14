@@ -86,3 +86,9 @@ You can download the APK from the link below:
 - `app/`: Contains the screens and navigation structure for the app.
 - `assets/`: Stores static assets like images and fonts.
 - `components/`: Reusable UI components.
+
+## Run Maestro Tests:
+- Download Maestro
+- Launch the apk
+- For tests that test the UI, login as a user/business account
+- type the command: maestro test .maestro/{test name}.yml

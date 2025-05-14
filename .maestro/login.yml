@@ -1,5 +1,5 @@
 appId: com.idonagler.ShareBuy 
----
+--- #tests logging in from the account created in CreateAccountTest
 - tapOn:
     point: "50%,58%"
 - inputText: "gaby@example.com"

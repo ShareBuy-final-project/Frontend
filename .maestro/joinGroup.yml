@@ -1,5 +1,6 @@
 appId: com.idonagler.ShareBuy 
----
+--- #tests joining a group from the main ui
+
 - tapOn:
     point: "72%,34%"
 - tapOn: ", Join Group"
