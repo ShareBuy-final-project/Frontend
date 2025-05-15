@@ -1,15 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { COLORS, FONT } from '../constants/theme';
 
-const DropDown = ({ label, selectedValue, onValueChange, options, width = '80%' }) => {
+const DropDown = ({ 
+  label, 
+  selectedValue, 
+  onValueChange, 
+  options, 
+  width = '80%', 
+  placeholder = "Select an option", 
+  marginTop = 20,
+  marginBottom = 0
+}) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(selectedValue);
   const [items, setItems] = useState(options);
 
+  // Update items when options prop changes
+  useEffect(() => {
+    setItems(options);
+  }, [options]);
+
+  // Update value when selectedValue prop changes
+  useEffect(() => {
+    setValue(selectedValue);
+  }, [selectedValue]);
+
   return (
-    <View style={[styles.container, { width }]}>
+    <View style={[{ width, marginTop, marginBottom }]}>
       {label && <Text style={styles.label}>{label}</Text>}
       <DropDownPicker
         open={open}
@@ -19,7 +38,7 @@ const DropDown = ({ label, selectedValue, onValueChange, options, width = '80%' 
         setValue={setValue}
         setItems={setItems}
         onChangeValue={onValueChange}
-        placeholder="Select an option"
+        placeholder={placeholder}
         style={styles.picker}
         dropDownContainerStyle={styles.dropDownContainer}
         listMode="SCROLLVIEW"
@@ -32,9 +51,6 @@ const DropDown = ({ label, selectedValue, onValueChange, options, width = '80%' 
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 20,
-  },
   label: {
     fontSize: 14,
     color: COLORS.black,
