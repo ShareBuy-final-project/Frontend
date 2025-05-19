@@ -1,0 +1,8 @@
+appId: com.idonagler.ShareBuy 
+--- #this one is probably wrong, leaving group button does not appear
+- tapOn: ""
+- tapOn: ", My Groups"
+- tapOn:
+    point: "50%,24%"
+- tapOn: ""
+- tapOn: ", History"
