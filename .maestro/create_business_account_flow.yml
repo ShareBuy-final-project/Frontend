@@ -1,5 +1,16 @@
 appId: com.idonagler.ShareBuy
---- #test if users can create user accounts
+env:
+  USER_NAME: "test business"
+  USER_EMAIL: "testbusiness@example.com"
+  USER_PHONE: "0501234567"
+  USER_PASSWORD: "TestPass123!"
+  USER_COUNTRY: "Israel"
+  USER_CITY: "Tel Aviv"
+  USER_STREET: "Herzl"
+  USER_HOUSE_NUMBER: "10"
+  USER_ZIP: "12345"
+  GROUP_NAME: "Treadmill"
+--- #test if users can create business accounts
 - tapOn:
     point: "75%,82%"
 - tapOn: "I am a private person"

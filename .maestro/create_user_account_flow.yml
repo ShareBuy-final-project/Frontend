@@ -1,0 +1,52 @@
+appId: com.idonagler.ShareBuy
+env:
+  USER_NAME: "Test User"
+  USER_EMAIL: "testuser@example.com"
+  USER_PHONE: "0501234567"
+  USER_PASSWORD: "TestPass123!"
+  USER_COUNTRY: "Israel"
+  USER_CITY: "Tel Aviv"
+  USER_STREET: "Herzl"
+  USER_HOUSE_NUMBER: "10"
+  USER_ZIP: "12345"
+  GROUP_NAME: "Treadmill"
+--- #test if users can create user accounts
+- tapOn:
+    point: "75%,82%"
+- tapOn: "I am a private person"
+- tapOn: "next, "
+- tapOn: "Full Name"
+- inputText: "${USER_NAME}" # Generic user name
+- "hideKeyboard"
+- tapOn: "Email"
+- inputText: "${USER_EMAIL}" # Generic user email
+- "hideKeyboard"
+- tapOn: "Phone Number"
+- inputText: "${USER_PHONE}" # Generic user phone
+- "hideKeyboard"
+- tapOn: "next, "
+- tapOn: "Password"
+- inputText: "${USER_PASSWORD}" # Generic password
+- "hideKeyboard"
+- tapOn: "Confirm Password"
+- inputText: "${USER_PASSWORD}" # Generic password confirmation
+- "hideKeyboard"
+- tapOn: "next, "
+- tapOn: "State"
+- inputText: "${USER_COUNTRY}" # Generic country
+- "hideKeyboard"
+- tapOn: "City"
+- inputText: "${USER_CITY}" # Generic city
+- "hideKeyboard"
+- tapOn: "Street"
+- inputText: "${USER_STREET}" # Generic street
+- "hideKeyboard"
+- tapOn: "Street Number"
+- inputText: "${USER_HOUSE_NUMBER}" # Generic house number
+- "hideKeyboard"
+- tapOn: "Zip Code"
+- inputText: "${USER_ZIP}" # Generic zip code
+- "hideKeyboard"
+- tapOn: "finish registration"
+- assertVisible:
+    id: "toastContentContainer"
