@@ -139,7 +139,7 @@ If you are using **Windows**, follow the specific instructions here:
 - To run a single test, use:
 
   ```
-  maestro test .maestro/{test_name}.yml
+  maestro test .maestro/<test_name>.yml
   ```
 
   Example:
@@ -162,7 +162,7 @@ If you want to save the results to a file (for example, to view them in VS Code 
 - Use the `--format junit --output results.xml` flags to generate a JUnit XML report:
 
   ```
-  maestro test .maestro/searchByName.yml --format junit --output results.xml
+  maestro test .maestro/<test name> --format junit --output results.xml
   ```
 
 - This will create a `results.xml` file in your project directory.
