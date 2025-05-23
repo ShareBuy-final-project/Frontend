@@ -97,7 +97,8 @@ Follow these step-by-step instructions to run Maestro UI tests on your Android d
 ### 1. Install Maestro
 
 Download and install Maestro by following the official guide:  
-[https://docs.maestro.dev/getting-started/installing-maestro](https://docs.maestro.dev/getting-started/installing-maestro)  
+[https://docs.maestro.dev/getting-started/installing-maestro](https://docs.maestro.dev/getting-started/installing-maestro)
+
 If you are using **Windows**, follow the specific instructions here:  
 [https://docs.maestro.dev/getting-started/installing-maestro/windows](https://docs.maestro.dev/getting-started/installing-maestro/windows)
 
