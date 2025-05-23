@@ -3,6 +3,6 @@ env:
   USER_EMAIL: "nonexistinguser@example.com"
   USER_PASSWORD: "WrongPass123!"
 ---
-- runFlow: welcome.yml
-- runFlow: loginFail.yml
-- runFlow: closeApp.yml
+- runFlow: actions/welcome.yml
+- runFlow: actions/loginFail.yml
+- runFlow: actions/closeApp.yml

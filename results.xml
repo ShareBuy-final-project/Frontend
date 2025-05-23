@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <testsuites>
-  <testsuite name="Test Suite" device="R5CR806NCYF" tests="1" failures="0" time="26">
-    <testcase id="failLoginFlow" name="failLoginFlow" classname="failLoginFlow" time="26" status="SUCCESS"/>
+  <testsuite name="Test Suite" device="R5CR806NCYF" tests="1" failures="0" time="25">
+    <testcase id="fail_login_flow" name="fail_login_flow" classname="fail_login_flow" time="25" status="SUCCESS"/>
   </testsuite>
 </testsuites>

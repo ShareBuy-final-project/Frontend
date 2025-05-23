@@ -5,3 +5,4 @@ appId: com.idonagler.ShareBuy
 - assertVisible: "Logout Successful"
 - tapOn: "OK"
 - assertVisible: "Welcome to ShareBuy"
+- runFlow: actions/closeApp.yml

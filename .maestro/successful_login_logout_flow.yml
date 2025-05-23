@@ -1,0 +1,9 @@
+appId: com.idonagler.ShareBuy
+env:
+  USER_EMAIL: "testuser@example.com"
+  USER_PASSWORD: "TestPass123!"
+---
+- runFlow: actions/welcome.yml
+- runFlow: actions/login_from_welcome_page.yml
+- runFlow: logout_flow.yml
+- runFlow: actions/closeApp.yml
