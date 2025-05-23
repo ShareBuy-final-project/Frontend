@@ -1,11 +1,10 @@
-appId: com.idonagler.ShareBuy 
+appId: com.idonagler.ShareBuy
 --- #tests logging in from the account created in CreateAccountTest
-- tapOn:
-    point: "50%,58%"
-- inputText: "gaby@example.com"
-- tapOn:
-    point: "50%,64%"
-- inputText: "A123123a!"
+- tapOn: "Email"
+- inputText: "${USER_EMAIL}" # Generic user email
+- "hideKeyboard"
+- tapOn: "Password"
+- inputText: "${USER_PASSWORD}" # Generic password
 - "hideKeyboard"
 - tapOn: "Sign In"
 - tapOn: "OK"

@@ -1,0 +1,4 @@
+appId: com.idonagler.ShareBuy
+--- #test if users can see the home screen
+- launchApp
+- assertVisible: "Welcome to ShareBuy"

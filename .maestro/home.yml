@@ -1,4 +1,0 @@
-appId: com.idonagler.ShareBuy # This is an example app id. Replace it with your app id.
----
-- launchApp
-- assertVisible: 'Welcome to ShareBuy'
