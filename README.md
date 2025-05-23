@@ -160,9 +160,11 @@ By default, Maestro prints test results in the terminal.
 If you want to save the results to a file (for example, to view them in VS Code or use them in CI):
 
 - Use the `--format junit --output results.xml` flags to generate a JUnit XML report:
+
   ```
   maestro test .maestro/searchByName.yml --format junit --output results.xml
   ```
+
 - This will create a `results.xml` file in your project directory.
 - You can open `results.xml` in VS Code to view the test results in a structured format.
 
