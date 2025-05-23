@@ -1,6 +1,8 @@
-appId: com.idonagler.ShareBuy 
---- #for saving a group, doesn't work
-- tapOn:
-    text: ""
-    index: 0
+appId: com.idonagler.ShareBuy
+--- #for saving a group, after searching the group
+- assertVisible: ""
+- tapOn: ""
 - assertVisible: ""
+- tapOn: ""
+- tapOn: "Favorites"
+- assertVisible: "${GROUP_NAME}"

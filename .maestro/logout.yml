@@ -1,0 +1,7 @@
+appId: com.idonagler.ShareBuy
+--- #test if users can log out
+- tapOn: ""
+- tapOn: "Sign Out"
+- assertVisible: "Logout Successful"
+- tapOn: "OK"
+- assertVisible: "Welcome to ShareBuy"
