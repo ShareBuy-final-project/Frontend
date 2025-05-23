@@ -1,0 +1,8 @@
+appId: com.idonagler.ShareBuy
+env:
+  USER_EMAIL: "nonexistinguser@example.com"
+  USER_PASSWORD: "WrongPass123!"
+---
+- runFlow: welcome.yml
+- runFlow: loginFail.yml
+- runFlow: closeApp.yml

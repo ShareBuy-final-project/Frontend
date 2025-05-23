@@ -12,16 +12,16 @@ env:
   GROUP_NAME: "Treadmill"
 ---
 - runFlow: welcome.yml
-- runFlow: createUserAccount.yml
+# - runFlow: createUserAccount.yml
 - runFlow: login.yml
 # - runFlow: searchByCategory.yml
 # - runFlow: clearCategory.yml
 - runFlow: searchByName.yml
 - runFlow: clearSearchBar.yml
-- runFlow: searchByName.yml
-- runFlow: saveGroup.yml
-- runFlow: unSaveGroup.yml
-- runFlow: returnHome.yml
+# - runFlow: searchByName.yml
+# - runFlow: saveGroup.yml
+# - runFlow: unSaveGroup.yml
+# - runFlow: returnHome.yml
 # - runFlow: joinGroup.yml
 # - runFlow: chat.yml
 # - runFlow: leaveGroup.yml
