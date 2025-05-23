@@ -179,7 +179,7 @@ To view your test results in a graphical HTML report:
 
    - You can also use the [Live Preview](https://marketplace.visualstudio.com/items?itemName=ms-vscode.live-server) extension in VS Code to view the HTML file inside the editor.
 
-     To view the file after installing the extenstion, right click the html file and select "Show Preview" option.
+     To view the file after installing the extenstion, right click the html file and select `Show Preview` option.
 
 ---
 
