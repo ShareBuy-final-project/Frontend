@@ -1,0 +1,7 @@
+appId: com.idonagler.ShareBuy
+--- # Test clearing the search bar
+- tapOn:
+    text: "Search"
+- eraseText: 50
+- "hideKeyboard"
+- assertVisible: "Search"

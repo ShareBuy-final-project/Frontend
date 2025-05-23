@@ -11,10 +11,10 @@ env:
   USER_ZIP: "12345"
 ---
 - runFlow: welcome.yml
-- runFlow: createAccount.yml
+- runFlow: createUserAccount.yml
 - runFlow: login.yml
-# - runFlow: searchByName.yml
-# - runFlow: clearSearchBar.yml
+- runFlow: searchByName.yml
+- runFlow: clearSearchBar.yml
 # - runFlow: searchByCategory.yml
 # - runFlow: clearSearchBar.yml
 # - runFlow: saveGroup.yml

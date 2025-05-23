@@ -1,0 +1,8 @@
+appId: com.idonagler.ShareBuy
+--- # Test searching by category
+- tapOn:
+    text: "Categories"
+- tapOn:
+    text: "Electronics" # Replace with an actual category in your app
+- "hideKeyboard"
+- assertVisible: "Electronics" # Adjust to a result that should appear
