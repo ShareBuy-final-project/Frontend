@@ -10,10 +10,20 @@ env:
   USER_HOUSE_NUMBER: "10"
   USER_ZIP: "12345"
   GROUP_NAME: "Treadmill"
---- #test if users can create user accounts
+onFlowStart:
+  - runFlow: actions/welcome.yml
+onFlowComplete:
+  - runFlow: actions/closeApp.yml
+---
+# Test Purpose:
+# Test if users can create user account
+
+# Preconditions:
+# - There is no account with the email ${USER_EMAIL} and password ${USER_PASSWORD}.
+
 - tapOn:
     point: "75%,82%"
-- tapOn: "I am a private person"
+- tapOn: "I am a business owner"
 - tapOn: "next, "
 - tapOn: "Full Name"
 - inputText: "${USER_NAME}" # Generic user name
@@ -47,6 +57,20 @@ env:
 - tapOn: "Zip Code"
 - inputText: "${USER_ZIP}" # Generic zip code
 - "hideKeyboard"
+- tapOn: "next"
+- tapOn: "Business Name"
+- inputText: "${BUSINESS_NAME}" # Generic business name
+- "hideKeyboard"
+- tapOn: "Business Number"
+- inputText: "${BUSINESS_NUMBER}" # Generic business number
+- "hideKeyboard"
+- tapOn: "Category"
+# tapOn: "${BUSINESS_CATEGORY}" # Generic business category
+- tapOn: "Description"
+- inputText: "${BUSINESS_DESCRIPTION}" # Generic business description
+- "hideKeyboard"
+- tapOn: "next, "
+
 - tapOn: "finish registration"
 - assertVisible:
     id: "toastContentContainer"

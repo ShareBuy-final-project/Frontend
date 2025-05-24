@@ -1,8 +1,11 @@
 appId: com.idonagler.ShareBuy
---- #for unsaving a group from favorites
-- tapOn: ""
-- tapOn: "Favorites"
-- assertVisible: "${GROUP_NAME}"
+---
+# Action: unsaving a group
+
+# Preconditions:
+# - The group is visible in the search results
+# - The group is saved
+
 - assertVisible: ""
 - tapOn: ""
 - assertVisible: ""

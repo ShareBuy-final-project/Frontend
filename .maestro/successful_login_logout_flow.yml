@@ -2,8 +2,16 @@ appId: com.idonagler.ShareBuy
 env:
   USER_EMAIL: "testuser@example.com"
   USER_PASSWORD: "TestPass123!"
+onFlowStart:
+  - runFlow: actions/welcome.yml
+onFlowComplete:
+  - runFlow: actions/closeApp.yml
 ---
-- runFlow: actions/welcome.yml
+# Test Purpose:
+# Test the login and logout flow with a valid user account.
+
+# Preconditions:
+# - The user ${USER_EMAIL} has an account with the password ${USER_PASSWORD}.
+
 - runFlow: actions/login_from_welcome_page.yml
-- runFlow: logout_flow.yml
-- runFlow: actions/closeApp.yml
+- runFlow: actions/logout.yml

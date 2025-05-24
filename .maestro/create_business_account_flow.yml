@@ -10,7 +10,17 @@ env:
   USER_HOUSE_NUMBER: "10"
   USER_ZIP: "12345"
   GROUP_NAME: "Treadmill"
---- #test if users can create business accounts
+onFlowStart:
+  - runFlow: actions/welcome.yml
+onFlowComplete:
+  - runFlow: actions/closeApp.yml
+---
+# Test Purpose:
+# Test if users can create business account
+
+# Preconditions:
+# - There is no account with the email ${USER_EMAIL} and password ${USER_PASSWORD}.
+
 - tapOn:
     point: "75%,82%"
 - tapOn: "I am a private person"

@@ -1,7 +1,12 @@
-appId: com.idonagler.ShareBuy 
---- #search a group by name from the main screen
+appId: com.idonagler.ShareBuy
+---
+# Action: search a group by name
+
+# Preconditions:
+# - The App is on the home screen
+
 - tapOn: "Search"
-- inputText: "Treadmill"
+- inputText: "${GROUP_NAME}"
 - assertVisible:
-    text: "Treadmill"
+    text: "${GROUP_NAME}"
     index: 1

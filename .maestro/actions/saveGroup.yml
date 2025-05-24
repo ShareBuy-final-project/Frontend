@@ -1,8 +1,11 @@
 appId: com.idonagler.ShareBuy
---- #for saving a group, after searching the group
+---
+# Action: saving a group
+
+# Preconditions:
+# - The group is visible in the search results
+# - The group is unsaved
+
 - assertVisible: ""
 - tapOn: ""
 - assertVisible: ""
-- tapOn: ""
-- tapOn: "Favorites"
-- assertVisible: "${GROUP_NAME}"

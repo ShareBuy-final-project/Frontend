@@ -1,0 +1,22 @@
+appId: com.idonagler.ShareBuy
+onFlowStart:
+  - runFlow: actions/welcome.yml
+  - runFlow: actions/login_from_welcome_page.yml
+onFlowComplete:
+  - runFlow: actions/logout.yml
+  - runFlow: actions/closeApp.yml
+---
+# Test Purpose:
+# Test if users can write a chat message
+
+# Preconditions:
+# - User is logged in
+# - User has at least one chat in the "My Chats" section
+
+- runFlow: actions/navigateToMyChats.yml
+- tapOn:
+    point: "50%,17%"
+- tapOn: "Type a message..."
+- inputText: "hello"
+- tapOn: ""
+- assertVisible: "hello"

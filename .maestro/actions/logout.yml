@@ -1,8 +1,13 @@
 appId: com.idonagler.ShareBuy
---- #test if users can log out
+---
+# Test Purpose:
+# Test logout functionality by navigating to the settings and signing out
+
+# Preconditions:
+# - User is logged in
+
 - tapOn: ""
 - tapOn: "Sign Out"
 - assertVisible: "Logout Successful"
 - tapOn: "OK"
 - assertVisible: "Welcome to ShareBuy"
-- runFlow: actions/closeApp.yml

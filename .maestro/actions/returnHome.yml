@@ -1,3 +1,5 @@
 appId: com.idonagler.ShareBuy
---- #test return home by clicking the home icon
+---
+# Action: return home by clicking the home icon
+
 - tapOn: ""

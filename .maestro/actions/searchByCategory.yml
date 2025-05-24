@@ -1,5 +1,10 @@
 appId: com.idonagler.ShareBuy
---- # Test searching by category
+---
+# Action: Filter the search by category
+
+# Preconditions:
+# - The App is on the home screen
+
 - tapOn:
     text: "Categories"
 - tapOn:

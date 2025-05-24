@@ -1,5 +1,11 @@
 appId: com.idonagler.ShareBuy
---- #tests logging in from the account created in CreateAccountTest
+---
+# Test Purpose:
+# test logging in from the account created in CreateAccountTest
+#
+# Preconditions:
+# - The user ${USER_EMAIL} has an account with the password ${USER_PASSWORD}.
+
 - tapOn: "Email"
 - inputText: "${USER_EMAIL}" # Generic user email
 - "hideKeyboard"
