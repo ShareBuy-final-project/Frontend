@@ -13,11 +13,7 @@ onFlowComplete:
 # - User is logged in
 # - User has at least one group in the history section
 
-- tapOn: ""
-- tapOn: "My Chats"
+- runFlow: actions/navigateToHistory.yml
 - tapOn:
     point: "50%,17%"
-- tapOn: "Type a message..."
-- inputText: "hello"
-- tapOn: ""
-- assertVisible: "hello"
+# TODO: continue when a group exist in the history section
