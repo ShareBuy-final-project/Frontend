@@ -142,17 +142,28 @@ If you are using **Windows**, follow the specific instructions here:
   maestro test .maestro/<test_name>.yml
   ```
 
-  Example:
+  **Adding parameters to the test command:**  
+  You can pass environment variables or Maestro options directly in the command. For example, to override a variable for a single run:
 
   ```
-  maestro test .maestro/searchByName.yml
+  maestro test .maestro/<test_name>.yml --env USER_EMAIL=another@example.com --env USER_PASSWORD=AnotherPass123!
   ```
 
-- To run all tests in the `.maestro` folder, use:
+  Or to generate a JUnit report for a single test:
+
   ```
-  maestro test .maestro
+  maestro test .maestro/<test_name>.yml --format junit --output results.xml
   ```
-  > **Note:** Running all tests at once may not work yet.
+
+  > Replace `<test_name>` with the name of your test file.
+
+- To run all tests in a specific order and collect results in one report, use the master flow file:
+
+  ```
+  maestro test .maestro/RunTests.yml --format junit --output results.xml
+  ```
+
+  > This will execute all flows in the order defined in `RunTests.yml` and generate a single `results.xml` report.
 
 ### 📄 Saving and Viewing Test Results
 
