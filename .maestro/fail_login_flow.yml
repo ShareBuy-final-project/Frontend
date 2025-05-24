@@ -1,0 +1,25 @@
+appId: com.idonagler.ShareBuy
+env:
+  USER_EMAIL: "nonexistinguser@example.com"
+  USER_PASSWORD: "WrongPass123!"
+onFlowStart:
+  - runFlow: actions/welcome.yml
+onFlowComplete:
+  - runFlow: actions/closeApp.yml
+---
+# Test Purpose:
+# Test the login flow with an invalid user account.
+
+# Preconditions:
+# - The user ${USER_EMAIL} does not have an account with the password ${USER_PASSWORD}.
+
+- tapOn: "Email"
+- inputText: "${USER_EMAIL}" # Generic user email
+- "hideKeyboard"
+- tapOn: "Password"
+- inputText: "${USER_PASSWORD}" # Generic password
+- "hideKeyboard"
+- tapOn: "Sign In"
+- assertVisible: "Login Failed"
+- tapOn: "OK"
+- assertVisible: "Welcome to ShareBuy"

@@ -1,5 +1,19 @@
-appId: com.idonagler.ShareBuy 
---- #tests joining a group from the main ui
+appId: com.idonagler.ShareBuy
+env:
+  USER_EMAIL: "testuser@example.com"
+  USER_PASSWORD: "TestPass123!"
+onFlowStart:
+  - runFlow: actions/welcome.yml
+  - runFlow: actions/login_from_welcome_page.yml
+onFlowComplete:
+  - runFlow: actions/logout.yml
+  - runFlow: actions/closeApp.yml
+---
+# Test Purpose:
+# Test if users can join a group and complete the payment process successfully.
+
+# Preconditions:
+# - User is logged in
 
 - tapOn:
     point: "72%,34%"

@@ -1,0 +1,6 @@
+appId: com.idonagler.ShareBuy
+---
+# Action: Select "favorites" from the side-bar menu
+
+- tapOn: ""
+- tapOn: "Favorites"
