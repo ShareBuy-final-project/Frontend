@@ -5,6 +5,8 @@ import { deleteAllTokens } from "../utils/userTokens";
 import AppNavigator from "./AppNavigator";
 import { SocketProvider } from '../context/SocketContext';
 import { logout } from "../apiCalls/authApiCalls";
+import { Provider as PaperProvider } from 'react-native-paper'; 
+
 function App() {
     useEffect(() => {
         // Clear the secure store when the app starts
@@ -18,11 +20,13 @@ function App() {
     }, []);
 
     return (
-        <NavigationContainer>
-            <SocketProvider>
-                <AppNavigator />
-            </SocketProvider>
-        </NavigationContainer>
+        <PaperProvider> 
+            <NavigationContainer>
+                <SocketProvider>
+                    <AppNavigator />
+                </SocketProvider>
+            </NavigationContainer>
+        </PaperProvider>
     );
 }
 

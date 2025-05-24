@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'stretch',
     marginTop: 60,
     padding: 10,
   },

@@ -5,15 +5,15 @@ import SearchBar from '../components/SearchBar';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS, FONT } from '../constants/theme';
-import {fetchDeals, saveGroup, unSaveGroup, fetchCategories} from '../apiCalls/groupApiCalls'
+import { fetchDeals, saveGroup, unSaveGroup, fetchCategories } from '../apiCalls/groupApiCalls';
 import { getToken } from '../utils/userTokens';
 import debounce from 'lodash/debounce';
 import DefaultPic from '../assets/images/default_pic.png';
-import DropDown from '../components/DropDown'; // Import the generic DropDown component
+import RecommendedBanner from './RecommendationsBanner';
 
 const Home = () => {
   const [deals, setDeals] = useState([]);
-  const [categories, setCategories] = useState([]); // State to store categories
+  const [categories, setCategories] = useState([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -34,13 +34,10 @@ const Home = () => {
         ? prevFavorites.filter((id) => id !== dealId)
         : [...prevFavorites, dealId];
 
-      // Call saveGroup or unSaveGroup based on whether the deal is being added or removed from favorites
       if (isFavorited) {
-        unSaveGroup(dealId)  // Call unSaveGroup when unfavoriting
-          .catch(error => console.error('Error unsaving group:', error));
+        unSaveGroup(dealId).catch(error => console.error('Error unsaving group:', error));
       } else {
-        saveGroup(dealId)  // Call saveGroup when favoriting
-          .catch(error => console.error('Error saving group:', error));
+        saveGroup(dealId).catch(error => console.error('Error saving group:', error));
       }
 
       return newFavorites;
@@ -49,56 +46,44 @@ const Home = () => {
 
   const fetchCategoriesFromAPI = async () => {
     try {
-      const data = await fetchCategories(); // Use the new fetchCategories function
-      console.log('Fetched categories:', data);
-
-      // Sort categories alphabetically and prepend "All Categories"
+      const data = await fetchCategories();
       const sortedCategories = data.sort((a, b) => a.localeCompare(b));
-      setCategories([{ label: 'All Categories', value: '' }, ...sortedCategories.map((category) => ({ label: category, value: category }))]);
+      setCategories([{ label: 'All Categories', value: '' }, ...sortedCategories.map((c) => ({ label: c, value: c }))]);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
   };
 
   useEffect(() => {
-    fetchCategoriesFromAPI(); // Fetch categories on component mount
+    fetchCategoriesFromAPI();
   }, []);
 
   const getDeals = async () => {
     setIsLoading(true);
     try {
-      // Prepare filters dynamically
       const filters = { text: searchQuery };
-      if (selectedCategory) {
-        filters.category = selectedCategory;
-      }
+      if (selectedCategory) filters.category = selectedCategory;
 
-      // Call the API fetchDeals function with filters and pagination
-      console.log('Fetching deals with filters:', filters);
       const apiDeals = await fetchDeals(filters, page, 10);
 
       if (apiDeals.length === 0) {
-        setHasMore(false); // No more deals available
+        setHasMore(false);
         return;
       }
 
-      // Map the API response to match your component's requirements
       const formattedDeals = apiDeals.map((deal) => ({
         id: deal.id,
         title: `${deal.name}`,
         original_price: `$${deal.price}`,
         discounted_price: `$${deal.discount}`,
-        image: deal.imageBase64, // Default placeholder image
-        participants: deal.totalAmount || 0, // Participant count from API
+        image: deal.imageBase64,
+        participants: deal.totalAmount || 0,
         size: deal.size,
         isSaved: deal.isSaved || false,
       }));
 
-      // Update favorites based on the deals received
-      const newFavorites = formattedDeals.filter(deal => deal.isSaved).map(deal => deal.id);
-      setFavorites((prevFavorites) => [...new Set([...prevFavorites, ...newFavorites])]);
-
-      // Update the state with the new deals
+      const newFavorites = formattedDeals.filter(d => d.isSaved).map(d => d.id);
+      setFavorites((prev) => [...new Set([...prev, ...newFavorites])]);
       setDeals((prevDeals) => [...prevDeals, ...formattedDeals]);
     } catch (error) {
       console.error('Error fetching deals:', error);
@@ -120,47 +105,27 @@ const Home = () => {
   }, [page]);
 
   const handleSearchChange = (query) => {
-    if (searchTimer.current) {
-      clearTimeout(searchTimer.current);
-    }
-
+    if (searchTimer.current) clearTimeout(searchTimer.current);
     setSearchQuery(query);
-    searchTimer.current = setTimeout(() => {
-      setDebouncedQuery(query);
-    }, 250);
+    searchTimer.current = setTimeout(() => setDebouncedQuery(query), 250);
   };
 
-  // Add this effect to watch for debouncedQuery changes
   useEffect(() => {
     if (isFirstRenderSearchQuery.current) {
       isFirstRenderSearchQuery.current = false;
     } else {
       setDeals([]);
-      if (page !== 1) {
-        setPage(1);
-      } else {
-        getDeals();
-      }
+      if (page !== 1) setPage(1);
+      else getDeals();
     }
   }, [debouncedQuery, selectedCategory]);
 
-  // Clean up timer when component unmounts
-  useEffect(() => {
-    return () => {
-      if (searchTimer.current) {
-        clearTimeout(searchTimer.current);
-      }
-    };
+  useEffect(() => () => {
+    if (searchTimer.current) clearTimeout(searchTimer.current);
   }, []);
 
   const handleLoadMore = () => {
-    if (!isLoading && hasMore) {
-      setPage((prevPage) => prevPage + 1);
-    }
-  };
-
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category);
+    if (!isLoading && hasMore) setPage((prev) => prev + 1);
   };
 
   const renderDealCard = ({ item }) => (
@@ -169,25 +134,12 @@ const Home = () => {
       onPress={() => navigation.navigate('DealPage', { dealId: item.id })}
     >
       <View style={styles.imageContainer}>
-        <Image
-          source={item?.image ? { uri: item.image } : DefaultPic}
-          style={styles.cardImage}
-          resizeMode="contain"
-        />
-        <TouchableOpacity
-          style={styles.heartButton}
-          onPress={() => toggleFavorite(item.id)}
-        >
-          <Icon
-            name={favorites.includes(item.id) ? 'favorite' : 'favorite-border'}
-            size={24}
-            color="#f08080"
-          />
+        <Image source={item?.image ? { uri: item.image } : DefaultPic} style={styles.cardImage} resizeMode="contain" />
+        <TouchableOpacity style={styles.heartButton} onPress={() => toggleFavorite(item.id)}>
+          <Icon name={favorites.includes(item.id) ? 'favorite' : 'favorite-border'} size={24} color="#f08080" />
         </TouchableOpacity>
         <View style={styles.participantOverlay}>
-          <Text style={styles.participantText}>
-            {item.participants}/{item.size}
-          </Text>
+          <Text style={styles.participantText}>{item.participants}/{item.size}</Text>
         </View>
       </View>
       <Text style={styles.cardTitle}>{item.title}</Text>
@@ -212,16 +164,21 @@ const Home = () => {
         </Text>
       </View>
       <View style={styles.DealsContainer}>
-        <SearchBar value={searchQuery} onChangeText={handleSearchChange} />
-        <DropDown
-          placeholder="filter by category"
-          marginTop={-5}
-          marginBottom={10}
-          selectedValue={selectedCategory}
-          onValueChange={handleCategoryChange}
-          options={categories}
-          width="90%"
+        <SearchBar
+          value={searchQuery}
+          onChangeText={handleSearchChange}
+          categories={categories}
+          onCategorySelect={(value) => setSelectedCategory(value)}
         />
+
+        {selectedCategory !== '' && (
+          <Text style={{ color: '#666', fontSize: 14, marginBottom: 8 }}>
+            Filtering by: <Text style={{ fontWeight: 'bold' }}>{selectedCategory}</Text>
+          </Text>
+        )}
+
+        <RecommendedBanner navigation={navigation} />
+
         {deals.length === 0 && !isLoading ? (
           <Text style={styles.noDealsText}>No deals found for the search query.</Text>
         ) : (
@@ -352,8 +309,10 @@ const styles = StyleSheet.create({
     padding: 6,
   },
   messageContainer: {
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
+    paddingHorizontal: 15,
     marginBottom: 10,
   },
   secondSubMessage: {
