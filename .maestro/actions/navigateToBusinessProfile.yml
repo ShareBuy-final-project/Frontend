@@ -1,0 +1,6 @@
+appId: com.idonagler.ShareBuy
+---
+# Action: Select "Business Profile" from the side-bar menu
+
+- tapOn: ""
+- tapOn: "Business Profile"

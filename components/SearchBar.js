@@ -1,8 +1,13 @@
-import React from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Menu } from 'react-native-paper';
 
-const SearchBar = ({ value, onChangeText }) => {
+const SearchBar = ({ value, onChangeText, categories, onCategorySelect }) => {
+  const [visible, setVisible] = useState(false);
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
+
   return (
     <View style={styles.searchContainer}>
       <Icon name="search" size={24} color="#888" style={styles.icon} />
@@ -12,6 +17,26 @@ const SearchBar = ({ value, onChangeText }) => {
         value={value}
         onChangeText={onChangeText}
       />
+      <Menu
+        visible={visible}
+        onDismiss={closeMenu}
+        anchor={
+          <TouchableOpacity onPress={openMenu}>
+            <Icon name="filter-list" size={24} color="#f08080" />
+          </TouchableOpacity>
+        }
+      >
+        {categories.map((item) => (
+          <Menu.Item
+            key={item.value}
+            title={item.label}
+            onPress={() => {
+              onCategorySelect(item.value);
+              closeMenu();
+            }}
+          />
+        ))}
+      </Menu>
     </View>
   );
 };
@@ -25,7 +50,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginVertical: 10,
     marginHorizontal: 15,
-    width: 300, // Add fixed width
+    width: '100%',
+  justifyContent: 'space-between'
   },
   input: {
     flex: 1,

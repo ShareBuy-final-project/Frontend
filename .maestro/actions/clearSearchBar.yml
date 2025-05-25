@@ -1,0 +1,12 @@
+appId: com.idonagler.ShareBuy
+---
+# Action: clear the search bar
+
+# Preconditions:
+# - The App is on the home screen
+
+- tapOn:
+    text: "Search"
+- eraseText: 50
+- "hideKeyboard"
+- assertVisible: "Search"

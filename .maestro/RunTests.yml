@@ -1,0 +1,13 @@
+appId: com.idonagler.ShareBuy
+---
+# Excute the following flows in sequence to test the app functionality:
+- runFlow: fail_login_flow.yml
+- runFlow: creat_user_account_flow.yml
+- runFlow: create_business_account_flow.yml
+- runFlow: successful_login_logout_flow.yml
+- runFlow: create_group_flow.yml
+- runFlow: save_searched_group_and_check_favorites_flow.yml
+- runFlow: unsave_searched_group_and_check_favorites_flow.yml
+- runFlow: join_group_flow.yml
+- runFlow: send_meessage_in_chat_flow.yml
+- runFlow: write_review_flow.yml

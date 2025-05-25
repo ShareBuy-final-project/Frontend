@@ -1,0 +1,22 @@
+appId: com.idonagler.ShareBuy
+env:
+  USER_EMAIL: "testuser@example.com"
+  USER_PASSWORD: "TestPass123!"
+  GROUP_NAME: "Treadmill"
+onFlowStart:
+  - runFlow: actions/welcome.yml
+  - runFlow: actions/login_from_welcome_page.yml
+onFlowComplete:
+  - runFlow: actions/logout.yml
+  - runFlow: actions/closeApp.yml
+---
+# Test Purpose:
+# Test the flow of saving a group and checking favorites.
+
+# Preconditions:
+# - User is logged in
+
+- runFlow: actions/searchByName.yml
+- runFlow: actions/saveGroup.yml
+- runFlow: actions/navigateToFavorites.yml
+- assertVisible: "${GROUP_NAME}"

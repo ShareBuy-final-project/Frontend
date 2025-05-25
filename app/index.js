@@ -8,6 +8,7 @@ import { SocketProvider } from '../context/SocketContext';
 import * as SplashScreen from 'expo-splash-screen';
 import { logout } from "../apiCalls/authApiCalls";
 import * as Updates from 'expo-updates';
+import { Provider as PaperProvider } from 'react-native-paper'; 
 
 function App() {
     useEffect(() => {
@@ -45,11 +46,13 @@ function App() {
     }, []);
 
     return (
-        <NavigationContainer>
-            <SocketProvider>
-                <AppNavigator />
-            </SocketProvider>
-        </NavigationContainer>
+        <PaperProvider> 
+            <NavigationContainer>
+                <SocketProvider>
+                    <AppNavigator />
+                </SocketProvider>
+            </NavigationContainer>
+        </PaperProvider>
     );
 }
 
