@@ -179,6 +179,26 @@ export const fetchDeals = async (filters = {}, page = 1, limit = 10) => {
 };
 
 /**
+ * Fetch recommended groups for the user
+ * @returns {Promise<Object[]>} - List of recommended groups
+ */
+export const getRecommendedGroups = async () => {
+  try {
+    const res = await excuteAPICallGET('recommendations/get');
+
+    if (res.status !== 200) {
+      throw new Error(`Failed to fetch recommended groups: status ${res.status}`);
+    }
+
+    return res.data;
+  } catch (error) {
+    console.error('Error fetching recommended groups:', error);
+    throw error;
+  }
+};
+
+
+/**
  * Get history groups of a user
  * @param {Number} [page=1] - Page number
  * @param {Number} [limit=10] - Number of groups per page
@@ -271,4 +291,20 @@ export const cancelPaymentIntent = async (groupId, paymentIntentId) => {
     }
   };
 
+  /**
+ * Fetch all unique categories
+ * @returns {Promise<String[]>} - List of unique categories
+ */
+export const fetchCategories = async () => {
+  try {
+    const res = await excuteAPICallGET('group/categories');
+    if (res.status !== 200) {
+      throw new Error('Failed to fetch categories');
+    }
+    return res.data;
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    throw error;
+  }
+};
 

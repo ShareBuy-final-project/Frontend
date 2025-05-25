@@ -1,0 +1,12 @@
+appId: com.idonagler.ShareBuy
+---
+# Action: search a group by name
+
+# Preconditions:
+# - The App is on the home screen
+
+- tapOn: "Search"
+- inputText: "${GROUP_NAME}"
+- assertVisible:
+    text: "${GROUP_NAME}"
+    index: 1

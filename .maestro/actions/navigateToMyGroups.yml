@@ -1,0 +1,6 @@
+appId: com.idonagler.ShareBuy
+---
+# Action: Select "My Groups" from the side-bar menu
+
+- tapOn: ""
+- tapOn: "My Groups"
