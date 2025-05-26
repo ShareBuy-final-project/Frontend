@@ -1,0 +1,5 @@
+appId: com.idonagler.ShareBuy
+---
+# Action: Close the app
+
+- stopApp

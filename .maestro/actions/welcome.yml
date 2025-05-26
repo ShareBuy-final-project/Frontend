@@ -1,0 +1,6 @@
+appId: com.idonagler.ShareBuy
+---
+# Action: Launch App
+
+- launchApp
+- assertVisible: "Welcome to ShareBuy"
