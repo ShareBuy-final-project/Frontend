@@ -140,7 +140,7 @@ const DealPage = () => {
       {/* Participants Circle */}
       {/* Join/Leave Group Button */}
       <View style={styles.buttonContainer}>
-        {isInGroup ? (
+        {/* {isInGroup ? (
           <TouchableOpacity style={styles.leaveButton} onPress={handleLeaveGroup}>
             <Icon name="group-remove" size={24} color="#fff" />
             <Text style={styles.buttonText}>Leave Group</Text>
@@ -150,7 +150,11 @@ const DealPage = () => {
             <Icon name="group-add" size={24} color="#fff" />
             <Text style={styles.buttonText}>Join Group</Text>
           </TouchableOpacity>
-        )}
+        )} */}
+        <TouchableOpacity style={styles.joinButton} onPress={handleJoinGroup}>
+          <Icon name="group-add" size={24} color="#fff" />
+          <Text style={styles.buttonText}>Join Group</Text>
+        </TouchableOpacity>
       </View>
     </View>
     </BaseLayout>

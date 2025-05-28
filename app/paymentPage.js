@@ -138,7 +138,6 @@ const CheckoutScreen = () => {
                 <Text style={styles.description}>{dealDetails?.description}</Text>
                 <View style={styles.priceContainer}>
                   <Text style={styles.price}>Price: ${totalPrice}</Text>
-                  {/* Replace DropDown with Menu */}
                   <Menu
                     visible={menuVisible}
                     onDismiss={() => setMenuVisible(false)}
@@ -148,7 +147,7 @@ const CheckoutScreen = () => {
                         onPress={() => setMenuVisible(true)}
                       >
                         <Text style={styles.menuButtonText}>{amount}</Text>
-                        <Icon name="chevron-down" size={16} color="#999" style={{ marginLeft: 8 }} />
+                        <Icon name="arrow-drop-down" size={16} color="#999" style={{ marginLeft: 8 }} />
                       </TouchableOpacity>
                     }
                   >
