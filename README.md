@@ -68,7 +68,7 @@ To run the app on any Android device without relying on the Expo Go app or devel
 
 You can download the APK from the link below:
 
-   <img src="images/APK_QR.png" alt="Download APK" width="200" />
+   <img src="assets/images/APK_QR.png" alt="Download APK" width="200" />
 
 ## 🛠️ Technologies Used
 
