@@ -3,7 +3,7 @@ import { SafeAreaView, View, StyleSheet, Text, TouchableOpacity, Alert, FlatList
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import InputField from '../components/InputField';
-import DropDown from '../components/DropDown';
+import { Menu } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 const RegisterBusinessDetails = () => {
@@ -14,6 +14,7 @@ const RegisterBusinessDetails = () => {
   const [businessNumber, setBusinessNumber] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
+  const [menuVisible, setMenuVisible] = useState(false);
 
   const handleNext = () => {
     if (!businessName) {
@@ -63,6 +64,11 @@ const RegisterBusinessDetails = () => {
     { value: 'arts', label: 'Arts' },
   ];
 
+  const getCategoryLabel = (val) => {
+    const found = categoryOptions.find((item) => item.value === val);
+    return found ? found.label : 'Category';
+  };
+
   const renderItem = ({ item }) => (
     <View style={styles.inputWrapper}>
       {item}
@@ -98,13 +104,31 @@ const RegisterBusinessDetails = () => {
       <Text style={styles.mandatory}>*</Text>
     </View>,
     <View key="categoryWrapper" style={styles.inputWrapper}>
-      <DropDown
-        key="category"
-        selectedValue={category}
-        onValueChange={setCategory}
-        options={categoryOptions}
-        label="Category"
-      />
+      <Text style={styles.label}>Category</Text>
+      <Menu
+        visible={menuVisible}
+        onDismiss={() => setMenuVisible(false)}
+        anchor={
+          <TouchableOpacity
+            style={styles.menuButton}
+            onPress={() => setMenuVisible(true)}
+          >
+            <Text style={styles.menuButtonText}>{getCategoryLabel(category)}</Text>
+            <Icon name="chevron-down" size={16} color={COLORS.gray2} style={{ marginLeft: 8 }} />
+          </TouchableOpacity>
+        }
+      >
+        {categoryOptions.filter(opt => opt.value !== '').map((item) => (
+          <Menu.Item
+            key={item.value}
+            title={item.label}
+            onPress={() => {
+              setCategory(item.value);
+              setMenuVisible(false);
+            }}
+          />
+        ))}
+      </Menu>
       <Text style={styles.mandatory}>*</Text>
     </View>,
     <View key="descriptionWrapper" style={styles.inputWrapper}>
@@ -163,6 +187,28 @@ const styles = StyleSheet.create({
     width: '90%',
     justifyContent: 'center',
     marginTop: 10,
+  },
+  label: {
+    fontSize: 14,
+    color: COLORS.black,
+    fontFamily: FONT.arial,
+    marginRight: 10,
+  },
+  menuButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.gray2,
+    borderRadius: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+    backgroundColor: '#fff',
+    minWidth: 150,
+  },
+  menuButtonText: {
+    fontSize: 16,
+    color: COLORS.black,
+    fontFamily: FONT.arial,
   },
   mandatory: {
     color: 'red',
