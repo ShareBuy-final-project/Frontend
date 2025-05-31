@@ -152,17 +152,19 @@ const Home = () => {
 
   return (
     <BaseLayout>
-      <View style={styles.messageContainer}>
-        <Text style={styles.secondSubMessage}>
-          {isBusiness ? 'Want to create a new deal? ' : 'Want to create a new suggested deal? '}
-          <Text
-            style={{ color: COLORS.black, textDecorationLine: 'underline', fontWeight: 'bold' }}
-            onPress={() => navigation.navigate(isBusiness ? 'NewDealBasics' : 'suggestedDeal')}
-          >
-            Create one
+      {isBusiness && (
+        <View style={styles.messageContainer}>
+          <Text style={styles.secondSubMessage}>
+            Want to create a new deal?{' '}
+            <Text
+              style={{ color: COLORS.black, textDecorationLine: 'underline', fontWeight: 'bold' }}
+              onPress={() => navigation.navigate('NewDealBasics')}
+            >
+              Create one
+            </Text>
           </Text>
-        </Text>
-      </View>
+        </View>
+      )}
       <View style={styles.DealsContainer}>
         <SearchBar
           value={searchQuery}
