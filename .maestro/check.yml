@@ -1,0 +1,22 @@
+appId: com.idonagler.ShareBuy
+---
+- longPressOn: "Email"
+- eraseText
+# - tapOn: "Register bank details"
+
+# - extendedWaitUntil:
+#     visible: "Let's get started"
+#     timeout: 15000 # Timeout in milliseconds
+#     optional: true
+# - assertVisible:
+#     id: "android:id/content"
+# - inputText: "0000000000"
+# - scroll
+# - tapOn:
+#     id: "android:id/content"
+#     point: "50%,65%"
+#     repeat: 2
+# - tapOn:
+#     id: "android:id/content"
+#     point: "50%,65%"
+#     repeat: 2

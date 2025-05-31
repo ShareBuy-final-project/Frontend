@@ -21,5 +21,6 @@ onFlowComplete:
     point: "50%,17%"
 - tapOn: "Type a message..."
 - inputText: "hello"
+- "hideKeyboard"
 - tapOn: ""
 - assertVisible: "hello"

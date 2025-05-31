@@ -1,0 +1,22 @@
+appId: com.idonagler.ShareBuy
+env:
+  USER_EMAIL: "testbusiness@example.com"
+  USER_PASSWORD: "Password1@"
+  GROUP_NAME: "Awesome Deal"
+onFlowStart:
+  - runFlow: actions/welcome.yml
+  - runFlow: actions/login_from_welcome_page.yml
+onFlowComplete:
+  - runFlow: actions/logout.yml
+  - runFlow: actions/closeApp.yml
+---
+# Test Purpose:
+# Test if the group appear in business history after purcase made.
+
+# Preconditions:
+# - User is logged in
+
+# - runFlow: actions/navigateToBusinessHistory.yml #TODO: create flow
+# - assertVisible: "${GROUP_NAME}"
+
+- scroll # delete later

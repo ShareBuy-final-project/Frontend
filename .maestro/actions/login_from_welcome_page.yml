@@ -13,6 +13,6 @@ appId: com.idonagler.ShareBuy
 - inputText: "${USER_PASSWORD}" # Generic password
 - "hideKeyboard"
 - tapOn: "Sign In"
-- assertVisible: "Login Successful"
-- tapOn: "OK"
+- assertVisible:
+    id: "toastContentContainer"
 - assertVisible: "Search"

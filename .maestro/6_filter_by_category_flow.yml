@@ -1,4 +1,8 @@
 appId: com.idonagler.ShareBuy
+env:
+  USER_EMAIL: "testuser@example.com"
+  USER_PASSWORD: "TestPass123!"
+  CATEGORY: "Electronics"
 onFlowStart:
   - runFlow: actions/welcome.yml
   - runFlow: actions/login_from_welcome_page.yml
@@ -7,13 +11,10 @@ onFlowComplete:
   - runFlow: actions/closeApp.yml
 ---
 # Test Purpose:
-# Test if users can write a review for business.
+# Test if users can filter groups by category.
 
 # Preconditions:
 # - User is logged in
-# - User has at least one group in the history section
 
-- runFlow: actions/navigateToHistory.yml
-- tapOn:
-    point: "50%,17%"
-# TODO: continue when a group exist in the history section
+- runFlow: actions/filterByCategory.yml
+- assertVisible: "iPhone 13"

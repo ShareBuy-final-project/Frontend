@@ -1,0 +1,20 @@
+appId: com.idonagler.ShareBuy
+env:
+  USER_EMAIL: "testuser@example.com"
+  USER_PASSWORD: "TestPass123!"
+  GROUP_NAME: "NonExistentGroup"
+onFlowStart:
+  - runFlow: actions/welcome.yml
+  - runFlow: actions/login_from_welcome_page.yml
+onFlowComplete:
+  - runFlow: actions/logout.yml
+  - runFlow: actions/closeApp.yml
+---
+# Test Purpose:
+# Test search of unexisting group.
+
+# Preconditions:
+# - User is logged in
+- assertVisible: "Search"
+- runFlow: actions/searchByName.yml
+- assertVisible: "No deals found for the search query."

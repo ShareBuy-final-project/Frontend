@@ -7,6 +7,4 @@ appId: com.idonagler.ShareBuy
 
 - tapOn: "Search"
 - inputText: "${GROUP_NAME}"
-- assertVisible:
-    text: "${GROUP_NAME}"
-    index: 1
+- "hideKeyboard"
