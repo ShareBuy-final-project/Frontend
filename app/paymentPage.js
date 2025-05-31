@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { CheckBox } from 'react-native-elements'; 
 import TermsOfUse from '../components/TermsOfUse';
-import DropDown from '../components/DropDown'; 
+import { Menu } from 'react-native-paper';
 import {createPaymentIntent} from '../apiCalls/groupApiCalls';
 import {updatePaymentConfirmed} from '../apiCalls/paymentApiCalls';
 import Toast from 'react-native-toast-message';
@@ -25,6 +25,7 @@ const CheckoutScreen = () => {
   const [isTermsVisible, setIsTermsVisible] = useState(false);
   const [isConsentChecked, setIsConsentChecked] = useState(false);
   const [amount, setAmount] = useState(1);
+  const [menuVisible, setMenuVisible] = useState(false);
   const { socket } = useSocket();
 
   const setupPaymentSheet = async () => {
@@ -137,12 +138,30 @@ const CheckoutScreen = () => {
                 <Text style={styles.description}>{dealDetails?.description}</Text>
                 <View style={styles.priceContainer}>
                   <Text style={styles.price}>Price: ${totalPrice}</Text>
-                  <DropDown
-                      selectedValue={amount}
-                      onValueChange={setAmount}
-                      options={[...Array(10).keys()].map(i => ({ label: `${i + 1}`, value: i + 1 }))}
-                      width='20%'
-                  />
+                  <Menu
+                    visible={menuVisible}
+                    onDismiss={() => setMenuVisible(false)}
+                    anchor={
+                      <TouchableOpacity
+                        style={styles.menuButton}
+                        onPress={() => setMenuVisible(true)}
+                      >
+                        <Text style={styles.menuButtonText}>{amount}</Text>
+                        <Icon name="arrow-drop-down" size={16} color="#999" style={{ marginLeft: 8 }} />
+                      </TouchableOpacity>
+                    }
+                  >
+                    {[...Array(10).keys()].map(i => (
+                      <Menu.Item
+                        key={i + 1}
+                        title={`${i + 1}`}
+                        onPress={() => {
+                          setAmount(i + 1);
+                          setMenuVisible(false);
+                        }}
+                      />
+                    ))}
+                  </Menu>
                 </View>
               
               <Modal
@@ -265,6 +284,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center', 
     alignItems: 'center',      
+  },
+  menuButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#c7c7c7',
+    borderRadius: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+    backgroundColor: '#fff',
+    minWidth: 60,
+  },
+  menuButtonText: {
+    fontSize: 16,
+    color: '#333',
   },
 });
 
