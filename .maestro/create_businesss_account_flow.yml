@@ -3,7 +3,7 @@ env:
   USER_NAME: "test business"
   USER_EMAIL: "testbusiness@example.com"
   USER_PHONE: "0501234567"
-  USER_PASSWORD: "TestPass123!"
+  USER_PASSWORD: "Password1@"
   USER_COUNTRY: "Israel"
   USER_CITY: "Tel Aviv"
   USER_STREET: "Herzl"

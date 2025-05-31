@@ -6,12 +6,13 @@ env:
   AMOUNT_BEFORE: "100"
   AMOUNT_AFTER: "90"
   MINIMUM_AMOUNT: "5"
-# onFlowStart:
-#   - runFlow: actions/welcome.yml
-#   - runFlow: actions/login_from_welcome_page.yml
-# onFlowComplete:
-#   - runFlow: actions/logout.yml
-#   - runFlow: actions/closeApp.yml
+  DEAL_DESCRIPTION: "This is a great deal for everyone!"
+onFlowStart:
+  - runFlow: actions/welcome.yml
+  - runFlow: actions/login_from_welcome_page.yml
+onFlowComplete:
+  - runFlow: actions/logout.yml
+  - runFlow: actions/closeApp.yml
 ---
 # Test Purpose:
 # Test if users can create new group.
@@ -40,4 +41,18 @@ env:
 - inputText: "${MINIMUM_AMOUNT}" # Generic minimum amount
 - "hideKeyboard"
 - tapOn: "next"
+
 # second group creation screen
+
+- assertVisible: "Add more details about your deal"
+- tapOn: "Enter deal description"
+- inputText: "${DEAL_DESCRIPTION}" # Generic deal description
+- "hideKeyboard"
+- tapOn: "Upload Deal image"
+- tapOn: "UPLOAD FROM GALLERY"
+- tapOn:
+    id: "com.google.android.providers.media.module:id/icon_thumbnail"
+    index: 0
+- tapOn:
+    id: "com.idonagler.ShareBuy:id/crop_image_menu_crop"
+- tapOn: "Done"

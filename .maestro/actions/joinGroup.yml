@@ -1,0 +1,31 @@
+appId: com.idonagler.ShareBuy
+---
+# Action: join a group and complete the payment process
+
+# Preconditions:
+# - The App is on the group page
+
+- tapOn: "Join Group"
+- tapOn: "1, "
+- tapOn:
+    id: "menu-item-title"
+    index: ${INDEX}
+- tapOn: "Proceed to Payment"
+- tapOn: "VIEW TERMS"
+- tapOn:
+    id: "checkbox"
+- tapOn: "Close"
+- tapOn: "Proceed to Payment"
+- tapOn: "Card number"
+- inputText: "4242424242424242"
+- "hideKeyboard"
+- tapOn: "Expiration date. Two digit month and two digit year, empty"
+- inputText: "1227"
+- "hideKeyboard"
+- tapOn: "CVC"
+- inputText: "789"
+- tapOn:
+    id: "com.idonagler.ShareBuy:id/primary_button"
+- assertVisible:
+    text: "Your payment was successful 🎉"
+    index: 1
