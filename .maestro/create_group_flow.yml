@@ -1,2 +1,43 @@
-#place holder for the create group flow
 appId: com.idonagler.ShareBuy
+env:
+  USER_EMAIL: "user1@example.com"
+  USER_PASSWORD: "password1"
+  DEAL_NAME: "Awesome Deal"
+  AMOUNT_BEFORE: "100"
+  AMOUNT_AFTER: "90"
+  MINIMUM_AMOUNT: "5"
+# onFlowStart:
+#   - runFlow: actions/welcome.yml
+#   - runFlow: actions/login_from_welcome_page.yml
+# onFlowComplete:
+#   - runFlow: actions/logout.yml
+#   - runFlow: actions/closeApp.yml
+---
+# Test Purpose:
+# Test if users can create new group.
+
+# Preconditions:
+# - User is logged in
+
+# first group creation screen
+
+- tapOn:
+    point: "70%,12%"
+- assertVisible: "Tell us about your awesome deal idea!"
+- tapOn: "Deal Name"
+- inputText: "${DEAL_NAME}" # Generic deal name
+- "hideKeyboard"
+- tapOn: "Amount Before"
+- inputText: "${AMOUNT_BEFORE}" # Generic amount before
+- "hideKeyboard"
+- tapOn: "Amount After"
+- inputText: "${AMOUNT_AFTER}" # Generic amount after
+- "hideKeyboard"
+- tapOn: "Minimum Amount of Products"
+- tapOn:
+    text: "Minimum Amount of Products"
+    index: 1
+- inputText: "${MINIMUM_AMOUNT}" # Generic minimum amount
+- "hideKeyboard"
+- tapOn: "next"
+# second group creation screen
