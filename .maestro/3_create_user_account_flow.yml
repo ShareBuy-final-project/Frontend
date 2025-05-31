@@ -1,7 +1,7 @@
 appId: com.idonagler.ShareBuy
 env:
-  USER_NAME: "test business"
-  USER_EMAIL: "testbusiness@example.com"
+  USER_NAME: "Test User"
+  USER_EMAIL: "testuser@example.com"
   USER_PHONE: "0501234567"
   USER_PASSWORD: "TestPass123!"
   USER_COUNTRY: "Israel"
@@ -22,7 +22,7 @@ onFlowComplete:
 # - There is no account with the email ${USER_EMAIL} and password ${USER_PASSWORD}.
 
 - tapOn:
-    point: "75%,82%"
+    point: "75%,84%"
 - tapOn: "I am a private person"
 - tapOn: "next, "
 - tapOn: "Full Name"

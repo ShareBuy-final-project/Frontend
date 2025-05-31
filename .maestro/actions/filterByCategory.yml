@@ -1,0 +1,10 @@
+appId: com.idonagler.ShareBuy
+---
+# Action: Filter the search by category
+
+# Preconditions:
+# - The App is on the home screen
+
+- tapOn: ""
+- tapOn: "${CATEGORY}"
+- assertVisible: "Filtering by: ${CATEGORY}"

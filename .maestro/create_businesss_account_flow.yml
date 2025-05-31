@@ -1,7 +1,7 @@
 appId: com.idonagler.ShareBuy
 env:
-  USER_NAME: "Test User"
-  USER_EMAIL: "testuser@example.com"
+  USER_NAME: "test business"
+  USER_EMAIL: "testbusiness@example.com"
   USER_PHONE: "0501234567"
   USER_PASSWORD: "TestPass123!"
   USER_COUNTRY: "Israel"
@@ -58,19 +58,42 @@ onFlowComplete:
 - inputText: "${USER_ZIP}" # Generic zip code
 - "hideKeyboard"
 - tapOn: "next"
+
+# fourth registration screen
+
+- assertVisible: "What is your business name?"
 - tapOn: "Business Name"
 - inputText: "${BUSINESS_NAME}" # Generic business name
 - "hideKeyboard"
 - tapOn: "Business Number"
 - inputText: "${BUSINESS_NUMBER}" # Generic business number
 - "hideKeyboard"
-- tapOn: "Category"
-# tapOn: "${BUSINESS_CATEGORY}" # Generic business category
+- tapOn: "Category, "
+- tapOn: "${BUSINESS_CATEGORY}" # Generic business category
 - tapOn: "Description"
 - inputText: "${BUSINESS_DESCRIPTION}" # Generic business description
 - "hideKeyboard"
-- tapOn: "next, "
+- tapOn: "next"
 
-- tapOn: "finish registration"
-- assertVisible:
-    id: "toastContentContainer"
+# fifth registration screen
+
+- assertVisible: "Business Contact Information"
+- tapOn: "Website Link"
+- inputText: "${WEBSITE_LINK}" # Generic website link
+- "hideKeyboard"
+- tapOn: "Contact Email"
+- inputText: "${CONTACT_EMAIL}" # Generic contact email
+- "hideKeyboard"
+- tapOn: "next"
+
+# final registration screen
+
+- assertVisible: "Secure Payment Setup"
+- assertVisible: "Register bank details"
+# - tapOn: "Register bank details"
+# - tapOn:
+#     point: "50%,49%"
+# - tapOn: "finish registration"
+# - assertVisible:
+#     id: "toastContentContainer"
+
