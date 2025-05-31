@@ -153,6 +153,10 @@ const NewDealDetails = () => {
 
 const styles = StyleSheet.create({
 
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+  },
   innerContainer: {
     flex: 1,
     padding: 20,
