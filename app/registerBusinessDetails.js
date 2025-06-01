@@ -62,6 +62,16 @@ const RegisterBusinessDetails = () => {
     { value: 'administrative', label: 'Administrative' },
     { value: 'educational_services', label: 'Educational Services' },
     { value: 'arts', label: 'Arts' },
+    { value: 'manufacturing', label: 'Manufacturing' },
+    { value: 'legal', label: 'Legal Services' },
+    { value: 'marketing', label: 'Marketing & Advertising' },
+    { value: 'sports', label: 'Sports & Recreation' },
+    { value: 'non_profit', label: 'Non-Profit' },
+    { value: 'technology', label: 'Technology & Innovation' },
+    { value: 'environment', label: 'Environmental Services' },
+    { value: 'consulting', label: 'Consulting' },
+    { value: 'media', label: 'Media & Communications' },
+    { value: 'other', label: 'Other' },
   ];
 
   const getCategoryLabel = (val) => {
