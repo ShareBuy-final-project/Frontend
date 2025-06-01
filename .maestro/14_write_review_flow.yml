@@ -1,0 +1,34 @@
+appId: com.idonagler.ShareBuy
+env:
+  BUSINESS_NAME: "Business 1"
+  REVIEW: "Great service and friendly staff!"
+  INDEX: 3 # amount of start - 1
+onFlowStart:
+  - runFlow: actions/welcome.yml
+  - runFlow: actions/login_from_welcome_page.yml
+onFlowComplete:
+  - runFlow: actions/logout.yml
+  - runFlow: actions/closeApp.yml
+---
+# Test Purpose:
+# Test if users can write a review for business.
+
+# Preconditions:
+# - User is logged in
+# - User has at least one group in the history section
+
+- runFlow: actions/navigateToHistory.yml
+- tapOn:
+    point: "50%,17%"
+- tapOn: "${BUSINESS_NAME}"
+- assertVisible: "Reviews:"
+- tapOn: "Add Review"
+- tapOn: "Write your review..."
+- inputText: "${REVIEW}"
+- "hideKeyboard"
+- tapOn:
+    text: ""
+    index: "${INDEX}" # INDEX + 1 stars
+- tapOn: "Submit"
+- assertVisible: "${REVIEW}"
+# TODO: continue when a group exist in the history section
