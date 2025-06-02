@@ -1,0 +1,26 @@
+appId: com.idonagler.ShareBuy
+env:
+  USER_EMAIL: "testuser@example.com"
+  USER_PASSWORD: "TestPass123!"
+  GROUP_NAME: "Awesome Deal"
+  INDEX: 2 # amount of items in the dropdown menu (index+1)
+onFlowStart:
+  - runFlow: actions/welcome.yml
+  - runFlow: actions/login_from_welcome_page.yml
+onFlowComplete:
+  - runFlow: actions/logout.yml
+  - runFlow: actions/closeApp.yml
+---
+# Test Purpose:
+# Test if users can join a group and complete the payment process successfully.
+
+# Preconditions:
+# - User is logged in
+
+- runFlow: actions/searchByName.yml
+- tapOn:
+    text: "${GROUP_NAME}"
+    index: 1
+- runFlow: actions/joinGroup.yml
+- runFlow: actions/navigateToHistory.yml
+- assertVisible: "${GROUP_NAME}"

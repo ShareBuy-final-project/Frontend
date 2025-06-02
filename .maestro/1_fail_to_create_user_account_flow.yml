@@ -1,0 +1,112 @@
+appId: com.idonagler.ShareBuy
+env:
+  USER_NAME: "Test User"
+  USER_VALID_EMAIL: "user1@example.com"
+  USER_INVALID_EMAIL: "invalid-email"
+  USER_PHONE: "0501234567"
+  USER_VALID_PASSWORD: "TestPass123!"
+  USER_INVALID_PASSWORD: "InvalidPass"
+  USER_COUNTRY: "Israel"
+  USER_CITY: "Tel Aviv"
+  USER_STREET: "Herzl"
+  USER_HOUSE_NUMBER: "10"
+  USER_ZIP: "12345"
+onFlowStart:
+  - runFlow: actions/welcome.yml
+onFlowComplete:
+  - runFlow: actions/closeApp.yml
+---
+# Test Purpose:
+# Test if users can create user account with invalid inputs
+
+# Preconditions:
+# - There is account with the email ${USER_EMAIL}.
+
+# welcome page
+
+- extendedWaitUntil:
+    visible: "Just for delay"
+    timeout: 2000 # Timeout in milliseconds
+    optional: true
+- tapOn:
+    point: "75%,84%"
+- assertVisible: "Who are you?"
+- tapOn: "I am a private person"
+- tapOn: "next, "
+
+# first registration screen
+
+- tapOn: "next, "
+- assertVisible: "Invalid Input"
+- tapOn: "OK"
+- tapOn: "Full Name"
+- inputText: "${USER_NAME}" # Generic user name
+- "hideKeyboard"
+- tapOn: "Email"
+- inputText: "${USER_INVALID_EMAIL}" # Generic user email
+- "hideKeyboard"
+- tapOn: "Phone Number"
+- inputText: "${USER_PHONE}" # Generic user phone
+- "hideKeyboard"
+- tapOn: "next, "
+- assertVisible: "Invalid Input"
+- assertVisible: "Email address is not valid."
+- tapOn: "OK"
+- longPressOn: "Email"
+- eraseText
+- tapOn: "Email"
+- inputText: "${USER_VALID_EMAIL}" # Generic valid user email
+- "hideKeyboard"
+- tapOn: "next"
+
+#second registration screen
+
+- tapOn: "Password"
+- inputText: "${USER_INVALID_PASSWORD}" # Generic invalid password
+- "hideKeyboard"
+- tapOn: "Confirm Password"
+- inputText: "${USER_INVALID_PASSWORD}" # Generic password confirmation
+- "hideKeyboard"
+- assertVisible: "Passwords match!"
+- tapOn: "next, "
+- assertVisible: "Invalid Input"
+- assertVisible: "Password does not meet the requirements."
+- tapOn: "OK"
+
+- longPressOn: "Password"
+- eraseText
+- tapOn: "Password"
+- inputText: "${USER_VALID_PASSWORD}" # Generic invalid password
+- "hideKeyboard"
+- assertVisible: "Passwords don't match!"
+- longPressOn: "Confirm Password"
+- eraseText
+- tapOn: "Confirm Password"
+- inputText: "${USER_VALID_PASSWORD}" # Generic password confirmation
+- "hideKeyboard"
+- assertVisible: "Passwords match!"
+- tapOn: "next"
+
+# third registration screen
+
+- assertVisible: "Where can we find you?"
+- tapOn: "finish registration"
+- assertVisible: "Invalid Input"
+- tapOn: "OK"
+- tapOn: "State"
+- inputText: "${USER_COUNTRY}" # Generic country
+- "hideKeyboard"
+- tapOn: "City"
+- inputText: "${USER_CITY}" # Generic city
+- "hideKeyboard"
+- tapOn: "Street"
+- inputText: "${USER_STREET}" # Generic street
+- "hideKeyboard"
+- tapOn: "Street Number"
+- inputText: "${USER_HOUSE_NUMBER}" # Generic house number
+- "hideKeyboard"
+- tapOn: "Zip Code"
+- inputText: "${USER_ZIP}" # Generic zip code
+- "hideKeyboard"
+- tapOn: "finish registration"
+- assertVisible: "Registration Error"
