@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView, ScrollView, View, TextInput, StyleSheet, Alert, Text, Platform, TouchableOpacity } from 'react-native';
+import { SafeAreaView, ScrollView, View, TextInput, StyleSheet, Alert, Text, Platform, TouchableOpacity, Animated, Easing } from 'react-native';
 import { COLORS, FONT } from '../constants/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { login } from '../apiCalls/authApiCalls';
@@ -15,6 +15,7 @@ import io from 'socket.io-client';
 const Welcome = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   
   const socketContext = useSocket();
@@ -26,6 +27,8 @@ const Welcome = () => {
         Alert.alert('Please fill in all fields!');
         return;
       }
+      console.log('handleSignIn - Validating input');
+      setIsLoading(true);
       const res = await login(email, password);
       await saveToken('isBusiness', res.isBusiness.toString());
       
@@ -41,7 +44,7 @@ const Welcome = () => {
       // Fetch chats and update unread count
       const chatsData = await getMyChats();
       socketContext.setChats(chatsData);
-      
+      setIsLoading(false);
       Toast.show({
         type: 'success',
         text1: 'Login Successful',
@@ -55,51 +58,76 @@ const Welcome = () => {
     }
   };
 
+  const spinnerAnimation = new Animated.Value(0);
+
+  Animated.loop(
+    Animated.timing(spinnerAnimation, {
+      toValue: 1,
+      duration: 1000,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    })
+  ).start();
+
+  const spin = spinnerAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollView}>
-        <View style={styles.iconContainer}>
-          <Icon name="shopping-cart" size={150} color={COLORS.black} />
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <Animated.View style={{ transform: [{ rotate: spin }] }}>
+            <Icon name="spinner" size={50} color={'#f08080'} />
+          </Animated.View>
+          <Text style={styles.loadingText}>Loading...</Text>
         </View>
-        <Text style={styles.welcomeMessage}>
-          Welcome to ShareBuy
-        </Text>
-        <View style={styles.messageContainer}>
-          <Text style={styles.subMessage}>
-            have we ever met?
+      ) : (
+        <ScrollView contentContainerStyle={styles.scrollView}>
+          <View style={styles.iconContainer}>
+            <Icon name="shopping-cart" size={150} color={COLORS.black} />
+          </View>
+          <Text style={styles.welcomeMessage}>
+            Welcome to ShareBuy
           </Text>
-        </View>
-        <InputField
-          icon="envelope"
-          placeholder="Email"
-          keyboardType="email-address"
-          value={email}
-          onChangeText={setEmail}
-          marginLeft={20}
-          marginRight={5}
-          borderColor={email ? COLORS.black : COLORS.gray}
-        />
-        <InputField
-          icon="lock"
-          placeholder="Password"
-          keyboardType="default"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={true}
-          marginBottom={5}
-          marginLeft={20}
-          marginRight={5}
-          borderColor={password ? COLORS.black : COLORS.gray}
-        />
-        <TouchableOpacity style={styles.buttonContainer} onPress={handleSignIn}>
-          <Text style={{color : COLORS.white}}>Sign In</Text>
-        </TouchableOpacity>
-        <View style={styles.messageContainer}>
-          <Text style={styles.secondSubMessage}>
-            don't have an account? <Text style={{ color: COLORS.black, textDecorationLine: 'underline' }} onPress={() => navigation.navigate('registerTypeSelection')}>Create one</Text>
-          </Text>
-        </View>
-      </ScrollView>
+          <View style={styles.messageContainer}>
+            <Text style={styles.subMessage}>
+              have we ever met?
+            </Text>
+          </View>
+          <InputField
+            icon="envelope"
+            placeholder="Email"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+            marginLeft={20}
+            marginRight={5}
+            borderColor={email ? COLORS.black : COLORS.gray}
+          />
+          <InputField
+            icon="lock"
+            placeholder="Password"
+            keyboardType="default"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={true}
+            marginBottom={5}
+            marginLeft={20}
+            marginRight={5}
+            borderColor={password ? COLORS.black : COLORS.gray}
+          />
+          <TouchableOpacity style={styles.buttonContainer} onPress={handleSignIn}>
+            <Text style={{color : COLORS.white}}>Sign In</Text>
+          </TouchableOpacity>
+          <View style={styles.messageContainer}>
+            <Text style={styles.secondSubMessage}>
+              don't have an account? <Text style={{ color: COLORS.black, textDecorationLine: 'underline' }} onPress={() => navigation.navigate('registerTypeSelection</Text>')}>Create one</Text>
+            </Text>
+          </View>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -166,6 +194,23 @@ const styles = StyleSheet.create({
     fontFamily: FONT.arial,
     marginTop: 20,
     backgroundColor: COLORS.glowingYeloow,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    textAlign: 'center',
+    marginVertical: 10,
+    color: COLORS.gray,
+    fontSize: 14,
+    fontFamily: FONT.arial,
+  },
+  loadingIcon: {
+    color: '#f08080',
+    fontSize: 50,
+    animation: 'spin 2s linear infinite', // Added CSS animation for spinning
   },
 });
 
