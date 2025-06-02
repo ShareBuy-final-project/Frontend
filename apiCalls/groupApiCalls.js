@@ -308,3 +308,21 @@ export const fetchCategories = async () => {
   }
 };
 
+export const fetchGroupsByBusiness = async (businessEmail, page = 1, limit = 10) => {
+  try {
+    const res = await excuteAPICallPOST('group/getGroupsByBusinessEmail', {
+      businessEmail,
+      page,
+      limit,
+    });
+
+    if (res.status !== 200) {
+      throw new Error('Failed to fetch groups by business');
+    }
+
+    return res.data;
+  } catch (error) {
+    console.error('Error fetching groups by business:', error);
+    throw error;
+  }
+}

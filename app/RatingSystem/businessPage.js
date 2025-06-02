@@ -1,20 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, TextInput, FlatList, Alert, Linking, Modal } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, TextInput, FlatList, Alert, Linking, Modal, Image } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { getBusinessByNumber, submitReview } from '../../apiCalls/reviewApiCalls';
 import { getToken } from '../../utils/userTokens'
 import BaseLayout from '../BaseLayout';
-
+import { fetchGroupsByBusiness } from '../../apiCalls/groupApiCalls';
+import DefaultPic from '../../assets/images/default_pic.png';
 const BusinessPage = () => {
+  const navigation = useNavigation();
   const route = useRoute();
   const { businessNumber } = route.params || {};
   const [businessDetails, setBusinessDetails] = useState(null);
+  const [businessEmail, setBusinessEmail] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newReview, setNewReview] = useState('');
   const [selectedRating, setSelectedRating] = useState(0);
   const [userEmail, setUserEmail] = useState('');
+  const [groups, setGroups] = useState([]);
+  const [page, setPage] = useState(1);
+  const [isLoadingGroups, setIsLoadingGroups] = useState(false);
+  const [hasMoreGroups, setHasMoreGroups] = useState(true);
 
   useEffect(() => {
     const fetchBusinessDetails = async () => {
@@ -22,7 +29,8 @@ const BusinessPage = () => {
       try {
         console.log("test:", businessNumber);
         const business = await getBusinessByNumber(businessNumber);
-        console.log("test:", business);
+        setBusinessEmail(business.userEmail);
+        console.log("test business----:", business.userEmail);
     
         const reviews = business.Reviews || [];
     
@@ -55,6 +63,47 @@ const BusinessPage = () => {
     fetchBusinessDetails();
     fetchEmail();
   }, [businessNumber]);
+
+  useEffect(() => {
+    if (!businessEmail) return;
+    fetchGroups();
+  }, [businessEmail]);
+  useEffect(() => {
+    if (!businessEmail) return;
+    if (page > 1) {
+      fetchGroups();
+    }
+  }, [page]);
+
+  const fetchGroups = async () => {
+    if (isLoadingGroups || !hasMoreGroups) return;
+
+    setIsLoadingGroups(true);
+    try {
+      console.log('Fetching groups for business:', businessEmail, 'Page:', page);
+      const fetchedGroups = await fetchGroupsByBusiness(businessEmail,page, 10);
+      if (fetchedGroups.length === 0) {
+        setHasMoreGroups(false);
+        return;
+      }
+
+      const formattedGroups = fetchedGroups.map((group) => ({
+        id: group.id,
+        title: group.name,
+        original_price: `$${group.price}`,
+        discounted_price: `$${group.discount}`,
+        image: group.imageBase64 || DefaultPic,
+        participants: group.totalAmount || 0,
+        size: group.size,
+      }));
+
+      setGroups((prevGroups) => [...prevGroups, ...formattedGroups]);
+    } catch (error) {
+      console.log('Error fetching groups:', error);
+    } finally {
+      setIsLoadingGroups(false);
+    }
+  };
 
   const addReview = async () => {
     if (newReview.trim() === '' || selectedRating === 0) {
@@ -90,6 +139,25 @@ const BusinessPage = () => {
     }
   };
 
+   const renderDealCard = ({ item }) => (
+      <TouchableOpacity
+        style={[styles.card, { width: groups.length === 1 ? '100%' : '48%' }]}
+        onPress={() => navigation.navigate('DealPage', { dealId: item.id })}
+      >
+        <View style={styles.imageContainer}>
+          <Image source={item?.image ? { uri: item.image } : DefaultPic} style={styles.cardImage} resizeMode="contain" />
+          <View style={styles.participantOverlay}>
+            <Text style={styles.participantText}>{item.participants}/{item.size}</Text>
+          </View>
+        </View>
+        <Text style={styles.cardTitle}>{item.title}</Text>
+        <View style={styles.priceContainer}>
+          <Text style={styles.cardPriceOriginal}>{item.original_price}</Text>
+          <Text style={styles.cardPriceDiscounted}>{item.discounted_price}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+
   if (isLoading || !businessDetails) {
     return (
       <View style={styles.loadingContainer}>
@@ -97,6 +165,9 @@ const BusinessPage = () => {
       </View>
     );
   }
+  const handleLoadMore = () => {
+    if (!isLoading && hasMoreGroups) setPage((prev) => prev + 1);
+  };
 
     return (
       <BaseLayout>
@@ -210,6 +281,25 @@ const BusinessPage = () => {
     </TouchableOpacity>
   </TouchableOpacity>
 </Modal>
+
+<Text style={styles.sectionHeadline}>Browse {businessDetails?.name}'s Offers</Text>
+
+ {groups.length === 0 && !isLoading ? (
+          <Text style={styles.noDealsText}>No deals found for the search query.</Text>
+        ) : (
+          <FlatList
+            data={groups}
+            renderItem={renderDealCard}
+            keyExtractor={(item, index) => `${item.id}_${index}`}
+            key={'grid'}
+            contentContainerStyle={styles.listContainer}
+            numColumns={2}
+            columnWrapperStyle={styles.row}
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={isLoading && <Text style={styles.loadingText}>Loading more deals...</Text>}
+          />
+        )}
       </View>
       </BaseLayout>
     );
@@ -276,6 +366,14 @@ const styles = StyleSheet.create({
   cancelText: { fontSize: 16, color: 'red' },
   submitButton: { backgroundColor: '#f08080', padding: 10, borderRadius: 5 },
   submitText: { color: '#fff', fontSize: 16 },
+  card: { backgroundColor: '#fff', borderRadius: 8, marginBottom: 10, padding: 10, elevation: 2 },
+  cardImage: { width: '100%', height: 150, borderRadius: 8 },
+  cardTitle: { fontSize: 16, fontWeight: 'bold', marginVertical: 5 },
+  priceContainer: { flexDirection: 'row', justifyContent: 'space-between' },
+  cardPriceOriginal: { fontSize: 14, color: '#888', textDecorationLine: 'line-through' },
+  cardPriceDiscounted: { fontSize: 14, color: '#f08080', fontWeight: 'bold' },
+  participantText: { fontSize: 12, color: '#666', marginTop: 5 },
+  sectionHeadline: { fontSize: 18, fontWeight: 'bold', marginTop: 20, marginBottom: 10, color: '#333' },
 });
 
 export default BusinessPage;

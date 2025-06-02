@@ -41,7 +41,7 @@ const excuteAPICall = async (route, type, params) => {
         //console.log('Response:', response);
         return response;
     } catch (error) {
-        if (error.response.status == 401) {
+        if (error.response && error.response.status == 401) {
             console.log('Token expired, trying to refresh');
             // Token might be invalid, try to refresh it
             accessToken = await refreshAccessToken();
