@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, TextInput, FlatList, Alert, Linking, Modal, Image } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, TextInput, FlatList, Alert, Linking, Modal, Image, ScrollView } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { getBusinessByNumber, submitReview } from '../../apiCalls/reviewApiCalls';
@@ -22,6 +22,7 @@ const BusinessPage = () => {
   const [page, setPage] = useState(1);
   const [isLoadingGroups, setIsLoadingGroups] = useState(false);
   const [hasMoreGroups, setHasMoreGroups] = useState(true);
+  const [reviewLimit, setReviewLimit] = useState(1); // Default to showing one review
 
   useEffect(() => {
     const fetchBusinessDetails = async () => {
@@ -33,6 +34,15 @@ const BusinessPage = () => {
         console.log("test business----:", business.userEmail);
     
         const reviews = business.Reviews || [];
+        const mockReviews = [
+          { id: 1, userEmail: 'user1@example.com', rating: 5, reviewText: 'Excellent service and great products!' },
+          { id: 2, userEmail: 'user2@example.com', rating: 4, reviewText: 'Good experience overall, but room for improvement.' },
+          { id: 3, userEmail: 'user3@example.com', rating: 3, reviewText: 'Average experience, nothing special.' },
+          { id: 4, userEmail: 'user4@example.com', rating: 2, reviewText: 'Not satisfied with the service.' },
+          { id: 5, userEmail: 'user5@example.com', rating: 1, reviewText: 'Terrible experience, would not recommend.' },
+        ];
+
+        reviews.push(...mockReviews);
     
         const averageRating = reviews.length > 0
           ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
@@ -171,142 +181,156 @@ const BusinessPage = () => {
 
     return (
       <BaseLayout>
-      <View style={styles.container}>
-      <View style={styles.titleWithRating}>
-        <Text style={styles.title}>{businessDetails?.name}</Text>
-        <View style={styles.ratingContainer}>
-          {[1, 2, 3, 4, 5].map((num) => (
-            <Icon
-              key={num}
-              name={num <= Math.round(businessDetails?.rating) ? 'star' : 'star-border'}
-              size={20}
-              color="#FFD700"
-            />
-          ))}
-          <Text style={styles.ratingCount}>({businessDetails?.reviews.length})</Text>
-        </View>
-      </View>
-        <Text style={styles.category}>{businessDetails?.category}</Text>
-        <Text style={styles.description}>{businessDetails?.description}</Text>
-
-        {(businessDetails?.websiteLink || businessDetails?.contactEmail) && (
-        <View style={styles.contactBox}>
-        <Text style={styles.contactHeading}>Contact Info</Text>
-      
-        {businessDetails?.websiteLink && (
-          <TouchableOpacity
-            style={styles.contactRow}
-            onPress={() => Linking.openURL(businessDetails.websiteLink)}
-          >
-            <Icon name="language" size={18} color="#000" />
-            <Text style={styles.contactText}>Visit Website</Text>
-          </TouchableOpacity>
-        )}
-      
-        {businessDetails?.contactEmail && (
-          <TouchableOpacity
-            style={styles.contactRow}
-            onPress={() => Linking.openURL(`mailto:${businessDetails.contactEmail}`)}
-          >
-            <Icon name="email" size={18} color="#000" />
-            <Text style={styles.contactText}>{businessDetails.contactEmail}</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-      )}
-        <Text style={styles.reviewTitle}>Reviews:</Text>
         <FlatList
-          data={businessDetails.reviews}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.reviewItem}>
-              <View style={styles.reviewHeader}>
-              <Text style={styles.reviewUser}>{item.User?.fullName || item.userEmail}:</Text>
-              <View style={styles.starContainer}>
-              {[1, 2, 3, 4, 5].map((num) => (
-                <Icon
-                  key={num}
-                  name={num <= item.rating ? 'star' : 'star-border'}
-                  size={16}
-                  color="#FFD700"
-                />
-              ))}
-            </View>
+          ListHeaderComponent={
+            <>
+            <View style={styles.container}>
+              <View style={styles.titleWithRating}>
+                <Text style={styles.title}>{businessDetails?.name}</Text>
+                <View style={styles.ratingContainer}>
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <Icon
+                      key={num}
+                      name={num <= Math.round(businessDetails?.rating) ? 'star' : 'star-border'}
+                      size={20}
+                      color="#FFD700"
+                    />
+                  ))}
+                  <Text style={styles.ratingCount}>({businessDetails?.reviews.length})</Text>
+                </View>
               </View>
-              <Text style={styles.reviewText}>{item.text || item.reviewText}</Text>
-            </View>
-          )}
+              <Text style={styles.category}>{businessDetails?.category}</Text>
+              <Text style={styles.description}>{businessDetails?.description}</Text>
+
+              {(businessDetails?.websiteLink || businessDetails?.contactEmail) && (
+                <View style={styles.contactBox}>
+                  <Text style={styles.contactHeading}>Contact Info</Text>
+
+                  {businessDetails?.websiteLink && (
+                    <TouchableOpacity
+                      style={styles.contactRow}
+                      onPress={() => Linking.openURL(businessDetails.websiteLink)}
+                    >
+                      <Icon name="language" size={18} color="#000" />
+                      <Text style={styles.contactText}>Visit Website</Text>
+                    </TouchableOpacity>
+                  )}
+
+                  {businessDetails?.contactEmail && (
+                    <TouchableOpacity
+                      style={styles.contactRow}
+                      onPress={() => Linking.openURL(`mailto:${businessDetails.contactEmail}`)}
+                    >
+                      <Icon name="email" size={18} color="#000" />
+                      <Text style={styles.contactText}>{businessDetails.contactEmail}</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              )}
+
+              <Text style={styles.reviewTitle}>Reviews:</Text>
+              {businessDetails.reviews.slice(0, reviewLimit).map((item, index) => (
+                <View key={index} style={styles.reviewItem}>
+                  <View style={styles.reviewHeader}>
+                    <Text style={styles.reviewUser}>{item.User?.fullName || item.userEmail}:</Text>
+                    <View style={styles.starContainer}>
+                      {[1, 2, 3, 4, 5].map((num) => (
+                        <Icon
+                          key={num}
+                          name={num <= item.rating ? 'star' : 'star-border'}
+                          size={16}
+                          color="#FFD700"
+                        />
+                      ))}
+                    </View>
+                  </View>
+                  <Text style={styles.reviewText}>{item.text || item.reviewText}</Text>
+                </View>
+              ))}
+
+              {reviewLimit < businessDetails.reviews.length && (
+                <TouchableOpacity onPress={() => setReviewLimit((prev) => prev + 2)}>
+                  <Text style={styles.showMoreText}>Show More</Text>
+                </TouchableOpacity>
+              )}
+
+              {reviewLimit > 1 && (
+                <TouchableOpacity onPress={() => setReviewLimit(1)}>
+                  <Text style={styles.showLessText}>Show Less</Text>
+                </TouchableOpacity>
+              )}
+
+              <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
+                <Text style={styles.addButtonText}>Add Review</Text>
+              </TouchableOpacity>
+
+              <Modal visible={isModalVisible} animationType="slide" transparent>
+                <TouchableOpacity
+                  style={styles.modalContainer}
+                  activeOpacity={1}
+                  onPressOut={() => setIsModalVisible(false)}
+                >
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    style={styles.modalContent}
+                    onPress={() => {}}
+                  >
+                    <Text style={styles.modalTitle}>Write a Review</Text>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Write your review..."
+                      value={newReview}
+                      onChangeText={setNewReview}
+                      multiline
+                      numberOfLines={4}
+                      textAlignVertical="top"
+                    />
+                    <Text style={styles.modalTitle}>Select Rating</Text>
+                    <View style={styles.ratingSelect}>
+                      {[1, 2, 3, 4, 5].map((num) => (
+                        <TouchableOpacity key={num} onPress={() => setSelectedRating(num)}>
+                          <Icon name="star" size={30} color={selectedRating >= num ? '#FFD700' : '#ccc'} />
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                    <View style={styles.modalButtons}>
+                      <TouchableOpacity style={styles.cancelButton} onPress={() => setIsModalVisible(false)}>
+                        <Text style={styles.cancelText}>Cancel</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.submitButton} onPress={addReview}>
+                        <Text style={styles.submitText}>Submit</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </TouchableOpacity>
+                </TouchableOpacity>
+              </Modal>
+              </View>
+              <Text style={styles.sectionHeadline}>Browse {businessDetails?.name}'s Offers</Text>
+              </>
+           
+          }
+          data={groups}
+          renderItem={renderDealCard}
+          keyExtractor={(item, index) => `${item.id}_${index}`}
+          numColumns={2} // Ensures two-column layout
+          columnWrapperStyle={styles.row} // Adds spacing between columns
+          contentContainerStyle={{
+            paddingHorizontal: 10,
+            marginTop: 40,
+            flexGrow: 1,          // Ensures content stretches to fill space
+            width: '100%'         // Ensures content fills entire screen width
+          }} // Increased marginTop to 40 for more spacing
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={isLoadingGroups && <Text style={styles.loadingText}>Loading more deals...</Text>}
         />
-
-        <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
-          <Text style={styles.addButtonText}>Add Review</Text>
-        </TouchableOpacity>
-
-        <Modal visible={isModalVisible} animationType="slide" transparent>
-  <TouchableOpacity
-    style={styles.modalContainer}
-    activeOpacity={1}
-    onPressOut={() => setIsModalVisible(false)}
-  >
-    <TouchableOpacity
-      activeOpacity={1}
-      style={styles.modalContent}
-      onPress={() => {}} 
-    >
-      <Text style={styles.modalTitle}>Write a Review</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Write your review..."
-        value={newReview}
-        onChangeText={setNewReview}
-        multiline
-        numberOfLines={4}
-        textAlignVertical="top"/>
-      <Text style={styles.modalTitle}>Select Rating</Text>
-      <View style={styles.ratingSelect}>
-        {[1, 2, 3, 4, 5].map((num) => (
-          <TouchableOpacity key={num} onPress={() => setSelectedRating(num)}>
-            <Icon name="star" size={30} color={selectedRating >= num ? '#FFD700' : '#ccc'} />
-          </TouchableOpacity>
-        ))}
-      </View>
-      <View style={styles.modalButtons}>
-        <TouchableOpacity style={styles.cancelButton} onPress={() => setIsModalVisible(false)}>
-          <Text style={styles.cancelText}>Cancel</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.submitButton} onPress={addReview}>
-          <Text style={styles.submitText}>Submit</Text>
-        </TouchableOpacity>
-      </View>
-    </TouchableOpacity>
-  </TouchableOpacity>
-</Modal>
-
-<Text style={styles.sectionHeadline}>Browse {businessDetails?.name}'s Offers</Text>
-
- {groups.length === 0 && !isLoading ? (
-          <Text style={styles.noDealsText}>No deals found for the search query.</Text>
-        ) : (
-          <FlatList
-            data={groups}
-            renderItem={renderDealCard}
-            keyExtractor={(item, index) => `${item.id}_${index}`}
-            key={'grid'}
-            contentContainerStyle={styles.listContainer}
-            numColumns={2}
-            columnWrapperStyle={styles.row}
-            onEndReached={handleLoadMore}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={isLoading && <Text style={styles.loadingText}>Loading more deals...</Text>}
-          />
-        )}
-      </View>
       </BaseLayout>
     );
   };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#fff', width: '100%' },
+  container: { flex: 1, padding: 20, backgroundColor: '#fff', width: '100%', marginBottom: 20, paddingBottom: 20 },
+
   title: { fontSize: 26, fontWeight: 'bold', color: '#333' },
   category: { fontSize: 18, color: '#666', marginBottom: 10 },
   titleWithRating: {
@@ -374,6 +398,17 @@ const styles = StyleSheet.create({
   cardPriceDiscounted: { fontSize: 14, color: '#f08080', fontWeight: 'bold' },
   participantText: { fontSize: 12, color: '#666', marginTop: 5 },
   sectionHeadline: { fontSize: 18, fontWeight: 'bold', marginTop: 20, marginBottom: 10, color: '#333' },
+  scrollContainer: { paddingBottom: 20,
+    backgroundColor: '#f9f9f9',
+   },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  loadingText: { textAlign: 'center', padding: 10, color: '#666' },
+  showMoreText: { color: '#007bff', textAlign: 'center', marginTop: 10, fontWeight: '500' },
+  showLessText: { color: '#007bff', textAlign: 'center', marginTop: 10, fontWeight: '500' },
 });
 
 export default BusinessPage;

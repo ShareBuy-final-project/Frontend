@@ -55,6 +55,7 @@ const Welcome = () => {
       navigation.navigate('home');
     } catch (error) {
       Alert.alert('Login Failed', 'Make sure the email and password are correct!');
+      setIsLoading(false);
     }
   };
 
