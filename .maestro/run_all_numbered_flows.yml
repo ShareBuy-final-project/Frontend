@@ -1,0 +1,19 @@
+appId: com.idonagler.ShareBuy
+---
+# This flow runs all numbered flows in order
+# It assumes all flows are independent and can be run sequentially
+
+- runFlow: 1_fail_to_create_user_account_flow.yml
+- runFlow: 2_fail_login_flow.yml
+- runFlow: 3_create_user_account_flow.yml
+- runFlow: 4_successful_login_logout_flow.yml
+- runFlow: 5_search_unexisting_group_flow.yml
+- runFlow: 6_filter_by_category_flow.yml
+- runFlow: 7_save_searched_group_and_check_favorites_flow.yml
+- runFlow: 8_unsave_searched_group_and_check_favorites_flow.yml
+- runFlow: 9_create_group_flow.yml
+- runFlow: 10_join_group_flow.yml
+- runFlow: 11_send_message_in_chat_flow.yml
+- runFlow: 12_complete_purchase_flow.yml
+- runFlow: 13_verify_business_history_flow.yml
+- runFlow: 14_write_review_flow.yml
