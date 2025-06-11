@@ -34,15 +34,6 @@ const BusinessPage = () => {
         console.log("test business----:", business.userEmail);
     
         const reviews = business.Reviews || [];
-        const mockReviews = [
-          { id: 1, userEmail: 'user1@example.com', rating: 5, reviewText: 'Excellent service and great products!' },
-          { id: 2, userEmail: 'user2@example.com', rating: 4, reviewText: 'Good experience overall, but room for improvement.' },
-          { id: 3, userEmail: 'user3@example.com', rating: 3, reviewText: 'Average experience, nothing special.' },
-          { id: 4, userEmail: 'user4@example.com', rating: 2, reviewText: 'Not satisfied with the service.' },
-          { id: 5, userEmail: 'user5@example.com', rating: 1, reviewText: 'Terrible experience, would not recommend.' },
-        ];
-
-        reviews.push(...mockReviews);
     
         const averageRating = reviews.length > 0
           ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
