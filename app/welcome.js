@@ -55,6 +55,7 @@ const Welcome = () => {
       navigation.navigate('home');
     } catch (error) {
       Alert.alert('Login Failed', 'Make sure the email and password are correct!');
+      setIsLoading(false);
     }
   };
 
@@ -123,7 +124,7 @@ const Welcome = () => {
           </TouchableOpacity>
           <View style={styles.messageContainer}>
             <Text style={styles.secondSubMessage}>
-              don't have an account? <Text style={{ color: COLORS.black, textDecorationLine: 'underline' }} onPress={() => navigation.navigate('registerTypeSelection</Text>')}>Create one</Text>
+              don't have an account? <Text style={{ color: COLORS.black, textDecorationLine: 'underline' }} onPress={() => navigation.navigate('registerTypeSelection')}>Create one</Text>
             </Text>
           </View>
         </ScrollView>
