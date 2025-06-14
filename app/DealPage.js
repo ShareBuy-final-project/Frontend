@@ -122,15 +122,15 @@ const DealPage = () => {
         />
       </TouchableOpacity>
       <View style={styles.participantOverlay}>
-          <Text style={styles.participantText}>{dealDetails?.participants}/{dealDetails?.size}</Text>
-        </View>
-        <View style={styles.titleContainer}>
-      <Text style={styles.title}>{dealDetails?.title}</Text>
+        <Text style={styles.participantText}>{dealDetails?.participants}/{dealDetails?.size}</Text>
+      </View>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>{dealDetails?.title}</Text>
+      </View>
       <TouchableOpacity onPress={() => navigation.navigate('BusinessPage', { businessNumber: dealDetails?.businessNumber })} style={styles.businessContainer}>
-      <Icon name="store" size={18} color="rgba(0, 0, 0, 0.7)" />
-      <Text style={styles.businessName}>{dealDetails?.businessName}</Text>
-    </TouchableOpacity>
-    </View>
+        <Icon name="store" size={18} color="rgba(0, 0, 0, 0.7)" />
+        <Text style={styles.businessName}>{dealDetails?.businessName}</Text>
+      </TouchableOpacity>
       <Text style={styles.description}>{dealDetails?.description}</Text>
       <View style={styles.priceContainer}>
         <Text style={styles.price}>Price: {dealDetails?.discounted_price}</Text>
