@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { getBusinessByNumber, submitReview } from '../../apiCalls/reviewApiCalls';
 import { getToken } from '../../utils/userTokens'
 import BaseLayout from '../BaseLayout';
-import { fetchGroupsByBusiness } from '../../apiCalls/groupApiCalls';
+import { fetchGroupsByBusiness, hasUserGroupWithBusiness } from '../../apiCalls/groupApiCalls';
 import DefaultPic from '../../assets/images/default_pic.png';
 const BusinessPage = () => {
   const navigation = useNavigation();
@@ -23,22 +23,20 @@ const BusinessPage = () => {
   const [isLoadingGroups, setIsLoadingGroups] = useState(false);
   const [hasMoreGroups, setHasMoreGroups] = useState(true);
   const [reviewLimit, setReviewLimit] = useState(1); // Default to showing one review
+  const [hasUserWithBusiness, setHasUserGroupWithBusiness] = useState(false);
 
   useEffect(() => {
     const fetchBusinessDetails = async () => {
       setIsLoading(true);
       try {
-        console.log("test:", businessNumber);
         const business = await getBusinessByNumber(businessNumber);
         setBusinessEmail(business.userEmail);
-        console.log("test business----:", business.userEmail);
-    
+  
         const reviews = business.Reviews || [];
-    
         const averageRating = reviews.length > 0
           ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
           : 0;
-    
+  
         setBusinessDetails({
           name: business.businessName,
           businessNumber: business.businessNumber,
@@ -49,22 +47,26 @@ const BusinessPage = () => {
           rating: Math.round(averageRating * 10) / 10,
           reviews: reviews,
         });
+  
+        const hasGroup = await hasUserGroupWithBusiness(businessNumber);
+        setHasUserGroupWithBusiness(hasGroup);
+  
       } catch (error) {
         console.error('Error fetching business details:', error);
       } finally {
         setIsLoading(false);
       }
     };
-    
+  
     const fetchEmail = async () => {
       const email = await getToken('email');
       setUserEmail(email);
     };
-
+  
     fetchBusinessDetails();
     fetchEmail();
   }, [businessNumber]);
-
+  
   useEffect(() => {
     if (!businessEmail) return;
     fetchGroups();
@@ -251,9 +253,10 @@ const BusinessPage = () => {
                 </TouchableOpacity>
               )}
 
-              <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
+              {hasUserWithBusiness && 
+              (<TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
                 <Text style={styles.addButtonText}>Add Review</Text>
-              </TouchableOpacity>
+              </TouchableOpacity>)}
 
               <Modal visible={isModalVisible} animationType="slide" transparent>
                 <TouchableOpacity

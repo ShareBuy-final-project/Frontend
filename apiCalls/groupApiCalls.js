@@ -264,6 +264,16 @@ export const getBuisnessCurrentGroups = async (page = 1, limit = 10) => {
   }
 };
 
+export const hasUserGroupWithBusiness = async (businessId) => {
+  try {
+    const res = await excuteAPICallPOST('group/hasUserGroupWithBusiness', { businessId });
+    return res.data.hasGroup; 
+  } catch (error) {
+    console.error('Error checking group with business:', error);
+    return false;
+  }
+};
+
 
 export const createPaymentIntent = async (groupId, amount) => {
   try{
