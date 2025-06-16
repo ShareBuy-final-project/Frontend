@@ -51,10 +51,16 @@ const BaseLayout = ({ children }) => {
     closeSidebar(); 
   };
 
-  const handleHistoryPress= () => {
-    business? navigation.navigate('history'): navigation.navigate('purchaseHistory');
+  const handleBusinessPress= () => {
+    navigation.navigate('history')
     closeSidebar(); 
   }
+
+  const handleHistoryPress= () => {
+    navigation.navigate('purchaseHistory');
+    closeSidebar(); 
+  }
+
 
   const handleCurrentGroupsPress= () => {
     navigation.navigate('myGroups');
@@ -155,7 +161,7 @@ const BaseLayout = ({ children }) => {
             </TouchableOpacity>
             <TouchableOpacity style={styles.sidebarItem} onPress={handleHistoryPress}>
               <Icon name="history" size={20} color="#fff" style={styles.sidebarIcon} />
-              <Text style={styles.sidebarItemText}>History</Text>
+              <Text style={styles.sidebarItemText}>My History</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.sidebarItem} onPress={handleCurrentGroupsPress}>
               <Icon name="group" size={20} color="#fff" style={styles.sidebarIcon}/>
@@ -174,6 +180,10 @@ const BaseLayout = ({ children }) => {
             <TouchableOpacity style={styles.sidebarItem} onPress={handleCreatedGroupsPress}>
               <Icon name="business" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>Business Groups</Text>
+            </TouchableOpacity>)}
+            {business && (<TouchableOpacity style={styles.sidebarItem} onPress={handleBusinessPress}>
+              <Icon name="payments" size={20} color="#fff" style={styles.sidebarIcon} />
+              <Text style={styles.sidebarItemText}>Business History</Text>
             </TouchableOpacity>)}
             <TouchableOpacity style={styles.sidebarItem} onPress={async () => {await handleLogout();}}>
               <Icon name="logout" size={20} color="#fff" style={styles.sidebarIcon} />
