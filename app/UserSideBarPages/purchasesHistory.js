@@ -42,7 +42,7 @@ const PurchaseHistory = () => {
   
   const getDeals = async () => {
     setIsLoading(true);
-    setDeals([]); // Clear the deals before fetching new ones
+    //setDeals([]); // Clear the deals before fetching new ones
     try {
       // Call the API fetchDeals function
       const apiDeals = await getUserHistory(page, 10); 
