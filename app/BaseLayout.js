@@ -41,6 +41,43 @@ const BaseLayout = ({ children }) => {
     })();
   }, []);
 
+  const handleHomePress = () => {
+    navigation.navigate('home');
+    closeSidebar(); 
+  };
+
+  const handleFavoritesPress = () => {
+    navigation.navigate('favorites'); 
+    closeSidebar(); 
+  };
+
+  const handleProfilePress = () => {
+    navigation.navigate('personalInformation');
+    closeSidebar(); 
+  };
+
+  const handleBusinessPress= () => {
+    navigation.navigate('history')
+    closeSidebar(); 
+  }
+
+  const handleHistoryPress= () => {
+    navigation.navigate('purchaseHistory');
+    closeSidebar(); 
+  }
+
+
+  const handleCurrentGroupsPress= () => {
+    navigation.navigate('myGroups');
+    closeSidebar(); 
+  }
+
+  const handleCreatedGroupsPress= () => {
+    navigation.navigate('groups')
+    closeSidebar(); 
+  }
+
+
   const handleLogout = async () => {
     if (await isLoggedIn()) {
       const res = await logout();
@@ -145,7 +182,7 @@ const BaseLayout = ({ children }) => {
 
             <TouchableOpacity style={styles.sidebarItem} onPress={() => { business ? handleNavigation('history') : handleNavigation('purchaseHistory'); }}>
               <Icon name="history" size={20} color="#fff" style={styles.sidebarIcon} />
-              <Text style={styles.sidebarItemText}>History</Text>
+              <Text style={styles.sidebarItemText}>My History</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.sidebarItem} onPress={() => { handleNavigation('myGroups'); }}>
@@ -164,13 +201,15 @@ const BaseLayout = ({ children }) => {
             </TouchableOpacity>
 
             {business && (
-              <TouchableOpacity style={styles.sidebarItem} onPress={() => { handleNavigation('groups'); }}>
-                <Icon name="business" size={20} color="#fff" style={styles.sidebarIcon} />
-                <Text style={styles.sidebarItemText}>Business Groups</Text>
-              </TouchableOpacity>
-            )}
-
-            <TouchableOpacity style={styles.sidebarItem} onPress={async () => { await handleLogout(); closeSidebar(); }}>
+            <TouchableOpacity style={styles.sidebarItem} onPress={handleCreatedGroupsPress}>
+              <Icon name="business" size={20} color="#fff" style={styles.sidebarIcon} />
+              <Text style={styles.sidebarItemText}>Business Groups</Text>
+            </TouchableOpacity>)}
+            {business && (<TouchableOpacity style={styles.sidebarItem} onPress={handleBusinessPress}>
+              <Icon name="payments" size={20} color="#fff" style={styles.sidebarIcon} />
+              <Text style={styles.sidebarItemText}>Business History</Text>
+            </TouchableOpacity>)}
+            <TouchableOpacity style={styles.sidebarItem} onPress={async () => {await handleLogout();}}>
               <Icon name="logout" size={20} color="#fff" style={styles.sidebarIcon} />
               <Text style={styles.sidebarItemText}>Sign Out</Text>
             </TouchableOpacity>

@@ -65,7 +65,7 @@ const RecommendationsBanner = ({ navigation }) => {
               <Image
                 source={deal.imageBase64 ? { uri: deal.imageBase64 } : DefaultPic}
                 style={styles.image}
-                resizeMode="cover"
+                resizeMode="contain"
               />
               <TouchableOpacity style={styles.heartButton} onPress={() => toggleFavorite(deal.id)}>
                 <Icon
