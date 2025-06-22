@@ -16,7 +16,5 @@ onFlowComplete:
 # Preconditions:
 # - User is logged in
 
-# - runFlow: actions/navigateToBusinessHistory.yml #TODO: create flow
-# - assertVisible: "${GROUP_NAME}"
-
-- scroll # delete later
+- runFlow: actions/navigateToBusinessHistory.yml
+- assertVisible: "${GROUP_NAME}"

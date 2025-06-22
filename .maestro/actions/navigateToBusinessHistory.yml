@@ -3,4 +3,4 @@ appId: com.idonagler.ShareBuy
 # Action: Select "History" from the side-bar menu
 
 - tapOn: ""
-- tapOn: "My History"
+- tapOn: "Business History"
