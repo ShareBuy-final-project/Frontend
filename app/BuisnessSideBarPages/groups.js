@@ -42,7 +42,7 @@ const Groups = () => {
   
   const getDeals = async () => {
     setIsLoading(true);
-    setDeals([]); // Clear the deals before fetching new ones
+    //setDeals([]); // Clear the deals before fetching new ones
     try {
       // Call the API fetchDeals function
       const apiDeals = await getBuisnessCurrentGroups(page, 10); 
