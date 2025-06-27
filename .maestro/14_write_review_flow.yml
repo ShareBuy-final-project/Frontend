@@ -1,5 +1,7 @@
 appId: com.idonagler.ShareBuy
 env:
+  USER_EMAIL: "testuser@example.com"
+  USER_PASSWORD: "TestPass123!"
   BUSINESS_NAME: "Business 1"
   REVIEW: "Great service and friendly staff!"
   INDEX: 3 # amount of start - 1
@@ -31,4 +33,3 @@ onFlowComplete:
     index: "${INDEX}" # INDEX + 1 stars
 - tapOn: "Submit"
 - assertVisible: "${REVIEW}"
-# TODO: continue when a group exist in the history section
